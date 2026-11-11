@@ -142,6 +142,7 @@ export async function updateProfile(data: Partial<Profile>): Promise<Profile> {
       github_url = COALESCE($11, github_url),
       linkedin_url = COALESCE($12, linkedin_url),
       website_url = COALESCE($13, website_url),
+      leetcode_url = COALESCE($14, leetcode_url),
       updated_at = NOW()
     WHERE id = 1
     RETURNING *;
@@ -149,7 +150,7 @@ export async function updateProfile(data: Partial<Profile>): Promise<Profile> {
     data.full_name, data.title, data.headline, data.bio,
     data.email, data.phone, data.location, data.college,
     data.degree, data.graduation_year, data.github_url,
-    data.linkedin_url, data.website_url
+    data.linkedin_url, data.website_url, data.leetcode_url
   ]);
   return res.rows[0];
 }

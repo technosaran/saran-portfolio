@@ -580,6 +580,17 @@ export default function AdminDashboardPage() {
                   className="mt-1 block w-full rounded-xl bg-neutral-950 border border-neutral-800 px-3.5 py-2 text-xs text-white focus:outline-none focus:border-emerald-500"
                 />
               </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-neutral-300">LeetCode Profile URL</label>
+                <input
+                  type="url"
+                  value={profile.leetcode_url || ''}
+                  onChange={(e) => setProfile({ ...profile, leetcode_url: e.target.value })}
+                  className="mt-1 block w-full rounded-xl bg-neutral-950 border border-neutral-800 px-3.5 py-2 text-xs text-white focus:outline-none focus:border-emerald-500"
+                  placeholder="https://leetcode.com/u/technosaran"
+                />
+              </div>
             </div>
 
             <div className="flex justify-end pt-4 border-t border-neutral-800">
