@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
-import { fetchProjects, fetchSkills, fetchExperience, fetchCertificates } from '@/lib/neon/db';
+import { fetchProfile, fetchProjects, fetchSkills, fetchExperience, fetchCertificates } from '@/lib/neon/db';
 
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const [projects, skills, experience, certificates] = await Promise.all([
+    const [profile, projects, skills, experience, certificates] = await Promise.all([
+      fetchProfile(),
       fetchProjects(),
       fetchSkills(),
       fetchExperience(),
@@ -14,6 +16,7 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       data: {
+        profile,
         projects,
         skills,
         experience,

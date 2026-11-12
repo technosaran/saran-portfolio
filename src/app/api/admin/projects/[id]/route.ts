@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken, updateProject, deleteProject } from '@/lib/neon/db';
 
+export const dynamic = 'force-dynamic';
+
 const AUTHORIZED_ADMIN = 'iamsaran.ai@gmail.com';
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -14,12 +16,18 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
   try {
     const { id } = await params;
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId) || numericId <= 0) {
+      return NextResponse.json({ success: false, error: 'Invalid ID parameter' }, { status: 400 });
+    }
+
     const body = await req.json();
-    const updated = await updateProject(parseInt(id, 10), body);
+    const updated = await updateProject(numericId, body);
     return NextResponse.json({ success: true, project: updated });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
-    return NextResponse.json({ success: false, error: message }, { status: 500 });
+    const status = message.includes('not found') ? 404 : 500;
+    return NextResponse.json({ success: false, error: message }, { status });
   }
 }
 
@@ -34,7 +42,15 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 
   try {
     const { id } = await params;
-    await deleteProject(parseInt(id, 10));
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId) || numericId <= 0) {
+      return NextResponse.json({ success: false, error: 'Invalid ID parameter' }, { status: 400 });
+    }
+
+    const deleted = await deleteProject(numericId);
+    if (!deleted) {
+      return NextResponse.json({ success: false, error: 'Project not found' }, { status: 404 });
+    }
     return NextResponse.json({ success: true, message: 'Project deleted' });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);

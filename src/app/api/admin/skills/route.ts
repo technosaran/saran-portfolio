@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken, createSkill } from '@/lib/neon/db';
 
+export const dynamic = 'force-dynamic';
+
 const AUTHORIZED_ADMIN = 'iamsaran.ai@gmail.com';
 
 export async function POST(req: NextRequest) {
@@ -14,10 +16,15 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
+    if (!body.name || !String(body.name).trim()) {
+      return NextResponse.json({ success: false, error: 'Skill name is required' }, { status: 400 });
+    }
+
     const created = await createSkill(body);
     return NextResponse.json({ success: true, skill: created });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
-    return NextResponse.json({ success: false, error: message }, { status: 500 });
+    const status = message.includes('already exists') ? 409 : 500;
+    return NextResponse.json({ success: false, error: message }, { status });
   }
 }

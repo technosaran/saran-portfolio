@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Shield, Lock, Mail, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 
 export default function AdminLoginPage() {
@@ -121,12 +122,12 @@ export default function AdminLoginPage() {
           </form>
 
           <div className="mt-6 border-t border-neutral-800 pt-4 text-center">
-            <a
+            <Link
               href="/"
               className="text-xs text-neutral-400 hover:text-emerald-400 transition-colors"
             >
               ← Back to Portfolio
-            </a>
+            </Link>
           </div>
         </div>
       </div>

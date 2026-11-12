@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken, updateProfile } from '@/lib/neon/db';
 
+export const dynamic = 'force-dynamic';
+
 const AUTHORIZED_ADMIN = 'iamsaran.ai@gmail.com';
 
 export async function PUT(req: NextRequest) {
@@ -16,6 +18,10 @@ export async function PUT(req: NextRequest) {
 
   try {
     const body = await req.json();
+    if (!body || typeof body !== 'object') {
+      return NextResponse.json({ success: false, error: 'Invalid profile payload' }, { status: 400 });
+    }
+
     const updated = await updateProfile(body);
     return NextResponse.json({ success: true, profile: updated });
   } catch (err: unknown) {

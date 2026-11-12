@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
   Shield, 
@@ -14,7 +14,6 @@ import {
   ExternalLink, 
   Plus, 
   Trash2, 
-  Edit3, 
   Save, 
   Loader2, 
   CheckCircle2, 
@@ -75,6 +74,30 @@ export default function AdminDashboardPage() {
 
   const [newPassword, setNewPassword] = useState('');
 
+  const notify = useCallback((type: 'success' | 'error', text: string) => {
+    setStatusMsg({ type, text });
+    setTimeout(() => setStatusMsg(null), 4000);
+  }, []);
+
+  const loadData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/admin/data');
+      const json = await res.json();
+      if (json.success && json.data) {
+        if (json.data.profile) setProfile(json.data.profile);
+        if (json.data.projects) setProjects(json.data.projects);
+        if (json.data.experience) setExperience(json.data.experience);
+        if (json.data.skills) setSkills(json.data.skills);
+        if (json.data.certificates) setCertificates(json.data.certificates);
+      }
+    } catch {
+      notify('error', 'Failed to load portfolio data from Neon');
+    } finally {
+      setLoading(false);
+    }
+  }, [notify]);
+
   // 1. Verify Auth
   useEffect(() => {
     const verifyAuth = async () => {
@@ -92,31 +115,7 @@ export default function AdminDashboardPage() {
       }
     };
     verifyAuth();
-  }, [router]);
-
-  const loadData = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch('/api/admin/data');
-      const json = await res.json();
-      if (json.success && json.data) {
-        if (json.data.profile) setProfile(json.data.profile);
-        if (json.data.projects) setProjects(json.data.projects);
-        if (json.data.experience) setExperience(json.data.experience);
-        if (json.data.skills) setSkills(json.data.skills);
-        if (json.data.certificates) setCertificates(json.data.certificates);
-      }
-    } catch {
-      notify('error', 'Failed to load portfolio data from Neon');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const notify = (type: 'success' | 'error', text: string) => {
-    setStatusMsg({ type, text });
-    setTimeout(() => setStatusMsg(null), 4000);
-  };
+  }, [router, loadData]);
 
   const handleLogout = async () => {
     await fetch('/api/admin/logout', { method: 'POST' });
@@ -201,8 +200,9 @@ export default function AdminDashboardPage() {
     if (!newExp.role || !newExp.company) return;
     setSaving(true);
     try {
+      const fallbackId = `exp-${Math.random().toString(36).slice(2, 8)}`;
       const payload = {
-        intern_id: newExp.intern_id || `exp-${Date.now()}`,
+        intern_id: newExp.intern_id || fallbackId,
         role: newExp.role.trim(),
         company: newExp.company.trim(),
         period: newExp.period.trim(),
@@ -269,6 +269,7 @@ export default function AdminDashboardPage() {
 
   // Delete Skill
   const handleDeleteSkill = async (id: number) => {
+    if (!confirm('Are you sure you want to remove this skill from the database?')) return;
     try {
       const res = await fetch(`/api/admin/skills/${id}`, { method: 'DELETE' });
       if (res.ok) {

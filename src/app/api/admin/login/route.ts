@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyAdminCredentials, generateToken } from '@/lib/neon/db';
 
+export const dynamic = 'force-dynamic';
+
 const AUTHORIZED_ADMIN_EMAIL = 'iamsaran.ai@gmail.com';
 
 export async function POST(req: NextRequest) {
