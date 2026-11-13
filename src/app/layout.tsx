@@ -25,11 +25,20 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Saran R Portfolio",
+    images: [
+      {
+        url: "/og-image.svg",
+        width: 1200,
+        height: 630,
+        alt: "Saran R — AI & ML Engineer Portfolio",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Saran R — AI & ML Engineer",
     description: "AI/ML Engineering Student | Cloud Infrastructure & Full-Stack Architect.",
+    images: ["/og-image.svg"],
   },
   robots: {
     index: true,
@@ -40,6 +49,37 @@ export const metadata: Metadata = {
   },
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://saran-portfolio-smoky.vercel.app/#person",
+      "name": "Saran R",
+      "jobTitle": "Artificial Intelligence & Machine Learning Engineer",
+      "alumniOf": {
+        "@type": "CollegeOrUniversity",
+        "name": "Panimalar Engineering College"
+      },
+      "url": "https://saran-portfolio-smoky.vercel.app",
+      "sameAs": [
+        "https://github.com/technosaran",
+        "https://linkedin.com/in/saran-r-b2b1a5275",
+        "https://leetcode.com/u/Saran-R/"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://saran-portfolio-smoky.vercel.app/#website",
+      "url": "https://saran-portfolio-smoky.vercel.app",
+      "name": "Saran R — AI & ML Engineer Portfolio",
+      "publisher": {
+        "@id": "https://saran-portfolio-smoky.vercel.app/#person"
+      }
+    }
+  ]
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -47,6 +87,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} dark antialiased`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="min-h-screen bg-[#07080c] text-zinc-100 font-sans selection:bg-blue-500/25 selection:text-blue-200">
         {children}
       </body>

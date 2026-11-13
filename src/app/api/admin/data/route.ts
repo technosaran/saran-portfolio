@@ -1,28 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { 
-  verifyToken, 
-  fetchProfile, 
-  fetchProjects, 
-  fetchExperience, 
-  fetchSkills, 
-  fetchCertificates 
-} from '@/lib/neon/db';
+import { requireAdminAuth } from '@/lib/security/guards';
+import { profileService } from '@/services/profile.service';
+import { projectsService } from '@/services/projects.service';
+import { experienceService } from '@/services/experience.service';
+import { skillsService } from '@/services/skills.service';
+import { certificatesService } from '@/services/certificates.service';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
-  const token = req.cookies.get('portfolio_admin_token')?.value;
-  if (!token || !verifyToken(token)) {
-    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+  const auth = await requireAdminAuth(req);
+  if (!auth.authorized) {
+    return auth.response;
   }
 
   try {
     const [profile, projects, experience, skills, certificates] = await Promise.all([
-      fetchProfile(),
-      fetchProjects(),
-      fetchExperience(),
-      fetchSkills(),
-      fetchCertificates(),
+      profileService.getProfile(),
+      projectsService.getAllProjects(),
+      experienceService.getAllExperience(),
+      skillsService.getAllSkills(),
+      certificatesService.getAllCertificates(),
     ]);
 
     return NextResponse.json({
@@ -36,7 +34,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
+    const message = err instanceof Error ? err.message : 'Database error fetching admin data';
     return NextResponse.json({ success: false, error: message }, { status: 500 });
   }
 }

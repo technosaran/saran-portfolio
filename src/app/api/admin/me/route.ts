@@ -1,19 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyToken } from '@/lib/neon/db';
+import { requireAdminAuth } from '@/lib/security/guards';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
-  const token = req.cookies.get('portfolio_admin_token')?.value;
-
-  if (!token) {
-    return NextResponse.json({ authenticated: false }, { status: 401 });
+  const auth = await requireAdminAuth(req);
+  if (!auth.authorized) {
+    return auth.response;
   }
 
-  const email = verifyToken(token);
-  if (!email) {
-    return NextResponse.json({ authenticated: false }, { status: 401 });
-  }
-
-  return NextResponse.json({ authenticated: true, email });
+  return NextResponse.json({ authenticated: true, email: auth.email });
 }

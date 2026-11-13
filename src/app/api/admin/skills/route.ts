@@ -1,29 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyToken, createSkill } from '@/lib/neon/db';
+import { requireAdminAuth } from '@/lib/security/guards';
+import { skillsService } from '@/services/skills.service';
+import { skillCreateSchema } from '@/lib/validation/schemas';
 
 export const dynamic = 'force-dynamic';
 
-const AUTHORIZED_ADMIN = 'iamsaran.ai@gmail.com';
-
 export async function POST(req: NextRequest) {
-  const token = req.cookies.get('portfolio_admin_token')?.value;
-  if (!token) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
-
-  const email = verifyToken(token);
-  if (!email || email !== AUTHORIZED_ADMIN) {
-    return NextResponse.json({ success: false, error: 'Access Denied: Only iamsaran.ai@gmail.com has rights to change data.' }, { status: 403 });
+  const auth = await requireAdminAuth(req);
+  if (!auth.authorized) {
+    return auth.response;
   }
 
   try {
-    const body = await req.json();
-    if (!body.name || !String(body.name).trim()) {
-      return NextResponse.json({ success: false, error: 'Skill name is required' }, { status: 400 });
+    const json = await req.json().catch(() => null);
+    const validation = skillCreateSchema.safeParse(json);
+    if (!validation.success) {
+      return NextResponse.json(
+        { success: false, error: validation.error.issues[0]?.message || 'Invalid skill payload' },
+        { status: 400 }
+      );
     }
 
-    const created = await createSkill(body);
+    const created = await skillsService.createSkill(validation.data);
     return NextResponse.json({ success: true, skill: created });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
+    const message = err instanceof Error ? err.message : 'Database error creating skill';
     const status = message.includes('already exists') ? 409 : 500;
     return NextResponse.json({ success: false, error: message }, { status });
   }

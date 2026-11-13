@@ -1,53 +1,55 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAdminCredentials, generateToken } from '@/lib/neon/db';
+import { authService } from '@/services/auth.service';
+import { adminLoginSchema } from '@/lib/validation/schemas';
+import { AUTH_CONFIG } from '@/lib/security/auth-config';
 
 export const dynamic = 'force-dynamic';
 
-const AUTHORIZED_ADMIN_EMAIL = 'iamsaran.ai@gmail.com';
-
 export async function POST(req: NextRequest) {
   try {
-    const { email, password } = await req.json();
-
-    if (!email || !password) {
-      return NextResponse.json({ success: false, error: 'Email and password required' }, { status: 400 });
+    const json = await req.json().catch(() => null);
+    if (!json) {
+      return NextResponse.json({ success: false, error: 'Malformed JSON payload' }, { status: 400 });
     }
 
-    const normalizedEmail = String(email).trim().toLowerCase();
-
-    // Strict Authorization Check: Only iamsaran.ai@gmail.com is authorized
-    if (normalizedEmail !== AUTHORIZED_ADMIN_EMAIL) {
-      return NextResponse.json({ 
-        success: false, 
-        error: 'Access Denied: Only the portfolio owner (iamsaran.ai@gmail.com) has rights to access the admin panel.' 
-      }, { status: 403 });
+    const validation = adminLoginSchema.safeParse(json);
+    if (!validation.success) {
+      return NextResponse.json(
+        { success: false, error: validation.error.issues[0]?.message || 'Validation failed' },
+        { status: 400 }
+      );
     }
 
-    const isValid = await verifyAdminCredentials(normalizedEmail, String(password));
+    const { email, password } = validation.data;
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() || req.headers.get('x-real-ip') || 'unknown';
+    const userAgent = req.headers.get('user-agent');
 
-    if (!isValid) {
-      return NextResponse.json({ 
-        success: false, 
-        error: 'Invalid password. Please check your credentials.' 
-      }, { status: 401 });
+    const result = await authService.authenticate(email, password, ip, userAgent);
+
+    if (!result.success || !result.token) {
+      return NextResponse.json({ success: false, error: result.error }, { status: result.status });
     }
 
-    const token = generateToken(normalizedEmail);
-    const response = NextResponse.json({ success: true, email: normalizedEmail });
+    const response = NextResponse.json({
+      success: true,
+      message: 'Authenticated successfully',
+      email: email.toLowerCase(),
+    });
 
     response.cookies.set({
-      name: 'portfolio_admin_token',
-      value: token,
+      name: AUTH_CONFIG.COOKIE_NAME,
+      value: result.token,
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
-      maxAge: 30 * 24 * 60 * 60, // 30 days
+      maxAge: AUTH_CONFIG.SESSION_DURATION_DAYS * 24 * 60 * 60,
     });
 
     return response;
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
+    const message = err instanceof Error ? err.message : 'Internal authentication error';
+    console.error('[LOGIN API ERROR]', err);
     return NextResponse.json({ success: false, error: message }, { status: 500 });
   }
 }

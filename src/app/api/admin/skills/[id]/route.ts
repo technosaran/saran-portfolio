@@ -1,17 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyToken, updateSkill, deleteSkill } from '@/lib/neon/db';
+import { requireAdminAuth } from '@/lib/security/guards';
+import { skillsService } from '@/services/skills.service';
+import { skillUpdateSchema } from '@/lib/validation/schemas';
 
 export const dynamic = 'force-dynamic';
 
-const AUTHORIZED_ADMIN = 'iamsaran.ai@gmail.com';
-
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const token = req.cookies.get('portfolio_admin_token')?.value;
-  if (!token) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
-
-  const email = verifyToken(token);
-  if (!email || email !== AUTHORIZED_ADMIN) {
-    return NextResponse.json({ success: false, error: 'Access Denied: Only iamsaran.ai@gmail.com has rights to change data.' }, { status: 403 });
+  const auth = await requireAdminAuth(req);
+  if (!auth.authorized) {
+    return auth.response;
   }
 
   try {
@@ -21,23 +18,28 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       return NextResponse.json({ success: false, error: 'Invalid ID parameter' }, { status: 400 });
     }
 
-    const body = await req.json();
-    const updated = await updateSkill(numericId, body);
+    const json = await req.json().catch(() => null);
+    const validation = skillUpdateSchema.safeParse(json);
+    if (!validation.success) {
+      return NextResponse.json(
+        { success: false, error: validation.error.issues[0]?.message || 'Invalid skill update payload' },
+        { status: 400 }
+      );
+    }
+
+    const updated = await skillsService.updateSkill(numericId, validation.data);
     return NextResponse.json({ success: true, skill: updated });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
+    const message = err instanceof Error ? err.message : 'Database error';
     const status = message.includes('not found') ? 404 : 500;
     return NextResponse.json({ success: false, error: message }, { status });
   }
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const token = req.cookies.get('portfolio_admin_token')?.value;
-  if (!token) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
-
-  const email = verifyToken(token);
-  if (!email || email !== AUTHORIZED_ADMIN) {
-    return NextResponse.json({ success: false, error: 'Access Denied: Only iamsaran.ai@gmail.com has rights to change data.' }, { status: 403 });
+  const auth = await requireAdminAuth(req);
+  if (!auth.authorized) {
+    return auth.response;
   }
 
   try {
@@ -47,13 +49,14 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
       return NextResponse.json({ success: false, error: 'Invalid ID parameter' }, { status: 400 });
     }
 
-    const deleted = await deleteSkill(numericId);
+    const deleted = await skillsService.deleteSkill(numericId);
     if (!deleted) {
       return NextResponse.json({ success: false, error: 'Skill not found' }, { status: 404 });
     }
+
     return NextResponse.json({ success: true, message: 'Skill deleted' });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
+    const message = err instanceof Error ? err.message : 'Database error';
     return NextResponse.json({ success: false, error: message }, { status: 500 });
   }
 }

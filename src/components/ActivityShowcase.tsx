@@ -36,10 +36,33 @@ export default function ActivityShowcase({ profile, projects = [], skills = [] }
   const [hoveredLang, setHoveredLang] = useState<string | null>(null);
 
   const copyToClipboard = (text: string, type: 'github' | 'leetcode') => {
-    if (typeof navigator !== 'undefined' && navigator.clipboard) {
-      navigator.clipboard.writeText(text);
-      setCopiedHandle(type);
-      setTimeout(() => setCopiedHandle(null), 2000);
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard) {
+        navigator.clipboard.writeText(text);
+        setCopiedHandle(type);
+        setTimeout(() => setCopiedHandle(null), 2000);
+        return;
+      }
+    } catch {
+      // Fallback
+    }
+
+    try {
+      if (typeof document !== 'undefined') {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        setCopiedHandle(type);
+        setTimeout(() => setCopiedHandle(null), 2000);
+      }
+    } catch {
+      setCopiedHandle(null);
     }
   };
 
@@ -47,21 +70,28 @@ export default function ActivityShowcase({ profile, projects = [], skills = [] }
   const stackBreakdown = useMemo(() => {
     if (skills && skills.length > 0) {
       const total = skills.length;
-      const langs = skills.filter((s) => s.category.toLowerCase().includes('language')).length;
-      const frameworks = skills.filter((s) => s.category.toLowerCase().includes('framework') || s.category.toLowerCase().includes('web')).length;
-      const aiml = skills.filter((s) => s.category.toLowerCase().includes('ai') || s.category.toLowerCase().includes('cloud')).length;
-      const dbAndTools = skills.filter((s) => s.category.toLowerCase().includes('database') || s.category.toLowerCase().includes('tool') || s.category.toLowerCase().includes('core')).length;
+      const langs = skills.filter((s) => (s.category || '').toLowerCase().includes('language')).length;
+      const frameworks = skills.filter((s) => (s.category || '').toLowerCase().includes('framework') || (s.category || '').toLowerCase().includes('web')).length;
+      const aiml = skills.filter((s) => (s.category || '').toLowerCase().includes('ai') || (s.category || '').toLowerCase().includes('cloud')).length;
+      const dbAndTools = skills.filter((s) => (s.category || '').toLowerCase().includes('database') || (s.category || '').toLowerCase().includes('tool') || (s.category || '').toLowerCase().includes('core')).length;
 
       const pLangs = Math.max(12, Math.round((langs / total) * 100));
       const pFrameworks = Math.max(12, Math.round((frameworks / total) * 100));
       const pAiml = Math.max(12, Math.round((aiml / total) * 100));
-      const pDb = Math.max(10, 100 - (pLangs + pFrameworks + pAiml));
+      const rawDb = Math.max(10, 100 - (pLangs + pFrameworks + pAiml));
+
+      // Normalize so sum is exactly 100%
+      const sum = pLangs + pFrameworks + pAiml + rawDb;
+      const normLangs = Math.round((pLangs / sum) * 100);
+      const normFrameworks = Math.round((pFrameworks / sum) * 100);
+      const normAiml = Math.round((pAiml / sum) * 100);
+      const normDb = 100 - (normLangs + normFrameworks + normAiml);
 
       return [
-        { name: 'Java & Languages', share: pLangs, color: 'bg-amber-500', textColor: 'text-amber-400', usage: `${langs} Core Languages (Java 21, TypeScript, Python, SQL) loaded from database` },
-        { name: 'Web & Frameworks', share: pFrameworks, color: 'bg-blue-500', textColor: 'text-blue-400', usage: `${frameworks} Full-Stack, Next.js & UI frameworks loaded from database` },
-        { name: 'AI/ML & Cloud', share: pAiml, color: 'bg-emerald-500', textColor: 'text-emerald-400', usage: `${aiml} Deep Learning, OpenCV & Cloud competencies loaded from database` },
-        { name: 'Databases & Tools', share: pDb, color: 'bg-indigo-500', textColor: 'text-indigo-400', usage: `${dbAndTools} Database schemas, DevOps pipelines & CS fundamentals loaded from database` }
+        { name: 'Java & Languages', share: normLangs, color: 'bg-amber-500', textColor: 'text-amber-400', usage: `${langs} Core Languages (Java 21, TypeScript, Python, SQL) loaded from database` },
+        { name: 'Web & Frameworks', share: normFrameworks, color: 'bg-blue-500', textColor: 'text-blue-400', usage: `${frameworks} Full-Stack, Next.js & UI frameworks loaded from database` },
+        { name: 'AI/ML & Cloud', share: normAiml, color: 'bg-emerald-500', textColor: 'text-emerald-400', usage: `${aiml} Deep Learning, OpenCV & Cloud competencies loaded from database` },
+        { name: 'Databases & Tools', share: normDb, color: 'bg-indigo-500', textColor: 'text-indigo-400', usage: `${dbAndTools} Database schemas, DevOps pipelines & CS fundamentals loaded from database` }
       ];
     }
     return [
@@ -75,7 +105,7 @@ export default function ActivityShowcase({ profile, projects = [], skills = [] }
   // Dynamically map active repositories from database projects
   const featuredRepos = useMemo(() => {
     if (projects && projects.length > 0) {
-      return projects.map((p, idx) => {
+      return projects.map((p) => {
         const titleLower = p.title.toLowerCase();
         let lang = 'TypeScript';
         let langColor = 'bg-blue-400';
@@ -99,8 +129,6 @@ export default function ActivityShowcase({ profile, projects = [], skills = [] }
           lang,
           langColor,
           tags: p.tech_stack || [],
-          stars: 12 + (idx * 2),
-          forks: 4 + idx,
           url: p.github_url || profile.github_url || 'https://github.com/technosaran'
         };
       });
@@ -108,14 +136,20 @@ export default function ActivityShowcase({ profile, projects = [], skills = [] }
 
     return [
       {
-        name: 'arthaX-wealth-terminal',
-        desc: 'Full-stack personal wealth dashboard with real-time portfolio NAV, PostgreSQL schema, and Supabase RLS isolation.',
+        name: 'arthaX',
+        desc: 'Full-stack personal wealth terminal with real-time portfolio NAV, PostgreSQL schema, and Supabase RLS isolation.',
         lang: 'TypeScript',
         langColor: 'bg-blue-400',
         tags: ['Next.js 16', 'PostgreSQL', 'Supabase RLS', 'Tailwind CSS'],
-        stars: 14,
-        forks: 4,
-        url: profile.github_url ? `${profile.github_url}/arthaX` : 'https://github.com/technosaran'
+        url: 'https://github.com/technosaran/arthaX'
+      },
+      {
+        name: 'saran-portfolio',
+        desc: 'Production developer portfolio architected with Next.js 16 App Router, Neon Serverless PostgreSQL, and Tailwind CSS 4.',
+        lang: 'TypeScript',
+        langColor: 'bg-blue-400',
+        tags: ['Next.js 16', 'Neon Postgres', 'Tailwind CSS 4', 'Vercel'],
+        url: 'https://github.com/technosaran/saran-portfolio'
       },
       {
         name: 'realtime-cv-inference',
@@ -123,58 +157,61 @@ export default function ActivityShowcase({ profile, projects = [], skills = [] }
         lang: 'Python',
         langColor: 'bg-emerald-400',
         tags: ['PyTorch', 'OpenCV', 'CUDA', 'NumPy'],
-        stars: 11,
-        forks: 3,
-        url: profile.github_url || 'https://github.com/technosaran'
+        url: 'https://github.com/technosaran'
       },
       {
-        name: 'dsa-mastery-java',
-        desc: 'Comprehensive repository of 90+ algorithmic solutions in Java 21 with rigorous asymptotic space-time analysis.',
-        lang: 'Java',
-        langColor: 'bg-amber-400',
-        tags: ['Java 21', 'Graph Algorithms', 'Dynamic Programming', 'JUnit'],
-        stars: 18,
-        forks: 6,
-        url: profile.github_url || 'https://github.com/technosaran'
+        name: 'ner-system-nlp',
+        desc: 'Natural Language Processing pipeline extracting structured entities from unstructured datasets with SpaCy.',
+        lang: 'Python',
+        langColor: 'bg-emerald-400',
+        tags: ['Python', 'NLP', 'SpaCy', 'Scikit-Learn'],
+        url: 'https://github.com/technosaran'
       }
     ];
   }, [projects, profile.github_url]);
 
   const commitLog = [
     {
-      hash: '9f4a1c2',
+      hash: 'b30176f',
       branch: 'main',
-      message: 'feat(portfolio): integrate atomic orbital nucleus visualizer with E=mc² center core',
+      message: 'feat(seo): configure Google Search Console verification meta tag and HTML route',
       time: 'Today',
-      scope: 'src/components/SkillsNucleus.tsx'
+      scope: 'technosaran/arthaX'
     },
     {
-      hash: '8b3e2d1',
+      hash: '9858cf8',
       branch: 'main',
-      message: 'perf(cv): pipeline GPU frame decoding for 60 FPS object tracking HUD',
+      message: 'feat(auth): add compliant privacy policy, terms of service, and site verification for Google branding',
+      time: 'Today',
+      scope: 'technosaran/arthaX'
+    },
+    {
+      hash: '7068d5f',
+      branch: 'main',
+      message: 'feat: prioritize user provided Logo.dev API for high-res bank and entity logos',
+      time: 'Today',
+      scope: 'technosaran/arthaX'
+    },
+    {
+      hash: '6bf27ca',
+      branch: 'main',
+      message: 'fix: replace approximated bank icons with authentic official vector logos for ICICI, SBI, HDFC, Axis',
+      time: 'Today',
+      scope: 'technosaran/arthaX'
+    },
+    {
+      hash: 'facf804',
+      branch: 'main',
+      message: 'feat: enhance UI/UX with atomic skills nucleus, high-res tech logos, dynamic DB hydration, and security fixes',
       time: 'Yesterday',
-      scope: 'cv/stream_inference.py'
+      scope: 'technosaran/saran-portfolio'
     },
     {
-      hash: '4c7a9e0',
+      hash: 'b1f3731',
       branch: 'main',
-      message: 'security(db): enforce sslmode=verify-full across neon postgres pool drivers',
+      message: 'feat: complete Saran R portfolio with Next.js, Neon Postgres, and hidden Admin Panel',
       time: '2 days ago',
-      scope: 'src/lib/neon/db.ts'
-    },
-    {
-      hash: '3a1b5f8',
-      branch: 'main',
-      message: 'feat(wealth): implement multi-currency conversion and portfolio asset metrics',
-      time: '3 days ago',
-      scope: 'terminal/valuation.ts'
-    },
-    {
-      hash: '7e2d9c4',
-      branch: 'main',
-      message: 'refactor(dsa): optimize binary tree lowest common ancestor to O(1) space',
-      time: '4 days ago',
-      scope: 'trees/LCAOptimization.java'
+      scope: 'technosaran/saran-portfolio'
     }
   ];
 
@@ -458,12 +495,12 @@ export default function ActivityShowcase({ profile, projects = [], skills = [] }
                   {/* Quick Telemetry Cards */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-2.5 text-center">
-                      <div className="text-base font-bold text-white font-mono">10+</div>
-                      <div className="text-[10px] text-zinc-400 font-mono mt-0.5">Repositories</div>
+                      <div className="text-base font-bold text-white font-mono">2+</div>
+                      <div className="text-[10px] text-zinc-400 font-mono mt-0.5">Production Repos</div>
                     </div>
                     <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-2.5 text-center">
-                      <div className="text-base font-bold text-emerald-400 font-mono">500+</div>
-                      <div className="text-[10px] text-zinc-400 font-mono mt-0.5">Git Commits</div>
+                      <div className="text-base font-bold text-emerald-400 font-mono">Daily</div>
+                      <div className="text-[10px] text-zinc-400 font-mono mt-0.5">Active Commits</div>
                     </div>
                     <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-2.5 text-center">
                       <div className="text-base font-bold text-blue-400 font-mono">AWS</div>
@@ -471,7 +508,7 @@ export default function ActivityShowcase({ profile, projects = [], skills = [] }
                     </div>
                     <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-2.5 text-center">
                       <div className="text-base font-bold text-amber-400 font-mono">100%</div>
-                      <div className="text-[10px] text-zinc-400 font-mono mt-0.5">Clean Branches</div>
+                      <div className="text-[10px] text-zinc-400 font-mono mt-0.5">Clean Builds</div>
                     </div>
                   </div>
 
@@ -521,10 +558,6 @@ export default function ActivityShowcase({ profile, projects = [], skills = [] }
                             <span className={`h-2 w-2 rounded-full ${repo.langColor}`} />
                             <span className="text-zinc-300">{repo.lang}</span>
                           </span>
-                          <span className="text-zinc-600">·</span>
-                          <span>★ {repo.stars}</span>
-                          <span className="text-zinc-600">·</span>
-                          <span>⑂ {repo.forks}</span>
                         </div>
                         <div className="flex gap-1">
                           {repo.tags.slice(0, 2).map(tag => (
@@ -619,9 +652,9 @@ export default function ActivityShowcase({ profile, projects = [], skills = [] }
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
-                      <span>leetcode.com/u/technosaran</span>
+                      <span>leetcode.com/u/Saran-R</span>
                       <button
-                        onClick={() => copyToClipboard('technosaran', 'leetcode')}
+                        onClick={() => copyToClipboard('Saran-R', 'leetcode')}
                         className="text-zinc-500 hover:text-amber-400 transition-colors p-0.5 rounded"
                         title="Copy handle"
                       >
@@ -740,7 +773,7 @@ export default function ActivityShowcase({ profile, projects = [], skills = [] }
 
                           {/* Center Readout */}
                           <div className="absolute flex flex-col items-center justify-center text-center">
-                            <span className="text-2xl font-black text-white font-mono tracking-tight">90+</span>
+                            <span className="text-2xl font-black text-white font-mono tracking-tight">90</span>
                             <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400">Solved</span>
                           </div>
                         </div>
@@ -748,7 +781,7 @@ export default function ActivityShowcase({ profile, projects = [], skills = [] }
                         <div className="mt-2 text-center">
                           <div className="inline-flex items-center gap-1 text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
                             <TrendingUp className="h-3 w-3" />
-                            <span>84.8% Acceptance</span>
+                            <span>32.8% Acceptance (274 Submissions)</span>
                           </div>
                         </div>
                       </div>
@@ -762,10 +795,10 @@ export default function ActivityShowcase({ profile, projects = [], skills = [] }
                               <span className="h-2 w-2 rounded-full bg-blue-500" />
                               Easy
                             </span>
-                            <span className="text-zinc-200">50+ Solved</span>
+                            <span className="text-zinc-200">81 Solved</span>
                           </div>
                           <div className="h-1.5 w-full rounded-full bg-white/[0.06] overflow-hidden">
-                            <div className="h-full bg-blue-500 rounded-full" style={{ width: '70%' }} />
+                            <div className="h-full bg-blue-500 rounded-full" style={{ width: '90%' }} />
                           </div>
                           <p className="mt-1 text-[10px] text-zinc-400 font-mono">
                             Arrays, Strings, HashMaps, Two Pointers
@@ -779,13 +812,13 @@ export default function ActivityShowcase({ profile, projects = [], skills = [] }
                               <span className="h-2 w-2 rounded-full bg-amber-500" />
                               Medium
                             </span>
-                            <span className="text-zinc-200">30+ Solved</span>
+                            <span className="text-zinc-200">9 Solved</span>
                           </div>
                           <div className="h-1.5 w-full rounded-full bg-white/[0.06] overflow-hidden">
-                            <div className="h-full bg-amber-500 rounded-full" style={{ width: '45%' }} />
+                            <div className="h-full bg-amber-500 rounded-full" style={{ width: '10%' }} />
                           </div>
                           <p className="mt-1 text-[10px] text-zinc-400 font-mono">
-                            Binary Trees, BFS/DFS, DP Memoization, Sliding Window
+                            Binary Trees, BFS/DFS, Recursion, Stack
                           </p>
                         </div>
 
@@ -796,13 +829,13 @@ export default function ActivityShowcase({ profile, projects = [], skills = [] }
                               <span className="h-2 w-2 rounded-full bg-rose-500" />
                               Hard
                             </span>
-                            <span className="text-zinc-200">10+ Solved</span>
+                            <span className="text-zinc-400">0 Solved (In Progress)</span>
                           </div>
                           <div className="h-1.5 w-full rounded-full bg-white/[0.06] overflow-hidden">
-                            <div className="h-full bg-rose-500 rounded-full" style={{ width: '25%' }} />
+                            <div className="h-full bg-rose-500 rounded-full" style={{ width: '0%' }} />
                           </div>
                           <p className="mt-1 text-[10px] text-zinc-400 font-mono">
-                            Interval Graphs, Multi-Dimensional DP, Topological Sort
+                            Interval Graphs, Advanced DP, Topological Sort
                           </p>
                         </div>
 
@@ -879,7 +912,7 @@ export default function ActivityShowcase({ profile, projects = [], skills = [] }
                       <div>
                         <div className="font-bold text-white font-mono">Bound &amp; Constraint Calculus</div>
                         <p className="text-[11px] text-zinc-400 mt-0.5">
-                          Immediately inspect input boundaries (e.g. \(N \le 10^5\) dictates \(O(N \log N)\) or \(O(N)\)) before writing code to prevent TLE.
+                          Immediately inspect input boundaries (e.g. N ≤ 10⁵ dictates O(N log N) or O(N)) before writing code to prevent TLE.
                         </p>
                       </div>
                     </div>
@@ -936,7 +969,7 @@ export default function ActivityShowcase({ profile, projects = [], skills = [] }
             {/* Bottom LeetCode CTA */}
             <div className="mt-6 border-t border-white/[0.06] pt-4">
               <a
-                href={profile.leetcode_url || 'https://leetcode.com/u/technosaran/'}
+                href={profile.leetcode_url || 'https://leetcode.com/u/Saran-R/'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 hover:border-amber-500/40 px-4 py-2.5 text-xs font-semibold text-amber-300 transition-all shadow-sm group"

@@ -1,0 +1,128 @@
+%PDF-1.4
+%âãÏÓ
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 2910 >>
+stream
+BT
+/F2 20 Tf
+50 740 Td
+(SARAN R) Tj
+/F1 11 Tf
+0 -18 Td
+(Artificial Intelligence and Machine Learning Engineer) Tj
+/F1 8.5 Tf
+0 -14 Td
+(Email: iamsaran.ai@gmail.com  |  Phone: +91 6384957740  |  Location: Chennai, Tamil Nadu) Tj
+0 -12 Td
+(GitHub: github.com/technosaran  |  LinkedIn: linkedin.com/in/saran-r-b2b1a5275  |  LeetCode: 90+ Solved (Java)) Tj
+ET
+0.2 w
+0.2 0.3 0.5 RG
+50 684 m 562 684 l S
+BT
+/F2 11 Tf
+50 666 Td
+(EDUCATION) Tj
+/F2 9.5 Tf
+0 -15 Td
+(Panimalar Engineering College - 2023 - 2027) Tj
+/F1 9 Tf
+0 -12 Td
+(B.Tech in Artificial Intelligence & Machine Learning) Tj
+/F2 11 Tf
+0 -20 Td
+(CORE TECHNICAL COMPETENCIES) Tj
+/F1 8.5 Tf
+0 -14 Td
+(Programming Languages: Java 21 (OOP, Collections, DSA), Python 3, TypeScript, JavaScript, SQL) Tj
+0 -12 Td
+(Full-Stack & Cloud: Next.js 16 (App Router), React 19, Node.js, Tailwind CSS 4, AWS Cloud, Docker) Tj
+0 -12 Td
+(AI & Machine Learning: PyTorch, OpenCV (60 FPS Stream), Scikit-Learn, SpaCy (NER Pipeline), Bi-LSTM) Tj
+0 -12 Td
+(Databases & Storage: Neon Serverless PostgreSQL, Supabase RLS, Database Pooling, Drizzle ORM) Tj
+0 -12 Td
+(Algorithmic Problem Solving: 90 LeetCode Problems Solved (81 Easy, 9 Medium) in Java 21) Tj
+/F2 11 Tf
+0 -20 Td
+(FEATURED PRODUCTION & RESEARCH SYSTEMS) Tj
+/F2 9.5 Tf
+0 -15 Td
+(arthaX - Personal Wealth & Financial Terminal [Next.js 16, TypeScript, PostgreSQL, Supabase RLS]) Tj
+/F1 8.5 Tf
+0 -12 Td
+(Full-stack financial terminal for tracking multi-asset personal wealth with sub-30ms PostgreSQL queries and Su) Tj
+/F2 9.5 Tf
+0 -15 Td
+(Real-Time Object Detection System [Python, PyTorch, OpenCV, CUDA]) Tj
+/F1 8.5 Tf
+0 -12 Td
+(Zero-latency live video stream computer vision application running deep learning visual inference at 60 FPS.) Tj
+/F2 9.5 Tf
+0 -15 Td
+(Named Entity Recognition \(NER\) NLP Pipeline [Python, NLP, SpaCy, Bi-LSTM]) Tj
+/F1 8.5 Tf
+0 -12 Td
+(Natural Language Processing pipeline extracting structured entities \(Names, Organizations, Dates\) with 94.8% p) Tj
+/F2 11 Tf
+0 -20 Td
+(PROFESSIONAL EXPERIENCE) Tj
+/F2 9 Tf
+0 -14 Td
+(AI & ML Intern - Edunet Foundation \(in partnership with AICTE & IBM SkillsBuild\)  [June 2025 - July 2025]) Tj
+/F1 8.5 Tf
+0 -12 Td
+(Engineered machine learning models using Python and Scikit-Learn; architected an end-to-end AIML capstone project.) Tj
+/F2 9 Tf
+0 -14 Td
+(Cloud Computing Intern - CodTech IT Solutions  [May 2025 - June 2025]) Tj
+/F1 8.5 Tf
+0 -12 Td
+(Deployed scalable cloud infrastructure utilizing AWS services and Docker containerization.) Tj
+/F2 11 Tf
+0 -20 Td
+(KEY INDUSTRY CERTIFICATIONS) Tj
+/F1 8.5 Tf
+0 -13 Td
+(- Programming using Java (Infosys Springboard)) Tj
+/F1 8.5 Tf
+0 -13 Td
+(- Oracle Cloud Infrastructure Certified Data Science Professional (Oracle University)) Tj
+/F1 8.5 Tf
+0 -13 Td
+(- Artificial Intelligence Fundamentals (IBM SkillsBuild)) Tj
+/F1 8.5 Tf
+0 -13 Td
+(- Introduction to IT & AWS Cloud (Amazon Web Services / Coursera)) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000019 00000 n 
+0000000068 00000 n 
+0000000125 00000 n 
+0000000261 00000 n 
+0000003223 00000 n 
+0000003293 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+3368
+%%EOF

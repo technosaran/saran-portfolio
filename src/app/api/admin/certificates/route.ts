@@ -1,32 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyToken, createCertificate } from '@/lib/neon/db';
+import { requireAdminAuth } from '@/lib/security/guards';
+import { certificatesService } from '@/services/certificates.service';
+import { certificateCreateSchema } from '@/lib/validation/schemas';
 
 export const dynamic = 'force-dynamic';
 
-const AUTHORIZED_ADMIN = 'iamsaran.ai@gmail.com';
-
 export async function POST(req: NextRequest) {
-  const token = req.cookies.get('portfolio_admin_token')?.value;
-  if (!token) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
-
-  const email = verifyToken(token);
-  if (!email || email !== AUTHORIZED_ADMIN) {
-    return NextResponse.json({ success: false, error: 'Access Denied: Only iamsaran.ai@gmail.com has rights to change data.' }, { status: 403 });
+  const auth = await requireAdminAuth(req);
+  if (!auth.authorized) {
+    return auth.response;
   }
 
   try {
-    const body = await req.json();
-    if (!body.title || !String(body.title).trim()) {
-      return NextResponse.json({ success: false, error: 'Certificate title is required' }, { status: 400 });
-    }
-    if (!body.provider || !String(body.provider).trim()) {
-      return NextResponse.json({ success: false, error: 'Certificate provider is required' }, { status: 400 });
+    const json = await req.json().catch(() => null);
+    const validation = certificateCreateSchema.safeParse(json);
+    if (!validation.success) {
+      return NextResponse.json(
+        { success: false, error: validation.error.issues[0]?.message || 'Invalid certificate payload' },
+        { status: 400 }
+      );
     }
 
-    const created = await createCertificate(body);
+    const created = await certificatesService.createCertificate(validation.data);
     return NextResponse.json({ success: true, certificate: created });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
+    const message = err instanceof Error ? err.message : 'Database error creating certificate';
     const status = message.includes('already exists') ? 409 : 500;
     return NextResponse.json({ success: false, error: message }, { status });
   }

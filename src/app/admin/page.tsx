@@ -589,7 +589,7 @@ export default function AdminDashboardPage() {
                   value={profile.leetcode_url || ''}
                   onChange={(e) => setProfile({ ...profile, leetcode_url: e.target.value })}
                   className="mt-1 block w-full rounded-xl bg-neutral-950 border border-neutral-800 px-3.5 py-2 text-xs text-white focus:outline-none focus:border-emerald-500"
-                  placeholder="https://leetcode.com/u/technosaran"
+                  placeholder="https://leetcode.com/u/Saran-R"
                 />
               </div>
             </div>
@@ -903,8 +903,9 @@ export default function AdminDashboardPage() {
             </form>
 
             <div className="space-y-6">
-              {['Programming Languages', 'Web & Backend Frameworks', 'AI/ML & Cloud', 'Databases & Developer Tools', 'Core CS Fundamentals'].map((cat) => {
+              {Array.from(new Set([...['Programming Languages', 'Web & Backend Frameworks', 'AI/ML & Cloud', 'Databases & Developer Tools', 'Core CS Fundamentals'], ...skills.map(s => s.category).filter(Boolean)])).map((cat) => {
                 const catSkills = skills.filter((s) => s.category === cat);
+                if (catSkills.length === 0) return null;
                 return (
                   <div key={cat} className="bg-neutral-900/40 border border-neutral-800 rounded-2xl p-5">
                     <h3 className="font-bold text-white text-sm border-b border-neutral-800 pb-2 mb-3 flex items-center justify-between">

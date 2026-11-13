@@ -477,7 +477,44 @@ export function DevOpsLogo({ className = 'w-6 h-6' }: LogoProps) {
   );
 }
 
-// 28. Default / Fallback Tech Vector
+// 28. Operating Systems / Linux
+export function OSLogo({ className = 'w-6 h-6' }: LogoProps) {
+  return (
+    <svg className={className} viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="128" height="128" rx="20" fill="#0f172a" />
+      <path d="M24 38h80v60H24z" rx="6" stroke="#38bdf8" strokeWidth="6" fill="#1e293b" />
+      <path d="M40 56l14 12-14 12M62 80h24" stroke="#38bdf8" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+// 29. Computer Networks
+export function NetworksLogo({ className = 'w-6 h-6' }: LogoProps) {
+  return (
+    <svg className={className} viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="64" cy="30" r="14" fill="#6366f1" />
+      <circle cx="28" cy="98" r="14" fill="#3b82f6" />
+      <circle cx="100" cy="98" r="14" fill="#3b82f6" />
+      <path d="M64 44v34M28 84l36-6M100 84l-36-6" stroke="#818cf8" strokeWidth="6" strokeLinecap="round" />
+      <circle cx="64" cy="78" r="6" fill="#a5b4fc" />
+    </svg>
+  );
+}
+
+// 30. Object-Oriented Programming (OOP)
+export function OOPLogo({ className = 'w-6 h-6' }: LogoProps) {
+  return (
+    <svg className={className} viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="20" width="40" height="40" rx="8" fill="#f59e0b" />
+      <rect x="68" y="68" width="40" height="40" rx="8" fill="#3b82f6" />
+      <path d="M60 40h28v28" stroke="#94a3b8" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="60" cy="40" r="4" fill="#fbbf24" />
+      <circle cx="88" cy="68" r="4" fill="#60a5fa" />
+    </svg>
+  );
+}
+
+// 31. Default / Fallback Tech Vector
 export function GenericTechLogo({ name, className = 'w-6 h-6' }: { name: string; className?: string }) {
   const initial = name.slice(0, 2).toUpperCase();
   return (
@@ -529,6 +566,9 @@ export function getSkillLogo(name: string): React.ComponentType<{ className?: st
   if (n.includes('api') || n.includes('rest')) return APILogo;
   if (n.includes('microservice')) return MicroservicesLogo;
   if (n.includes('devops') || n.includes('ci/cd') || n.includes('sdlc') || n.includes('software')) return DevOpsLogo;
+  if (n.includes('operating system') || n === 'os' || n.includes('linux')) return OSLogo;
+  if (n.includes('network')) return NetworksLogo;
+  if (n.includes('oop') || n.includes('object-oriented')) return OOPLogo;
 
   return function Fallback({ className }: { className?: string }) {
     return <GenericTechLogo name={name} className={className} />;
