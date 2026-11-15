@@ -1,21 +1,27 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { 
   Copy, 
   Check, 
   MapPin, 
   Mail,
-  ArrowUpRight,
-  GraduationCap,
-  Download,
-  Terminal,
-  Cpu,
-  Layers,
-  Zap
+  ArrowUpRight, 
+  GraduationCap, 
+  Download, 
+  Terminal, 
+  Cpu, 
+  Layers, 
+  Database,
+  Code2,
+  Sparkles,
+  RotateCcw
 } from 'lucide-react';
 import { GithubIcon, LinkedinIcon, LeetCodeIcon } from './SocialIcons';
 import { Profile, Skill } from '@/lib/neon/db';
+import { useToast } from './Toast';
+import { useCommandMenu } from './PortfolioClientShell';
+import BrandLogo from './BrandLogo';
 
 interface InteractiveHeroProps {
   profile: Profile;
@@ -23,6 +29,7 @@ interface InteractiveHeroProps {
   projectCount?: number;
   certCount?: number;
   internshipCount?: number;
+  onOpenCommandMenu?: () => void;
 }
 
 export default function InteractiveHero({ 
@@ -30,22 +37,35 @@ export default function InteractiveHero({
   skills = [], 
   projectCount = 3, 
   certCount = 6, 
-  internshipCount = 2 
+  internshipCount = 2,
+  onOpenCommandMenu
 }: InteractiveHeroProps) {
+  const { toast } = useToast();
+  const { openCommandMenu } = useCommandMenu();
+  const handleOpenCommand = onOpenCommandMenu || openCommandMenu;
   const [copied, setCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState<'profile' | 'metrics' | 'terminal'>('profile');
-  const [terminalCommand, setTerminalCommand] = useState<'status' | 'stack' | 'contact'>('status');
+  const [activeTab, setActiveTab] = useState<'profile' | 'stats' | 'terminal'>('profile');
+  const [terminalCommand, setTerminalCommand] = useState<'about' | 'projects' | 'skills' | 'contact'>('about');
+  const [cliInput, setCliInput] = useState('');
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+    e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+  };
 
   const handleCopyEmail = async () => {
     try {
       if (typeof navigator !== 'undefined' && navigator.clipboard) {
         await navigator.clipboard.writeText(profile.email);
         setCopied(true);
-        setTimeout(() => setCopied(false), 2200);
+        toast('Email copied to clipboard', 'success');
+        setTimeout(() => setCopied(false), 2000);
         return;
       }
     } catch {
-      // Fallback
+      // fallback
     }
 
     try {
@@ -60,96 +80,116 @@ export default function InteractiveHero({
         document.execCommand('copy');
         document.body.removeChild(textarea);
         setCopied(true);
-        setTimeout(() => setCopied(false), 2200);
+        toast('Email copied to clipboard', 'success');
+        setTimeout(() => setCopied(false), 2000);
       }
     } catch {
-      setCopied(false);
+      toast('Failed to copy email', 'error');
     }
   };
 
-  // Derive dynamic stacks from database skills
-  const dbLanguages = skills
-    .filter((s) => (s.category || '').toLowerCase().includes('language'))
-    .map((s) => s.name);
-  const languagesToDisplay = dbLanguages.length > 0 ? dbLanguages.slice(0, 5) : ['Java', 'Python', 'TypeScript', 'SQL'];
+  const copyProfileCode = () => {
+    const code = `export const saran = {
+  name: "${profile.full_name}",
+  role: "AI & ML Student / Software Developer",
+  college: "${profile.college}",
+  graduation: "${profile.graduation_year}",
+  location: "${profile.location}",
+  languages: ["Java", "Python", "TypeScript", "SQL"],
+  status: "Open for Opportunities"
+};`;
+    try {
+      navigator.clipboard.writeText(code);
+      toast('Profile code copied to clipboard', 'success');
+    } catch {
+      toast('Failed to copy code', 'error');
+    }
+  };
 
-  const dbFrameworks = skills
-    .filter((s) => (s.category || '').toLowerCase().includes('framework') || (s.category || '').toLowerCase().includes('ai'))
-    .map((s) => s.name);
-  const frameworksToDisplay = dbFrameworks.length > 0 ? dbFrameworks.slice(0, 4) : ['Next.js', 'PyTorch', 'OpenCV', 'React'];
+  // Extract languages and frameworks
+  const languages = ['Java', 'Python', 'TypeScript', 'SQL'];
+  const frameworks = ['Next.js', 'React', 'PyTorch', 'OpenCV'];
+  const tools = ['PostgreSQL', 'AWS', 'Docker', 'Tailwind CSS'];
 
-  const dbDatabases = skills
-    .filter((s) => (s.category || '').toLowerCase().includes('database') || (s.category || '').toLowerCase().includes('tool'))
-    .map((s) => s.name);
-  const databasesToDisplay = dbDatabases.length > 0 ? dbDatabases.slice(0, 3) : ['PostgreSQL', 'Supabase', 'MongoDB'];
+  const handleCliSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const cmd = cliInput.trim().toLowerCase().replace(/^--/, '');
+    if (cmd === 'about' || cmd === 'projects' || cmd === 'skills' || cmd === 'contact') {
+      setTerminalCommand(cmd);
+      setCliInput('');
+    } else if (cmd === 'clear') {
+      setTerminalCommand('about');
+      setCliInput('');
+    } else {
+      toast(`Unknown command. Available: about, projects, skills, contact`, 'info');
+    }
+  };
 
   return (
-    <section id="home" className="relative overflow-hidden pt-10 pb-16 md:pt-16 md:pb-24 border-b border-white/[0.08] bg-grid-faded">
-      {/* Refined ambient lighting: Deep sapphire and indigo gradients */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-gradient-to-tr from-blue-600/15 via-indigo-600/10 to-sky-500/5 blur-[150px] pointer-events-none rounded-full" />
-      <div className="absolute top-40 right-[-100px] w-[350px] h-[350px] bg-blue-500/10 blur-[130px] pointer-events-none rounded-full" />
+    <section id="home" className="relative overflow-hidden pt-8 pb-16 md:pt-14 md:pb-20 border-b border-white/[0.08] bg-grid-faded">
+      {/* Subtle ambient lighting */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-blue-600/10 blur-[130px] pointer-events-none rounded-full" />
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-center">
           
-          {/* Left Column: Identity, Bio & CTAs (7 cols) */}
-          <div className="lg:col-span-7 space-y-6">
+          {/* Left Column: Bio & Core Info (7 cols) */}
+          <div className="lg:col-span-7 space-y-5">
             
-            {/* Status Beacon Pill */}
-            <div className="inline-flex items-center gap-2.5 rounded-full border border-blue-500/25 bg-blue-500/10 px-3.5 py-1 text-xs font-mono font-medium text-blue-300 backdrop-blur-xl shadow-[0_0_20px_rgba(59,130,246,0.15)]">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+            {/* Status Badge */}
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-mono text-emerald-400">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+                </span>
+                <span>Open for Internships &amp; Entry-Level Roles</span>
+              </div>
+
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.02] px-3 py-1 text-xs text-zinc-400">
+                <MapPin className="h-3 w-3 text-zinc-400" />
+                <span>{profile.location}</span>
               </span>
-              <span>Open to AI/ML &amp; Software Engineering Roles</span>
             </div>
 
             {/* Main Headline */}
-            <div className="space-y-2.5">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.1]">
-                Hi, I&apos;m{' '}
-                <span className="text-gradient-titanium">
-                  {profile.full_name}
-                </span>
+            <div className="space-y-1.5">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+                {profile.full_name}
               </h1>
-              <p className="text-lg sm:text-xl font-medium text-blue-300/90 tracking-tight">
-                {profile.title}
+              <p className="text-base sm:text-lg font-medium text-blue-400">
+                AI &amp; Machine Learning Engineering Student
               </p>
             </div>
 
-            {/* Bio summary */}
-            <p className="text-sm sm:text-base text-zinc-300/90 leading-relaxed max-w-2xl font-normal">
-              {profile.bio}
+            {/* Clean, Grounded Bio */}
+            <p className="text-sm sm:text-base text-zinc-300 leading-relaxed max-w-2xl font-normal">
+              Undergraduate student at {profile.college} pursuing B.Tech in Artificial Intelligence &amp; Data Science. Experienced in building full-stack web applications with Next.js and PostgreSQL, implementing computer vision models with Python and PyTorch, and practicing algorithmic problem solving in Java.
             </p>
 
-            {/* Quick Metadata Chips */}
-            <div className="flex flex-wrap items-center gap-2 text-xs text-zinc-300">
-              <span className="inline-flex items-center gap-1.5 rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 backdrop-blur-md">
-                <MapPin className="h-3.5 w-3.5 text-blue-400" />
-                <span>{profile.location}</span>
-              </span>
-
-              <span className="inline-flex items-center gap-1.5 rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 backdrop-blur-md">
-                <GraduationCap className="h-3.5 w-3.5 text-indigo-400" />
-                <span>{profile.college} ({profile.graduation_year})</span>
-              </span>
+            {/* Education Tag */}
+            <div className="flex items-center gap-2 text-xs text-zinc-300">
+              <div className="inline-flex items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.02] px-3 py-2">
+                <GraduationCap className="h-4 w-4 text-blue-400" />
+                <span>{profile.college} &middot; B.Tech AI &amp; ML ({profile.graduation_year})</span>
+              </div>
             </div>
 
-            {/* Primary Action Buttons */}
-            <div className="flex flex-wrap items-center gap-3 pt-1">
+            {/* Action Buttons */}
+            <div className="flex flex-wrap items-center gap-3 pt-2">
               <a
                 href="#projects"
-                className="inline-flex items-center gap-2 rounded-xl bg-white hover:bg-zinc-200 px-5 py-2.5 text-xs font-bold text-zinc-950 shadow-lg shadow-white/10 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-white hover:bg-zinc-200 px-4 py-2.5 text-xs font-semibold text-zinc-950 transition-colors"
               >
-                <span>Explore Systems</span>
-                <ArrowUpRight className="h-3.5 w-3.5 text-zinc-950" />
+                <span>View Projects</span>
+                <ArrowUpRight className="h-3.5 w-3.5" />
               </a>
 
               <a
                 href="#contact"
-                className="inline-flex items-center gap-2 rounded-xl border border-white/[0.12] bg-white/[0.04] hover:bg-white/[0.08] hover:border-blue-500/40 px-5 py-2.5 text-xs font-semibold text-zinc-100 transition-all cursor-pointer backdrop-blur-xl hover:scale-[1.02] active:scale-[0.98]"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-white/[0.12] bg-white/[0.04] hover:bg-white/[0.08] px-4 py-2.5 text-xs font-semibold text-white transition-colors"
               >
-                <Mail className="h-3.5 w-3.5 text-blue-400" />
+                <Mail className="h-3.5 w-3.5 text-zinc-400" />
                 <span>Contact Me</span>
               </a>
 
@@ -157,21 +197,34 @@ export default function InteractiveHero({
                 href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl border border-blue-500/30 bg-blue-500/10 hover:bg-blue-500/20 px-4 py-2.5 text-xs font-semibold text-blue-300 transition-all cursor-pointer shadow-sm hover:scale-[1.02] active:scale-[0.98]"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-blue-500/30 bg-blue-500/10 hover:bg-blue-500/20 px-4 py-2.5 text-xs font-semibold text-blue-300 transition-colors"
               >
                 <Download className="h-3.5 w-3.5 text-blue-400" />
                 <span>Resume (PDF)</span>
               </a>
+
+              {onOpenCommandMenu && (
+                <button
+                  type="button"
+                  onClick={handleOpenCommand}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.06] px-3 py-2.5 text-xs font-mono text-zinc-400 hover:text-white transition-colors"
+                  title="Search (⌘K)"
+                >
+                  <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+                  <span className="hidden sm:inline">Search</span>
+                  <span className="text-[10px] text-zinc-500 font-mono">⌘K</span>
+                </button>
+              )}
             </div>
 
-            {/* Social Icons row & Quick Copy Email */}
-            <div className="flex flex-wrap items-center gap-2.5 pt-1">
+            {/* Social Links & Copy Email */}
+            <div className="flex flex-wrap items-center gap-2 pt-1">
               <a
                 href={profile.github_url || 'https://github.com/technosaran'}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-300 hover:text-white hover:border-blue-500/40 hover:bg-white/[0.08] transition-all cursor-pointer"
-                title="GitHub Profile"
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.02] text-zinc-400 hover:text-white hover:border-white/20 transition-colors"
+                title="GitHub"
               >
                 <GithubIcon className="h-4 w-4" />
               </a>
@@ -180,8 +233,8 @@ export default function InteractiveHero({
                 href={profile.linkedin_url || 'https://linkedin.com/in/saran-r-b2b1a5275'}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-300 hover:text-blue-400 hover:border-blue-500/40 hover:bg-white/[0.08] transition-all cursor-pointer"
-                title="LinkedIn Profile"
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.02] text-zinc-400 hover:text-blue-400 hover:border-blue-500/30 transition-colors"
+                title="LinkedIn"
               >
                 <LinkedinIcon className="h-4 w-4" />
               </a>
@@ -190,83 +243,82 @@ export default function InteractiveHero({
                 href={profile.leetcode_url || 'https://leetcode.com/u/Saran-R/'}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-xl border border-amber-500/20 bg-amber-500/5 text-amber-400 hover:border-amber-500/40 hover:bg-amber-500/15 transition-all cursor-pointer"
-                title="LeetCode (90+ Java DSA Solved)"
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-amber-500/20 bg-amber-500/5 text-amber-400 hover:border-amber-500/40 transition-colors"
+                title="LeetCode (90+ Solved)"
               >
                 <LeetCodeIcon className="h-4 w-4" />
               </a>
 
-              {/* Inline copy email pill */}
               <button
                 type="button"
                 onClick={handleCopyEmail}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-[11px] font-mono text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.06] hover:border-white/20 transition-all cursor-pointer"
-                title="Click to copy email address"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-white/[0.08] bg-white/[0.02] px-3 py-2 text-xs font-mono text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors"
+                title="Click to copy email"
               >
                 {copied ? (
                   <>
-                    <Check className="h-3 w-3 text-emerald-400" />
-                    <span className="text-emerald-400 font-semibold">Email Copied!</span>
+                    <Check className="h-3.5 w-3.5 text-emerald-400" />
+                    <span className="text-emerald-400 font-sans">Copied</span>
                   </>
                 ) : (
                   <>
-                    <Copy className="h-3 w-3 text-zinc-400" />
+                    <Copy className="h-3.5 w-3.5 text-zinc-400" />
                     <span>{profile.email}</span>
                   </>
                 )}
               </button>
             </div>
+
           </div>
 
-          {/* Right Column: Sleek Architectural Snapshot Card (5 cols) */}
+          {/* Right Column: Clean Interactive Card (5 cols) */}
           <div className="lg:col-span-5">
-            <div className="relative rounded-2xl border border-white/[0.1] bg-[#0b0d14]/90 p-1 shadow-2xl backdrop-blur-2xl card-shine">
-              
-              {/* Outer Glow */}
-              <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-transparent blur-xl opacity-60 -z-10" />
-
+            <div 
+              ref={cardRef}
+              onMouseMove={handleCardMouseMove}
+              className="rounded-2xl border border-white/[0.08] bg-[#0c0d15]/90 p-1 shadow-xl backdrop-blur-xl card-shine card-spotlight"
+            >
               {/* Window Header */}
               <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.06] bg-[#08090e]/80 rounded-t-xl">
                 <div className="flex items-center gap-2">
-                  <div className="h-2.5 w-2.5 rounded-full bg-rose-500/80" />
-                  <div className="h-2.5 w-2.5 rounded-full bg-amber-500/80" />
-                  <div className="h-2.5 w-2.5 rounded-full bg-emerald-500/80" />
+                  <div className="h-2.5 w-2.5 rounded-full bg-rose-500/70" />
+                  <div className="h-2.5 w-2.5 rounded-full bg-amber-500/70" />
+                  <div className="h-2.5 w-2.5 rounded-full bg-emerald-500/70" />
                   <span className="ml-2 text-xs font-mono text-zinc-400">
-                    {activeTab === 'profile' ? 'saran.config.ts' : activeTab === 'metrics' ? 'telemetry.json' : 'cli.sh'}
+                    {activeTab === 'profile' ? 'profile.ts' : activeTab === 'stats' ? 'highlights.json' : 'terminal'}
                   </span>
                 </div>
 
-                {/* Tab selector */}
                 <div className="flex items-center gap-1 bg-white/[0.04] p-0.5 rounded-lg border border-white/[0.06] text-[11px] font-mono">
                   <button
                     type="button"
                     onClick={() => setActiveTab('profile')}
-                    className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
+                    className={`px-2 py-0.5 rounded transition-colors ${
                       activeTab === 'profile'
-                        ? 'bg-blue-500/20 text-blue-300 font-semibold border border-blue-500/30'
-                        : 'text-zinc-400 hover:text-zinc-200'
+                        ? 'bg-blue-500/20 text-blue-300 font-semibold'
+                        : 'text-zinc-400 hover:text-white'
                     }`}
                   >
                     Profile
                   </button>
                   <button
                     type="button"
-                    onClick={() => setActiveTab('metrics')}
-                    className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
-                      activeTab === 'metrics'
-                        ? 'bg-blue-500/20 text-blue-300 font-semibold border border-blue-500/30'
-                        : 'text-zinc-400 hover:text-zinc-200'
+                    onClick={() => setActiveTab('stats')}
+                    className={`px-2 py-0.5 rounded transition-colors ${
+                      activeTab === 'stats'
+                        ? 'bg-blue-500/20 text-blue-300 font-semibold'
+                        : 'text-zinc-400 hover:text-white'
                     }`}
                   >
-                    Telemetry
+                    Highlights
                   </button>
                   <button
                     type="button"
                     onClick={() => setActiveTab('terminal')}
-                    className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
+                    className={`px-2 py-0.5 rounded transition-colors ${
                       activeTab === 'terminal'
-                        ? 'bg-blue-500/20 text-blue-300 font-semibold border border-blue-500/30'
-                        : 'text-zinc-400 hover:text-zinc-200'
+                        ? 'bg-blue-500/20 text-blue-300 font-semibold'
+                        : 'text-zinc-400 hover:text-white'
                     }`}
                   >
                     CLI
@@ -275,180 +327,199 @@ export default function InteractiveHero({
               </div>
 
               {/* Card Body */}
-              <div className="p-5 font-mono text-xs leading-relaxed min-h-[300px] flex flex-col justify-between">
+              <div className="p-5 font-mono text-xs leading-relaxed min-h-[290px] flex flex-col justify-between">
+                
+                {/* TAB 1: PROFILE CODE */}
                 {activeTab === 'profile' && (
-                  <div className="space-y-1.5 text-zinc-300">
-                    <p className="text-zinc-500 text-[11px]">{'// Verified Core Configuration (Neon PostgreSQL Synced)'}</p>
+                  <div className="space-y-1 text-zinc-300">
+                    <p className="text-zinc-500 text-[11px]">{'// saran.ts'}</p>
                     <p>
-                      <span className="text-indigo-400">export const </span>
-                      <span className="text-blue-400 font-bold">engineer</span>
-                      <span className="text-zinc-400"> = </span>
-                      <span className="text-zinc-100">{'{'}</span>
+                      <span className="text-blue-400">export const </span>
+                      <span className="text-white font-bold">developer</span> = {'{'}
                     </p>
                     <p className="pl-4">
                       <span className="text-sky-400">name</span>: <span className="text-zinc-100">&quot;{profile.full_name}&quot;</span>,
                     </p>
                     <p className="pl-4">
-                      <span className="text-sky-400">discipline</span>: <span className="text-emerald-300">&quot;Artificial Intelligence &amp; Systems&quot;</span>,
+                      <span className="text-sky-400">college</span>: <span className="text-zinc-100">&quot;Panimalar Engineering College&quot;</span>,
                     </p>
                     <p className="pl-4">
-                      <span className="text-sky-400">languages</span>: <span className="text-amber-300">[{languagesToDisplay.map(l => `"${l}"`).join(', ')}]</span>,
+                      <span className="text-sky-400">graduation</span>: <span className="text-zinc-100">&quot;2027&quot;</span>,
                     </p>
                     <p className="pl-4">
-                      <span className="text-sky-400">frameworks</span>: <span className="text-indigo-300">[{frameworksToDisplay.map(f => `"${f}"`).join(', ')}]</span>,
+                      <span className="text-sky-400">languages</span>: <span className="text-amber-300">[{languages.map(l => `"${l}"`).join(', ')}]</span>,
                     </p>
                     <p className="pl-4">
-                      <span className="text-sky-400">databases</span>: <span className="text-teal-300">[{databasesToDisplay.map(d => `"${d}"`).join(', ')}]</span>,
+                      <span className="text-sky-400">frameworks</span>: <span className="text-indigo-300">[{frameworks.map(f => `"${f}"`).join(', ')}]</span>,
                     </p>
                     <p className="pl-4">
-                      <span className="text-sky-400">status</span>: <span className="text-emerald-400 font-semibold">&quot;Open to Opportunities&quot;</span>
+                      <span className="text-sky-400">status</span>: <span className="text-emerald-400">&quot;Open to Opportunities&quot;</span>
                     </p>
-                    <p className="text-zinc-100">{'}'};</p>
+                    <p>{'}'};</p>
                   </div>
                 )}
 
-                {activeTab === 'metrics' && (
+                {/* TAB 2: HIGHLIGHTS */}
+                {activeTab === 'stats' && (
                   <div className="space-y-3 font-sans">
-                    <p className="text-xs font-mono text-zinc-500">{'// Verified Engineering Metrics'}</p>
-                    
                     <div className="grid grid-cols-2 gap-2.5">
-                      <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-3 text-center hover:border-amber-500/30 transition-colors">
-                        <div className="text-xl font-bold font-mono text-amber-400">90+</div>
-                        <div className="text-[11px] text-zinc-300 mt-0.5 font-medium">LeetCode Solved</div>
-                        <div className="text-[10px] text-zinc-500 font-mono">81 Easy · 9 Med (Java)</div>
+                      <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 text-center">
+                        <div className="text-2xl font-bold font-mono text-amber-400">90+</div>
+                        <div className="text-xs text-zinc-200 mt-0.5 font-medium">LeetCode Solved</div>
+                        <div className="text-[10px] text-zinc-400 font-mono">81 Easy &middot; 9 Medium</div>
                       </div>
 
-                      <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-3 text-center hover:border-blue-500/30 transition-colors">
-                        <div className="text-xl font-bold font-mono text-blue-400">{projectCount}+</div>
-                        <div className="text-[11px] text-zinc-300 mt-0.5 font-medium">Core Systems</div>
-                        <div className="text-[10px] text-zinc-500 font-mono">FinTech, CV &amp; NLP</div>
+                      <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 text-center">
+                        <div className="text-2xl font-bold font-mono text-blue-400">{projectCount}</div>
+                        <div className="text-xs text-zinc-200 mt-0.5 font-medium">Featured Projects</div>
+                        <div className="text-[10px] text-zinc-400 font-mono">Full-Stack, CV &amp; NLP</div>
                       </div>
 
-                      <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-3 text-center hover:border-indigo-500/30 transition-colors">
-                        <div className="text-xl font-bold font-mono text-indigo-400">{certCount}</div>
-                        <div className="text-[11px] text-zinc-300 mt-0.5 font-medium">Certifications</div>
-                        <div className="text-[10px] text-zinc-500 font-mono">AWS, Oracle, IBM, Infosys</div>
+                      <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 text-center">
+                        <div className="text-2xl font-bold font-mono text-emerald-400">{internshipCount}</div>
+                        <div className="text-xs text-zinc-200 mt-0.5 font-medium">Internships</div>
+                        <div className="text-[10px] text-zinc-400 font-mono">AI/ML &amp; Cloud (AWS)</div>
                       </div>
 
-                      <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-3 text-center hover:border-emerald-500/30 transition-colors">
-                        <div className="text-xl font-bold font-mono text-emerald-400">{internshipCount}</div>
-                        <div className="text-[11px] text-zinc-300 mt-0.5 font-medium">Applied Internships</div>
-                        <div className="text-[10px] text-zinc-500 font-mono">IBM SkillsBuild &amp; Cloud</div>
+                      <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 text-center">
+                        <div className="text-2xl font-bold font-mono text-indigo-400">{certCount}</div>
+                        <div className="text-xs text-zinc-200 mt-0.5 font-medium">Certifications</div>
+                        <div className="text-[10px] text-zinc-400 font-mono">Oracle, IBM, AWS, Infosys</div>
                       </div>
                     </div>
                   </div>
                 )}
 
+                {/* TAB 3: CLI */}
                 {activeTab === 'terminal' && (
                   <div className="space-y-3 font-mono text-xs">
-                    <div className="flex items-center gap-1.5 border-b border-white/[0.06] pb-2">
+                    <div className="flex flex-wrap items-center gap-1.5 border-b border-white/[0.06] pb-2">
                       <span className="text-zinc-500">$</span>
-                      <span className="text-zinc-400">saran --help</span>
-                      <div className="ml-auto flex items-center gap-1">
+                      {(['about', 'projects', 'skills', 'contact'] as const).map((cmd) => (
                         <button
+                          key={cmd}
                           type="button"
-                          onClick={() => setTerminalCommand('status')}
-                          className={`px-2 py-0.5 rounded text-[10px] cursor-pointer transition-colors ${
-                            terminalCommand === 'status' ? 'bg-blue-500/20 text-blue-300' : 'text-zinc-500 hover:text-zinc-300'
+                          onClick={() => setTerminalCommand(cmd)}
+                          className={`px-2 py-0.5 rounded text-[11px] cursor-pointer transition-colors ${
+                            terminalCommand === cmd ? 'bg-blue-500/20 text-blue-300 font-semibold' : 'text-zinc-500 hover:text-zinc-300'
                           }`}
                         >
-                          --status
+                          --{cmd}
                         </button>
-                        <button
-                          type="button"
-                          onClick={() => setTerminalCommand('stack')}
-                          className={`px-2 py-0.5 rounded text-[10px] cursor-pointer transition-colors ${
-                            terminalCommand === 'stack' ? 'bg-blue-500/20 text-blue-300' : 'text-zinc-500 hover:text-zinc-300'
-                          }`}
-                        >
-                          --stack
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setTerminalCommand('contact')}
-                          className={`px-2 py-0.5 rounded text-[10px] cursor-pointer transition-colors ${
-                            terminalCommand === 'contact' ? 'bg-blue-500/20 text-blue-300' : 'text-zinc-500 hover:text-zinc-300'
-                          }`}
-                        >
-                          --contact
-                        </button>
-                      </div>
+                      ))}
                     </div>
 
-                    {terminalCommand === 'status' && (
-                      <div className="space-y-1.5 text-zinc-300">
-                        <p><span className="text-emerald-400">✓</span> Candidate: <span className="text-white font-bold">{profile.full_name}</span></p>
-                        <p><span className="text-emerald-400">✓</span> Standing: <span className="text-blue-300">Undergrad Student (2023–2027)</span></p>
-                        <p><span className="text-emerald-400">✓</span> Availability: <span className="text-emerald-400 font-semibold">Immediate for 2026/2027 roles</span></p>
-                        <p><span className="text-emerald-400">✓</span> Focus: <span className="text-zinc-400">Production Systems, Cloud &amp; AI</span></p>
-                      </div>
-                    )}
+                    <div className="space-y-1 text-zinc-300 min-h-[120px]">
+                      {terminalCommand === 'about' && (
+                        <div className="space-y-1">
+                          <p>&bull; Name: <span className="text-white font-bold">{profile.full_name}</span></p>
+                          <p>&bull; Degree: <span className="text-zinc-300">{profile.degree}</span></p>
+                          <p>&bull; College: <span className="text-zinc-300">{profile.college} ({profile.graduation_year})</span></p>
+                          <p>&bull; Location: <span className="text-zinc-300">{profile.location}</span></p>
+                        </div>
+                      )}
 
-                    {terminalCommand === 'stack' && (
-                      <div className="space-y-1.5 text-zinc-300">
-                        <p><span className="text-sky-400">Languages:</span> Java 21, TypeScript, Python 3, SQL</p>
-                        <p><span className="text-sky-400">Frameworks:</span> Next.js 16, React 19, PyTorch, OpenCV</p>
-                        <p><span className="text-sky-400">Cloud / DB:</span> Neon Postgres, Supabase, AWS, Docker</p>
-                      </div>
-                    )}
+                      {terminalCommand === 'projects' && (
+                        <div className="space-y-1">
+                          <p>1. <span className="text-blue-400 font-bold">arthaX:</span> Personal wealth and finance terminal (Next.js, PostgreSQL)</p>
+                          <p>2. <span className="text-indigo-400 font-bold">Object Detection:</span> Real-time video stream detection (Python, OpenCV, PyTorch)</p>
+                          <p>3. <span className="text-sky-400 font-bold">NER Pipeline:</span> Named entity recognition from text (Python, SpaCy)</p>
+                        </div>
+                      )}
 
-                    {terminalCommand === 'contact' && (
-                      <div className="space-y-1.5 text-zinc-300">
-                        <p><span className="text-indigo-400">Email:</span> {profile.email}</p>
-                        <p><span className="text-indigo-400">Phone:</span> {profile.phone}</p>
-                        <p><span className="text-indigo-400">Location:</span> {profile.location}</p>
-                      </div>
-                    )}
+                      {terminalCommand === 'skills' && (
+                        <div className="space-y-1">
+                          <p>&bull; Languages: Java, Python, TypeScript, SQL</p>
+                          <p>&bull; Frameworks: Next.js, React, PyTorch, OpenCV</p>
+                          <p>&bull; Databases: PostgreSQL, Supabase, MongoDB</p>
+                          <p>&bull; Cloud/Tools: AWS, Docker, Git</p>
+                        </div>
+                      )}
+
+                      {terminalCommand === 'contact' && (
+                        <div className="space-y-1">
+                          <p>&bull; Email: {profile.email}</p>
+                          <p>&bull; Phone: {profile.phone}</p>
+                          <p>&bull; GitHub: github.com/technosaran</p>
+                          <p>&bull; LinkedIn: linkedin.com/in/saran-r-b2b1a5275</p>
+                        </div>
+                      )}
+                    </div>
+
+                    <form onSubmit={handleCliSubmit} className="flex items-center gap-2 pt-2 border-t border-white/[0.06]">
+                      <span className="text-emerald-400">&gt;</span>
+                      <input
+                        type="text"
+                        value={cliInput}
+                        onChange={(e) => setCliInput(e.target.value)}
+                        placeholder="Type about, projects, skills, contact..."
+                        className="w-full bg-transparent text-[11px] text-white placeholder-zinc-600 focus:outline-none font-mono"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setTerminalCommand('about');
+                          setCliInput('');
+                        }}
+                        className="text-zinc-500 hover:text-zinc-300 p-0.5 rounded"
+                      >
+                        <RotateCcw className="h-3 w-3" />
+                      </button>
+                    </form>
                   </div>
                 )}
 
-                {/* Bottom Status Bar */}
-                <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs text-zinc-400">
-                  <div className="flex items-center gap-1.5">
-                    <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-zinc-300 font-mono text-[11px]">Neon DB Active</span>
-                  </div>
-                  <span className="text-[10px] font-mono text-zinc-500">{profile.location} (IST)</span>
+                {/* Bottom card footer */}
+                <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between text-[11px] text-zinc-400 font-mono">
+                  <span>Panimalar Engineering College</span>
+                  <button
+                    type="button"
+                    onClick={copyProfileCode}
+                    className="hover:text-white transition-colors flex items-center gap-1"
+                  >
+                    <Copy className="h-3 w-3" />
+                    <span>Copy Config</span>
+                  </button>
                 </div>
-              </div>
 
+              </div>
             </div>
           </div>
 
         </div>
 
-        {/* Minimalist 4-Pillar Architectural Telemetry Strip */}
-        <div className="mt-14 pt-8 border-t border-white/[0.08] grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3.5 backdrop-blur-md">
-            <div className="flex items-center gap-2 text-blue-400 text-xs font-mono font-semibold">
-              <Cpu className="h-3.5 w-3.5" />
-              <span>01 / AI &amp; Deep Learning</span>
+        {/* 4 Clean Focus Cards */}
+        <div className="mt-12 pt-8 border-t border-white/[0.08] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 card-shine">
+            <div className="flex items-center gap-2.5 text-blue-400 text-xs font-semibold">
+              <Cpu className="h-4 w-4" />
+              <span>AI &amp; Machine Learning</span>
             </div>
-            <p className="mt-1 text-xs text-zinc-300 font-medium">PyTorch · OpenCV · Computer Vision</p>
+            <p className="mt-1.5 text-xs text-zinc-400">PyTorch, OpenCV, Scikit-Learn, SpaCy</p>
           </div>
 
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3.5 backdrop-blur-md">
-            <div className="flex items-center gap-2 text-indigo-400 text-xs font-mono font-semibold">
-              <Layers className="h-3.5 w-3.5" />
-              <span>02 / Full-Stack Architecture</span>
+          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 card-shine">
+            <div className="flex items-center gap-2.5 text-indigo-400 text-xs font-semibold">
+              <Layers className="h-4 w-4" />
+              <span>Full-Stack Development</span>
             </div>
-            <p className="mt-1 text-xs text-zinc-300 font-medium">Next.js 16 · TypeScript · Tailwind CSS 4</p>
+            <p className="mt-1.5 text-xs text-zinc-400">Next.js 16, React, TypeScript, Tailwind CSS</p>
           </div>
 
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3.5 backdrop-blur-md">
-            <div className="flex items-center gap-2 text-sky-400 text-xs font-mono font-semibold">
-              <Zap className="h-3.5 w-3.5" />
-              <span>03 / Database Engineering</span>
+          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 card-shine">
+            <div className="flex items-center gap-2.5 text-emerald-400 text-xs font-semibold">
+              <Database className="h-4 w-4" />
+              <span>Databases &amp; Cloud</span>
             </div>
-            <p className="mt-1 text-xs text-zinc-300 font-medium">Neon PostgreSQL · Supabase RLS</p>
+            <p className="mt-1.5 text-xs text-zinc-400">PostgreSQL, Supabase, AWS, Docker</p>
           </div>
 
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3.5 backdrop-blur-md">
-            <div className="flex items-center gap-2 text-amber-400 text-xs font-mono font-semibold">
-              <Terminal className="h-3.5 w-3.5" />
-              <span>04 / Algorithmic Rigor</span>
+          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 card-shine">
+            <div className="flex items-center gap-2.5 text-amber-400 text-xs font-semibold">
+              <Code2 className="h-4 w-4" />
+              <span>Problem Solving</span>
             </div>
-            <p className="mt-1 text-xs text-zinc-300 font-medium">90+ LeetCode Solved · Java 21 DSA</p>
+            <p className="mt-1.5 text-xs text-zinc-400">90+ LeetCode Solved in Java (DSA)</p>
           </div>
         </div>
 

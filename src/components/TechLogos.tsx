@@ -514,7 +514,146 @@ export function OOPLogo({ className = 'w-6 h-6' }: LogoProps) {
   );
 }
 
-// 31. Default / Fallback Tech Vector
+// 31. Oracle
+export function OracleLogo({ className = 'w-6 h-6' }: LogoProps) {
+  return (
+    <svg className={className} viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="128" height="128" rx="24" fill="#F80000" />
+      <path
+        d="M64 42c-15.5 0-28 9.9-28 22s12.5 22 28 22 28-9.9 28-22-12.5-22-28-22zm0 33c-8.8 0-16-4.9-16-11s7.2-11 16-11 16 4.9 16 11-7.2 11-16 11z"
+        fill="white"
+      />
+    </svg>
+  );
+}
+
+// 32. IBM
+export function IBMLogo({ className = 'w-6 h-6' }: LogoProps) {
+  return (
+    <svg className={className} viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="128" height="128" rx="20" fill="#0F62FE" />
+      <g fill="white">
+        <rect x="24" y="32" width="20" height="6" />
+        <rect x="54" y="32" width="20" height="6" />
+        <rect x="84" y="32" width="20" height="6" />
+        <rect x="24" y="42" width="20" height="6" />
+        <rect x="54" y="42" width="20" height="6" />
+        <rect x="84" y="42" width="20" height="6" />
+        <rect x="24" y="52" width="20" height="6" />
+        <rect x="54" y="52" width="20" height="6" />
+        <rect x="84" y="52" width="20" height="6" />
+        <rect x="24" y="62" width="20" height="6" />
+        <rect x="54" y="62" width="20" height="6" />
+        <rect x="84" y="62" width="20" height="6" />
+        <rect x="24" y="72" width="20" height="6" />
+        <rect x="54" y="72" width="20" height="6" />
+        <rect x="84" y="72" width="20" height="6" />
+        <rect x="24" y="82" width="20" height="6" />
+        <rect x="54" y="82" width="20" height="6" />
+        <rect x="84" y="82" width="20" height="6" />
+        <rect x="24" y="92" width="20" height="6" />
+        <rect x="54" y="92" width="20" height="6" />
+        <rect x="84" y="92" width="20" height="6" />
+      </g>
+    </svg>
+  );
+}
+
+// 33. Infosys
+export function InfosysLogo({ className = 'w-6 h-6' }: LogoProps) {
+  return (
+    <svg className={className} viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="128" height="128" rx="20" fill="#007CC3" />
+      <text
+        x="64"
+        y="76"
+        textAnchor="middle"
+        fontSize="30"
+        fontFamily="sans-serif"
+        fontWeight="800"
+        fill="white"
+        letterSpacing="-0.5"
+      >
+        Infosys
+      </text>
+    </svg>
+  );
+}
+
+// 34. Coursera
+export function CourseraLogo({ className = 'w-6 h-6' }: LogoProps) {
+  return (
+    <svg className={className} viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="128" height="128" rx="20" fill="#0056D2" />
+      <path
+        d="M78 40a28 28 0 1 0 0 48l-8-12a14 14 0 1 1 0-24l8-12z"
+        fill="white"
+      />
+    </svg>
+  );
+}
+
+// 35. Google
+export function GoogleLogo({ className = 'w-6 h-6' }: LogoProps) {
+  return (
+    <svg className={className} viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="128" height="128" rx="20" fill="white" />
+      <path
+        d="M98 65.5c0-2.4-.2-4.7-.6-7H64v13.3h19.1c-.8 4.4-3.3 8.2-7 10.7v8.9h11.4c6.7-6.2 10.5-15.3 10.5-25.9z"
+        fill="#4285F4"
+      />
+      <path
+        d="M64 100c9.7 0 17.9-3.2 23.8-8.7L76.4 82.4c-3.2 2.2-7.4 3.4-12.4 3.4-9.5 0-17.6-6.4-20.5-15.1H31.7v9.2C37.6 91.5 49.9 100 64 100z"
+        fill="#34A853"
+      />
+      <path
+        d="M43.5 70.7c-.7-2.2-1.1-4.5-1.1-6.7s.4-4.5 1.1-6.7V48.1H31.7c-2.4 4.8-3.7 10.3-3.7 15.9s1.3 11.1 3.7 15.9l11.8-9.2z"
+        fill="#FBBC05"
+      />
+      <path
+        d="M64 42.2c5.3 0 10 1.8 13.8 5.4l10.3-10.3C81.9 31.5 73.7 28 64 28c-14.1 0-26.4 8.5-32.3 20.1l11.8 9.2c2.9-8.7 11-15.1 20.5-15.1z"
+        fill="#EA4335"
+      />
+    </svg>
+  );
+}
+
+// 36. LeetCode
+export function LeetCodeLogo({ className = 'w-6 h-6' }: LogoProps) {
+  return (
+    <svg className={className} viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="128" height="128" rx="20" fill="#1A1A1A" />
+      <path
+        d="M78 36l-26 26a4 4 0 0 0 0 5.6l26 26"
+        stroke="#FFA116"
+        strokeWidth="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M58 84h34"
+        stroke="white"
+        strokeWidth="10"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+// 37. Neon DB
+export function NeonLogo({ className = 'w-6 h-6' }: LogoProps) {
+  return (
+    <svg className={className} viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="128" height="128" rx="20" fill="#000000" />
+      <path
+        d="M32 96V32l40 40V32h24v64L56 56v40H32z"
+        fill="#00E599"
+      />
+    </svg>
+  );
+}
+
+// 38. Default / Fallback Tech Vector
 export function GenericTechLogo({ name, className = 'w-6 h-6' }: { name: string; className?: string }) {
   const initial = name.slice(0, 2).toUpperCase();
   return (
@@ -560,6 +699,13 @@ export function getSkillLogo(name: string): React.ComponentType<{ className?: st
   if (n.includes('pandas')) return PandasLogo;
   if (n.includes('numpy')) return NumPyLogo;
   if (n.includes('vercel')) return VercelLogo;
+  if (n.includes('neon')) return NeonLogo;
+  if (n.includes('oracle')) return OracleLogo;
+  if (n.includes('ibm')) return IBMLogo;
+  if (n.includes('infosys')) return InfosysLogo;
+  if (n.includes('coursera')) return CourseraLogo;
+  if (n.includes('google')) return GoogleLogo;
+  if (n.includes('leetcode')) return LeetCodeLogo;
   if (n.includes('spacy')) return SpaCyLogo;
   if (n === 'sql' || n.includes('mysql') || n.includes('database') || n === 'dbms') return SQLLogo;
   if (n.includes('data structure') || n.includes('dsa') || n.includes('algorithm')) return DSALogo;

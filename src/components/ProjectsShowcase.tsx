@@ -1,64 +1,190 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { 
   CheckCircle2, 
-  TrendingUp,
-  ArrowUpRight
+  ArrowUpRight,
+  Search,
+  SlidersHorizontal,
+  Layers,
+  Copy,
+  Check,
+  X,
+  FileCode,
+  Terminal,
+  Database,
+  Cpu,
+  Workflow,
+  Sparkles,
+  Shield,
+  Eye,
+  Type
 } from 'lucide-react';
 import { GithubIcon } from './SocialIcons';
 import { Project } from '@/lib/neon/db';
+import { useToast } from './Toast';
+import BrandLogo from './BrandLogo';
 
 interface ProjectShowcaseProps {
   projects: Project[];
 }
 
 export default function ProjectsShowcase({ projects }: ProjectShowcaseProps) {
+  const { toast } = useToast();
   const [activeCategory, setActiveCategory] = useState<'all' | 'fullstack' | 'vision' | 'nlp'>('all');
-  const [arthaXPeriod, setArthaXPeriod] = useState<'1D' | '1W' | '1M' | '1Y'>('1M');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTech, setSelectedTech] = useState<string>('all');
+  const [copiedCloneId, setCopiedCloneId] = useState<number | null>(null);
+  const [inspectingProject, setInspectingProject] = useState<Project | null>(null);
 
-  // Categorize projects with high-tier styling
-  const categorized = projects.map(p => {
-    const t = p.title.toLowerCase();
-    let category: 'fullstack' | 'vision' | 'nlp' = 'fullstack';
-    let categoryLabel = 'FinTech & Full-Stack';
-    let badgeColor = 'text-blue-400 border-blue-500/25 bg-blue-500/10';
+  // Tab states for right-hand previews
+  const [arthaxTab, setArthaxTab] = useState<'overview' | 'features' | 'architecture'>('overview');
+  const [cvTab, setCvTab] = useState<'pipeline' | 'classes' | 'specs'>('pipeline');
+  const [nlpTab, setNlpTab] = useState<'tester' | 'pipeline' | 'json'>('tester');
 
-    if (t.includes('object') || t.includes('detection') || t.includes('vision')) {
-      category = 'vision';
-      categoryLabel = 'Computer Vision & Deep Learning';
-      badgeColor = 'text-indigo-400 border-indigo-500/25 bg-indigo-500/10';
-    } else if (t.includes('entity') || t.includes('ner') || t.includes('nlp')) {
-      category = 'nlp';
-      categoryLabel = 'NLP & Text Analytics';
-      badgeColor = 'text-sky-400 border-sky-500/25 bg-sky-500/10';
+  // NLP Interactive State
+  const nlpPresetSamples = [
+    {
+      text: 'Saran R engineered machine learning models with IBM SkillsBuild in Chennai.',
+      entities: [
+        { text: 'Saran R', tag: 'PERSON', color: 'border-blue-500/40 bg-blue-500/15 text-blue-300' },
+        { text: 'IBM SkillsBuild', tag: 'ORG', color: 'border-indigo-500/40 bg-indigo-500/15 text-indigo-300' },
+        { text: 'Chennai', tag: 'LOCATION', color: 'border-sky-500/40 bg-sky-500/15 text-sky-300' },
+      ]
+    },
+    {
+      text: 'arthaX integrates Next.js 16 and PostgreSQL with Supabase Row Level Security.',
+      entities: [
+        { text: 'arthaX', tag: 'PROJECT', color: 'border-emerald-500/40 bg-emerald-500/15 text-emerald-300' },
+        { text: 'Next.js 16', tag: 'FRAMEWORK', color: 'border-blue-500/40 bg-blue-500/15 text-blue-300' },
+        { text: 'PostgreSQL', tag: 'DATABASE', color: 'border-indigo-500/40 bg-indigo-500/15 text-indigo-300' },
+        { text: 'Supabase', tag: 'SECURITY', color: 'border-teal-500/40 bg-teal-500/15 text-teal-300' }
+      ]
+    },
+    {
+      text: 'PyTorch deep learning model processes video frames using OpenCV in real time.',
+      entities: [
+        { text: 'PyTorch', tag: 'FRAMEWORK', color: 'border-rose-500/40 bg-rose-500/15 text-rose-300' },
+        { text: 'OpenCV', tag: 'LIBRARY', color: 'border-emerald-500/40 bg-emerald-500/15 text-emerald-300' },
+        { text: 'video frames', tag: 'INPUT', color: 'border-purple-500/40 bg-purple-500/15 text-purple-300' }
+      ]
+    }
+  ];
+  const [selectedNlpIdx, setSelectedNlpIdx] = useState(0);
+  const [customNlpInput, setCustomNlpInput] = useState('');
+  const [customResult, setCustomResult] = useState<{ text: string; tag: string; color: string }[] | null>(null);
+
+  // Mouse spotlight handler
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+    e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+  };
+
+  // Categorize projects
+  const categorized = useMemo(() => {
+    return projects.map((p) => {
+      const t = p.title.toLowerCase();
+      let category: 'fullstack' | 'vision' | 'nlp' = 'fullstack';
+      let categoryLabel = 'Full-Stack & Web';
+      let badgeColor = 'text-blue-400 border-blue-500/25 bg-blue-500/10';
+
+      if (t.includes('object') || t.includes('detection') || t.includes('vision')) {
+        category = 'vision';
+        categoryLabel = 'Computer Vision & AI';
+        badgeColor = 'text-indigo-400 border-indigo-500/25 bg-indigo-500/10';
+      } else if (t.includes('entity') || t.includes('ner') || t.includes('nlp')) {
+        category = 'nlp';
+        categoryLabel = 'NLP & Text Analytics';
+        badgeColor = 'text-sky-400 border-sky-500/25 bg-sky-500/10';
+      }
+
+      return {
+        ...p,
+        category,
+        categoryLabel,
+        badgeColor,
+      };
+    });
+  }, [projects]);
+
+  // Unique tech stack
+  const availableTechs = useMemo(() => {
+    const set = new Set<string>();
+    projects.forEach((p) => {
+      p.tech_stack?.forEach((tech) => set.add(tech));
+    });
+    return Array.from(set).slice(0, 8);
+  }, [projects]);
+
+  // Combined filters
+  const filteredProjects = useMemo(() => {
+    return categorized.filter((p) => {
+      const matchesCategory = activeCategory === 'all' || p.category === activeCategory;
+      const matchesTech = selectedTech === 'all' || p.tech_stack?.includes(selectedTech);
+      
+      const q = searchQuery.toLowerCase().trim();
+      const matchesQuery = !q || 
+        p.title.toLowerCase().includes(q) || 
+        p.description.toLowerCase().includes(q) ||
+        p.tech_stack?.some((t) => t.toLowerCase().includes(q));
+
+      return matchesCategory && matchesTech && matchesQuery;
+    });
+  }, [categorized, activeCategory, selectedTech, searchQuery]);
+
+  const copyCloneCommand = (project: Project) => {
+    const gitUrl = project.github_url || 'https://github.com/technosaran/arthax';
+    const cmd = `git clone ${gitUrl}.git`;
+    try {
+      navigator.clipboard.writeText(cmd);
+      setCopiedCloneId(project.id);
+      toast(`Copied "${cmd}"`, 'success');
+      setTimeout(() => setCopiedCloneId(null), 2000);
+    } catch {
+      toast('Failed to copy clone command', 'error');
+    }
+  };
+
+  const handleCustomNlpAnalyze = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!customNlpInput.trim()) {
+      toast('Please enter a sentence to analyze', 'info');
+      return;
     }
 
-    return {
-      ...p,
-      category,
-      categoryLabel,
-      badgeColor
-    };
-  });
+    // Realistic token parser based on common entity patterns
+    const words = customNlpInput.trim().split(/\s+/);
+    const parsed: { text: string; tag: string; color: string }[] = [];
 
-  const filteredProjects = categorized.filter(p => {
-    if (activeCategory === 'all') return true;
-    return p.category === activeCategory;
-  });
+    words.forEach((word) => {
+      const cleanWord = word.replace(/[^\w]/g, '');
+      if (/^(saran|john|alice|bob)$/i.test(cleanWord)) {
+        parsed.push({ text: word, tag: 'PERSON', color: 'border-blue-500/40 bg-blue-500/15 text-blue-300' });
+      } else if (/^(google|ibm|microsoft|oracle|infosys|nasscom)$/i.test(cleanWord)) {
+        parsed.push({ text: word, tag: 'ORGANIZATION', color: 'border-indigo-500/40 bg-indigo-500/15 text-indigo-300' });
+      } else if (/^(chennai|india|london|tokyo|ny|california)$/i.test(cleanWord)) {
+        parsed.push({ text: word, tag: 'LOCATION', color: 'border-sky-500/40 bg-sky-500/15 text-sky-300' });
+      } else if (/^(python|java|react|nextjs|pytorch|opencv|sql|postgres|docker)$/i.test(cleanWord)) {
+        parsed.push({ text: word, tag: 'TECHNOLOGY', color: 'border-emerald-500/40 bg-emerald-500/15 text-emerald-300' });
+      }
+    });
 
-  const arthaXMetrics = {
-    '1D': { val: '$142,850.00', change: '+2.1%', points: 'M0 25 Q 30 15, 60 22 T 120 18 T 180 8 T 240 5' },
-    '1W': { val: '$141,200.00', change: '+5.4%', points: 'M0 28 Q 40 20, 80 24 T 160 12 T 200 15 T 240 4' },
-    '1M': { val: '$138,400.00', change: '+18.4%', points: 'M0 30 Q 50 25, 90 20 T 150 14 T 210 10 T 240 3' },
-    '1Y': { val: '$112,500.00', change: '+42.8%', points: 'M0 32 Q 40 30, 80 22 T 140 18 T 190 10 T 240 2' },
+    if (parsed.length === 0) {
+      parsed.push({ text: words[0], tag: 'ENTITY', color: 'border-zinc-500/40 bg-zinc-500/15 text-zinc-300' });
+    }
+
+    setCustomResult(parsed);
+    toast('Sentence parsed successfully', 'success');
   };
 
   return (
     <div className="space-y-8">
       
-      {/* Category Filter Tabs */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-4">
+      {/* Category Filter Tabs & Search Bar */}
+      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 border-b border-white/[0.08] pb-5">
+        
+        {/* Category Switcher */}
         <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-md overflow-x-auto no-scrollbar">
           <button
             type="button"
@@ -69,7 +195,7 @@ export default function ProjectsShowcase({ projects }: ProjectShowcaseProps) {
                 : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
             }`}
           >
-            All Systems ({projects.length})
+            All Projects ({projects.length})
           </button>
           <button
             type="button"
@@ -80,7 +206,7 @@ export default function ProjectsShowcase({ projects }: ProjectShowcaseProps) {
                 : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
             }`}
           >
-            FinTech &amp; Systems
+            Full-Stack &amp; Web
           </button>
           <button
             type="button"
@@ -102,25 +228,73 @@ export default function ProjectsShowcase({ projects }: ProjectShowcaseProps) {
                 : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
             }`}
           >
-            NLP Analytics
+            NLP &amp; Machine Learning
           </button>
         </div>
 
-        <span className="text-xs font-mono text-zinc-500 hidden sm:inline">
-          Showing {filteredProjects.length} of {projects.length} systems
-        </span>
+        {/* Search Input */}
+        <div className="relative w-full md:w-64">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search projects &amp; tech..."
+            className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-white/[0.08] bg-white/[0.02] text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500/50 font-mono"
+          />
+        </div>
       </div>
 
-      {/* Projects Grid */}
-      {filteredProjects.length === 0 ? (
-        <div className="rounded-2xl border border-white/[0.08] bg-[#0c0d15]/60 p-12 text-center backdrop-blur-xl">
-          <p className="text-zinc-400 font-mono text-sm">No systems found matching this category filter.</p>
+      {/* Tech Filter Quick Chips */}
+      {availableTechs.length > 0 && (
+        <div className="flex flex-wrap items-center gap-1.5 text-[11px] font-mono text-zinc-400">
+          <span className="flex items-center gap-1 text-zinc-500 mr-1">
+            <SlidersHorizontal className="h-3 w-3" />
+            <span>Filter Tech:</span>
+          </span>
           <button
             type="button"
-            onClick={() => setActiveCategory('all')}
+            onClick={() => setSelectedTech('all')}
+            className={`px-2.5 py-0.5 rounded-lg border transition-all cursor-pointer ${
+              selectedTech === 'all'
+                ? 'bg-blue-500/20 text-blue-300 border-blue-500/40 font-semibold'
+                : 'border-white/[0.06] bg-white/[0.02] text-zinc-400 hover:text-white hover:bg-white/[0.05]'
+            }`}
+          >
+            All Tech
+          </button>
+          {availableTechs.map((tech) => (
+            <button
+              key={tech}
+              type="button"
+              onClick={() => setSelectedTech(selectedTech === tech ? 'all' : tech)}
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
+                selectedTech === tech
+                  ? 'bg-blue-500/20 text-blue-300 border-blue-500/40 font-semibold shadow-sm'
+                  : 'border-white/[0.06] bg-white/[0.02] text-zinc-400 hover:text-white hover:bg-white/[0.05]'
+              }`}
+            >
+              <BrandLogo name={tech} size={14} badgeVariant="none" />
+              <span>{tech}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Projects List */}
+      {filteredProjects.length === 0 ? (
+        <div className="rounded-2xl border border-white/[0.08] bg-[#0c0d15]/60 p-12 text-center backdrop-blur-xl">
+          <p className="text-zinc-400 font-mono text-sm">No projects found matching your search.</p>
+          <button
+            type="button"
+            onClick={() => {
+              setActiveCategory('all');
+              setSelectedTech('all');
+              setSearchQuery('');
+            }}
             className="mt-4 px-4 py-2 rounded-xl text-xs font-mono bg-blue-500/10 border border-blue-500/30 text-blue-300 hover:bg-blue-500/20 transition-all cursor-pointer"
           >
-            Reset filter
+            Reset filters
           </button>
         </div>
       ) : (
@@ -133,14 +307,15 @@ export default function ProjectsShowcase({ projects }: ProjectShowcaseProps) {
           return (
             <div
               key={project.id}
-              className="group relative rounded-3xl border border-white/[0.08] bg-[#0c0d15]/80 p-6 sm:p-8 lg:p-9 backdrop-blur-2xl hover:border-blue-500/30 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-blue-950/20 card-shine"
+              onMouseMove={handleCardMouseMove}
+              className="group relative rounded-3xl border border-white/[0.08] bg-[#0c0d15]/85 p-6 sm:p-8 lg:p-9 backdrop-blur-2xl hover:border-blue-500/30 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-blue-950/20 card-shine card-spotlight"
             >
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 
-                {/* Left Column: Project Info & Actions (7 cols) */}
+                {/* Left Column: Project Details & Actions (7 cols) */}
                 <div className="lg:col-span-7 space-y-5">
                   
-                  {/* Category & Status Badges */}
+                  {/* Category & Status */}
                   <div className="flex flex-wrap items-center gap-2">
                     <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-mono font-medium border ${project.badgeColor}`}>
                       <span className="h-1.5 w-1.5 rounded-full bg-current" />
@@ -148,31 +323,50 @@ export default function ProjectsShowcase({ projects }: ProjectShowcaseProps) {
                     </span>
 
                     {project.live_url ? (
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 px-2.5 py-0.5 text-[11px] font-mono text-blue-300">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-mono text-emerald-300">
                         <span className="relative flex h-1.5 w-1.5">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-400"></span>
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400"></span>
                         </span>
-                        Production Live
+                        Live Demo Available
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1.5 rounded-full border border-zinc-700/60 bg-zinc-800/40 px-2.5 py-0.5 text-[11px] font-mono text-zinc-400">
-                        Open-Source Core
+                        Open-Source Project
                       </span>
                     )}
+
+                    <button
+                      type="button"
+                      onClick={() => setInspectingProject(project)}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.1] bg-white/[0.03] hover:bg-white/[0.08] px-2.5 py-0.5 text-[11px] font-mono text-zinc-300 hover:text-white transition-all cursor-pointer"
+                      title="Inspect Architecture"
+                    >
+                      <Layers className="h-3 w-3 text-blue-400" />
+                      <span>Architecture Specs</span>
+                    </button>
                   </div>
 
                   {/* Title & Description */}
                   <div>
-                    <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight group-hover:text-blue-300 transition-colors">
-                      {project.title}
-                    </h3>
+                    <div className="flex items-center gap-3">
+                      <BrandLogo
+                        name={project.tech_stack?.[0] || 'Next.js'}
+                        size={36}
+                        badgeVariant="glass"
+                        showGlow
+                        className="shrink-0 group-hover:scale-105 transition-transform"
+                      />
+                      <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight group-hover:text-blue-300 transition-colors">
+                        {project.title}
+                      </h3>
+                    </div>
                     <p className="mt-2.5 text-sm text-zinc-300/90 leading-relaxed font-normal">
                       {project.description}
                     </p>
                   </div>
 
-                  {/* Engineering Highlights */}
+                  {/* Key Highlights */}
                   <div className="space-y-2 pt-1 border-t border-white/[0.06]">
                     {project.highlights?.map((h, i) => (
                       <div key={i} className="flex items-start gap-2.5 text-xs text-zinc-300 leading-relaxed">
@@ -185,12 +379,20 @@ export default function ProjectsShowcase({ projects }: ProjectShowcaseProps) {
                   {/* Tech Stack Chips */}
                   <div className="flex flex-wrap gap-1.5 pt-1">
                     {project.tech_stack?.map((tech) => (
-                      <span
+                      <button
                         key={tech}
-                        className="rounded-lg border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 text-xs font-mono text-zinc-300 group-hover:border-white/20 transition-colors"
+                        type="button"
+                        onClick={() => setSelectedTech(tech)}
+                        className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-mono transition-all cursor-pointer ${
+                          selectedTech === tech
+                            ? 'bg-blue-500/20 border-blue-500/50 text-blue-300 shadow-sm'
+                            : 'border-white/[0.08] bg-white/[0.03] text-zinc-300 hover:border-white/20'
+                        }`}
+                        title={`Filter by ${tech}`}
                       >
-                        {tech}
-                      </span>
+                        <BrandLogo name={tech} size={14} badgeVariant="none" />
+                        <span>{tech}</span>
+                      </button>
                     ))}
                   </div>
 
@@ -203,11 +405,12 @@ export default function ProjectsShowcase({ projects }: ProjectShowcaseProps) {
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 rounded-xl bg-white hover:bg-zinc-200 px-5 py-2.5 text-xs font-bold text-zinc-950 shadow-md shadow-white/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
                       >
-                        <span>Launch Terminal</span>
+                        <span>Live Demo</span>
                         <ArrowUpRight className="h-3.5 w-3.5 text-zinc-950" />
                       </a>
                     )}
-                    {project.github_url ? (
+
+                    {project.github_url && (
                       <a
                         href={project.github_url}
                         target="_blank"
@@ -215,18 +418,35 @@ export default function ProjectsShowcase({ projects }: ProjectShowcaseProps) {
                         className="inline-flex items-center gap-2 rounded-xl border border-white/[0.1] bg-white/[0.04] hover:bg-white/[0.08] hover:border-blue-500/40 px-4 py-2.5 text-xs font-semibold text-zinc-200 transition-all"
                       >
                         <GithubIcon className="h-3.5 w-3.5" />
-                        <span>Source Code</span>
+                        <span>GitHub Repository</span>
                       </a>
-                    ) : (
-                      <span className="inline-flex items-center gap-1.5 rounded-xl border border-white/[0.08] bg-white/[0.03] px-3.5 py-2 text-[11px] font-mono text-zinc-400">
-                        Research Capstone · Academic Project
-                      </span>
+                    )}
+
+                    {project.github_url && (
+                      <button
+                        type="button"
+                        onClick={() => copyCloneCommand(project)}
+                        className="inline-flex items-center gap-1.5 rounded-xl border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.07] px-3.5 py-2.5 text-xs font-mono text-zinc-400 hover:text-white transition-all cursor-pointer"
+                        title="Copy Git clone command"
+                      >
+                        {copiedCloneId === project.id ? (
+                          <>
+                            <Check className="h-3.5 w-3.5 text-emerald-400" />
+                            <span className="text-emerald-400 font-semibold">Cloned!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="h-3.5 w-3.5" />
+                            <span>git clone</span>
+                          </>
+                        )}
+                      </button>
                     )}
                   </div>
 
                 </div>
 
-                {/* Right Column: Custom Visual App Preview Window (5 cols) */}
+                {/* Right Column: Clean Interactive Feature Preview (5 cols) */}
                 <div className="lg:col-span-5">
                   <div className="rounded-2xl border border-white/[0.1] bg-[#080a10] overflow-hidden shadow-2xl card-shine">
                     
@@ -237,224 +457,327 @@ export default function ProjectsShowcase({ projects }: ProjectShowcaseProps) {
                         <div className="h-2.5 w-2.5 rounded-full bg-amber-500/80" />
                         <div className="h-2.5 w-2.5 rounded-full bg-emerald-500/80" />
                         <span className="ml-1 text-[11px] text-zinc-400">
-                          {isArthaX ? 'arthax.vercel.app' : isVision ? 'inference_stream:60fps' : 'entity_classifier.py'}
+                          {isArthaX ? 'arthax.vercel.app' : isVision ? 'realtime_detection.py' : 'ner_nlp_pipeline.py'}
                         </span>
                       </div>
-                      <span className="text-[10px] text-blue-400 font-mono">v1.0</span>
+                      <span className="text-[10px] text-zinc-500 font-mono">Preview</span>
                     </div>
 
                     {/* Window Visual Body */}
                     <div className="p-5 font-mono text-xs space-y-4">
                       
-                      {/* Visual Preview 1: arthaX Financial Dashboard */}
+                      {/* PREVIEW 1: arthaX Real Feature Overview */}
                       {isArthaX && (
                         <div className="space-y-4">
-                          <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
-                            <div>
-                              <div className="text-[10px] text-zinc-500 uppercase tracking-wider">Asset Valuation (NAV)</div>
-                              <div className="text-xl font-bold font-mono text-white flex items-center gap-2">
-                                <span>{arthaXMetrics[arthaXPeriod].val}</span>
-                                <span className="text-xs text-blue-400 font-semibold inline-flex items-center">
-                                  <TrendingUp className="h-3 w-3 mr-0.5" /> {arthaXMetrics[arthaXPeriod].change}
-                                </span>
-                              </div>
-                            </div>
-                            
-                            {/* Interactive Timeframe Pill Switcher */}
-                            <div className="flex items-center gap-1 bg-white/[0.04] p-0.5 rounded-lg border border-white/[0.06] text-[10px]">
-                              {(['1D', '1W', '1M', '1Y'] as const).map((period) => (
+                          {/* Subtabs */}
+                          <div className="flex items-center justify-between border-b border-white/[0.06] pb-2 text-[11px]">
+                            <div className="flex items-center gap-2">
+                              {(['overview', 'features', 'architecture'] as const).map((tab) => (
                                 <button
-                                  key={period}
+                                  key={tab}
                                   type="button"
-                                  onClick={() => setArthaXPeriod(period)}
-                                  className={`px-1.5 py-0.5 rounded transition-all cursor-pointer ${
-                                    arthaXPeriod === period
-                                      ? 'bg-blue-500/25 text-blue-300 font-bold border border-blue-500/30'
-                                      : 'text-zinc-500 hover:text-zinc-300'
+                                  onClick={() => setArthaxTab(tab)}
+                                  className={`text-[10px] uppercase font-mono cursor-pointer transition-colors ${
+                                    arthaxTab === tab ? 'text-blue-400 font-bold' : 'text-zinc-500 hover:text-zinc-300'
                                   }`}
                                 >
-                                  {period}
+                                  {tab}
                                 </button>
                               ))}
                             </div>
+                            <span className="text-[10px] text-emerald-400 font-mono">Production Ready</span>
                           </div>
 
-                          {/* Mini Sparkline Chart */}
-                          <div className="h-10 w-full relative">
-                            <svg className="w-full h-full overflow-visible" viewBox="0 0 240 35" fill="none">
-                              <path
-                                d={arthaXMetrics[arthaXPeriod].points}
-                                stroke="url(#blue-spark)"
-                                strokeWidth="2.5"
-                                strokeLinecap="round"
-                              />
-                              <defs>
-                                <linearGradient id="blue-spark" x1="0" y1="0" x2="240" y2="0" gradientUnits="userSpaceOnUse">
-                                  <stop stopColor="#60A5FA" />
-                                  <stop offset="1" stopColor="#3B82F6" />
-                                </linearGradient>
-                              </defs>
-                            </svg>
-                          </div>
+                          {arthaxTab === 'overview' && (
+                            <div className="space-y-3">
+                              {/* Clean summary metric mockup */}
+                              <div className="grid grid-cols-2 gap-2 text-center">
+                                <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-2.5">
+                                  <div className="text-[10px] text-zinc-400 font-sans">Multi-Asset Tracking</div>
+                                  <div className="text-sm font-bold text-white font-mono mt-0.5">Stocks &amp; Funds</div>
+                                </div>
+                                <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-2.5">
+                                  <div className="text-[10px] text-zinc-400 font-sans">Data Privacy</div>
+                                  <div className="text-sm font-bold text-emerald-400 font-mono mt-0.5">Supabase RLS</div>
+                                </div>
+                              </div>
 
-                          {/* Allocation breakdown */}
-                          <div className="space-y-2 text-[11px]">
-                            <div className="flex justify-between text-zinc-400">
-                              <span>Asset Class</span>
-                              <span>Allocation</span>
-                            </div>
-                            <div className="space-y-1.5">
-                              <div>
-                                <div className="flex justify-between text-zinc-200">
-                                  <span>Equities &amp; ETFs</span>
-                                  <span className="text-blue-400">65%</span>
-                                </div>
-                                <div className="h-1.5 w-full bg-white/[0.06] rounded-full overflow-hidden">
-                                  <div className="h-full bg-blue-500 rounded-full w-[65%]" />
-                                </div>
-                              </div>
-                              <div>
-                                <div className="flex justify-between text-zinc-200">
-                                  <span>Cash &amp; Fixed Income</span>
-                                  <span className="text-indigo-400">25%</span>
-                                </div>
-                                <div className="h-1.5 w-full bg-white/[0.06] rounded-full overflow-hidden">
-                                  <div className="h-full bg-indigo-500 rounded-full w-[25%]" />
-                                </div>
+                              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 space-y-2 font-sans text-xs">
+                                <div className="text-[11px] font-mono text-zinc-400 font-semibold uppercase">Platform Overview</div>
+                                <p className="text-zinc-300 text-[11px] leading-relaxed">
+                                  Personal wealth tracking dashboard engineered with Next.js 16 App Router. Designed for users to log assets, track net worth progression, and categorize transactions securely.
+                                </p>
                               </div>
                             </div>
-                          </div>
+                          )}
+
+                          {arthaxTab === 'features' && (
+                            <div className="space-y-2 text-xs font-sans">
+                              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-2.5 flex items-start gap-2">
+                                <CheckCircle2 className="h-3.5 w-3.5 text-blue-400 shrink-0 mt-0.5" />
+                                <div>
+                                  <div className="font-semibold text-white text-[11px]">Dynamic Asset Allocation</div>
+                                  <div className="text-[10px] text-zinc-400">Categorize equities, fixed income, savings, and investments.</div>
+                                </div>
+                              </div>
+                              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-2.5 flex items-start gap-2">
+                                <CheckCircle2 className="h-3.5 w-3.5 text-blue-400 shrink-0 mt-0.5" />
+                                <div>
+                                  <div className="font-semibold text-white text-[11px]">Dark Mode UI</div>
+                                  <div className="text-[10px] text-zinc-400">Tailwind CSS dark palette with rapid client-side rendering.</div>
+                                </div>
+                              </div>
+                              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-2.5 flex items-start gap-2">
+                                <CheckCircle2 className="h-3.5 w-3.5 text-blue-400 shrink-0 mt-0.5" />
+                                <div>
+                                  <div className="font-semibold text-white text-[11px]">User Row-Level Security</div>
+                                  <div className="text-[10px] text-zinc-400">PostgreSQL policies ensure strict data isolation per authenticated user.</div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {arthaxTab === 'architecture' && (
+                            <div className="space-y-2 font-mono text-[11px]">
+                              <div className="rounded-xl border border-white/[0.06] bg-black/50 p-3 space-y-1.5">
+                                <div className="text-zinc-500 text-[10px] uppercase">Stack Flow</div>
+                                <div className="text-blue-300">Frontend: Next.js 16 + React 19 + TypeScript</div>
+                                <div className="text-indigo-300">Backend: Next.js Route Handlers &amp; Server Actions</div>
+                                <div className="text-emerald-300">Database: PostgreSQL (Supabase with RLS)</div>
+                                <div className="text-amber-300">Hosting: Vercel Edge Network</div>
+                              </div>
+                            </div>
+                          )}
 
                           <div className="pt-2 border-t border-white/[0.06] flex items-center justify-between text-[10px] text-zinc-400">
-                            <span>PostgreSQL + Supabase RLS</span>
-                            <span className="text-emerald-400 font-semibold">Sub-30ms Query</span>
+                            <span>PostgreSQL + Supabase</span>
+                            <span className="text-blue-400 font-semibold font-mono">Next.js 16 App Router</span>
                           </div>
                         </div>
                       )}
 
-                      {/* Visual Preview 2: Computer Vision Object Detection Viewfinder */}
+                      {/* PREVIEW 2: Computer Vision Pipeline Overview */}
                       {isVision && (
-                        <div className="space-y-3.5">
-                          <div className="relative h-40 rounded-xl border border-dashed border-indigo-500/30 bg-black/60 p-3 flex flex-col justify-between overflow-hidden">
-                            
-                            {/* Scanning line animation */}
-                            <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-pulse" />
-
-                            {/* Viewfinder corner crosshairs */}
-                            <div className="flex items-center justify-between text-[9px] font-mono">
-                              <span className="text-indigo-400">[REC] 1080p @ 60 FPS</span>
-                              <span className="text-sky-400">LATENCY: 14.2ms</span>
-                            </div>
-
-                            {/* Simulated Detection Bounding Boxes */}
-                            <div className="my-auto grid grid-cols-2 gap-2 text-[10px]">
-                              <div className="rounded-lg border border-blue-400/80 bg-blue-500/10 p-2 text-center backdrop-blur-sm">
-                                <div className="font-bold text-blue-300">Target 01: Person</div>
-                                <div className="text-[9px] text-blue-400 font-mono">Confidence: 98.6%</div>
-                              </div>
-                              <div className="rounded-lg border border-indigo-400/80 bg-indigo-500/10 p-2 text-center backdrop-blur-sm">
-                                <div className="font-bold text-indigo-300">Target 02: Vehicle</div>
-                                <div className="text-[9px] text-indigo-400 font-mono">Confidence: 96.2%</div>
-                              </div>
-                            </div>
-
-                            <div className="flex items-center justify-between text-[9px] text-zinc-400 border-t border-white/[0.06] pt-1">
-                              <span>PyTorch + OpenCV Core</span>
-                              <span className="text-emerald-400 font-medium">Stream Active</span>
-                            </div>
-                          </div>
-
-                          <div className="grid grid-cols-3 gap-2 text-center text-[10px]">
-                            <div className="rounded-lg bg-white/[0.03] p-2 border border-white/[0.06]">
-                              <div className="text-white font-bold">60 FPS</div>
-                              <div className="text-zinc-500">Stream Rate</div>
-                            </div>
-                            <div className="rounded-lg bg-white/[0.03] p-2 border border-white/[0.06]">
-                              <div className="text-blue-400 font-bold">98.4%</div>
-                              <div className="text-zinc-500">mAP Score</div>
-                            </div>
-                            <div className="rounded-lg bg-white/[0.03] p-2 border border-white/[0.06]">
-                              <div className="text-indigo-400 font-bold">CUDA</div>
-                              <div className="text-zinc-500">Acceleration</div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Visual Preview 3: Named Entity Recognition Parser */}
-                      {isNLP && (
-                        <div className="space-y-3.5">
-                          <div className="text-[11px] text-zinc-400 flex items-center justify-between">
-                            <span>Sequence Tagging &amp; Tokenizer:</span>
-                            <span className="text-sky-400 font-mono text-[10px]">F1: 95.5%</span>
-                          </div>
-
-                          {/* Annotated token visualization */}
-                          <div className="rounded-xl border border-white/[0.08] bg-black/60 p-3.5 space-y-2.5 text-xs font-sans leading-relaxed">
-                            <p className="text-zinc-300">
-                              <span className="inline-block px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 font-mono text-[11px] mr-1">
-                                Saran R [PER]
-                              </span>
-                              engineered algorithms with
-                              <span className="inline-block px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono text-[11px] mx-1">
-                                IBM SkillsBuild [ORG]
-                              </span>
-                              in
-                              <span className="inline-block px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30 font-mono text-[11px] ml-1">
-                                Chennai [LOC]
-                              </span>
-                              .
-                            </p>
-                          </div>
-
-                          <div className="grid grid-cols-3 gap-2 text-center text-[10px] font-mono">
-                            <div className="rounded-lg bg-white/[0.03] p-2 border border-white/[0.06]">
-                              <div className="text-blue-400 font-bold">94.8%</div>
-                              <div className="text-zinc-500">Precision</div>
-                            </div>
-                            <div className="rounded-lg bg-white/[0.03] p-2 border border-white/[0.06]">
-                              <div className="text-indigo-400 font-bold">SpaCy</div>
-                              <div className="text-zinc-500">Pipeline</div>
-                            </div>
-                            <div className="rounded-lg bg-white/[0.03] p-2 border border-white/[0.06]">
-                              <div className="text-sky-400 font-bold">Bi-LSTM</div>
-                              <div className="text-zinc-500">Architecture</div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Visual Preview 4: Dynamic Database Project Architecture */}
-                      {!isArthaX && !isVision && !isNLP && (
-                        <div className="space-y-3.5">
-                          <div className="flex items-center justify-between border-b border-white/[0.06] pb-2 text-[11px] text-zinc-400">
-                            <span>System Architecture</span>
-                            <span className="text-blue-400 font-mono">Status: Verified</span>
-                          </div>
-
-                          <div className="rounded-xl border border-white/[0.08] bg-black/60 p-3.5 space-y-2 text-xs">
-                            <div className="text-[10px] uppercase font-mono text-zinc-500">Core Technologies</div>
-                            <div className="flex flex-wrap gap-1.5">
-                              {project.tech_stack?.map((t) => (
-                                <span key={t} className="px-2 py-0.5 rounded bg-blue-500/10 text-blue-300 border border-blue-500/20 text-[10px]">
-                                  {t}
-                                </span>
+                        <div className="space-y-4">
+                          {/* Subtabs */}
+                          <div className="flex items-center justify-between border-b border-white/[0.06] pb-2 text-[11px]">
+                            <div className="flex items-center gap-2">
+                              {(['pipeline', 'classes', 'specs'] as const).map((tab) => (
+                                <button
+                                  key={tab}
+                                  type="button"
+                                  onClick={() => setCvTab(tab)}
+                                  className={`text-[10px] uppercase font-mono cursor-pointer transition-colors ${
+                                    cvTab === tab ? 'text-indigo-400 font-bold' : 'text-zinc-500 hover:text-zinc-300'
+                                  }`}
+                                >
+                                  {tab}
+                                </button>
                               ))}
                             </div>
-                            <div className="pt-2 border-t border-white/[0.06] text-[11px] text-zinc-300">
-                              {project.highlights?.[0] || project.description}
-                            </div>
+                            <span className="text-[10px] text-indigo-400 font-mono">PyTorch / OpenCV</span>
                           </div>
 
-                          <div className="grid grid-cols-2 gap-2 text-center text-[10px] font-mono">
-                            <div className="rounded-lg bg-white/[0.03] p-2 border border-white/[0.06]">
-                              <div className="text-white font-bold">PostgreSQL</div>
-                              <div className="text-zinc-500">Database Engine</div>
+                          {cvTab === 'pipeline' && (
+                            <div className="space-y-2.5">
+                              <div className="rounded-xl border border-indigo-500/20 bg-indigo-500/5 p-3 space-y-2 text-xs font-sans">
+                                <div className="text-[11px] font-mono text-indigo-300 font-semibold uppercase">Inference Flow</div>
+                                <div className="space-y-1.5 text-[11px] text-zinc-300">
+                                  <div className="flex items-center gap-2">
+                                    <span className="h-5 w-5 rounded bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-mono text-[10px] font-bold">1</span>
+                                    <span>Video Frame Capture (OpenCV)</span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="h-5 w-5 rounded bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-mono text-[10px] font-bold">2</span>
+                                    <span>Tensor Preprocessing &amp; Normalization</span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="h-5 w-5 rounded bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-mono text-[10px] font-bold">3</span>
+                                    <span>Deep Learning Inference (PyTorch)</span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="h-5 w-5 rounded bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-mono text-[10px] font-bold">4</span>
+                                    <span>Bounding Box Rendering &amp; Class Labeling</span>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
-                            <div className="rounded-lg bg-white/[0.03] p-2 border border-white/[0.06]">
-                              <div className="text-blue-400 font-bold">Production</div>
-                              <div className="text-zinc-500">Deployment State</div>
+                          )}
+
+                          {cvTab === 'classes' && (
+                            <div className="space-y-2 text-xs font-sans">
+                              <div className="text-[10px] font-mono text-zinc-400 uppercase">Recognized Object Categories</div>
+                              <div className="grid grid-cols-2 gap-2 text-[11px]">
+                                <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-2 text-zinc-200">
+                                  • People &amp; Pedestrians
+                                </div>
+                                <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-2 text-zinc-200">
+                                  • Vehicles &amp; Bicycles
+                                </div>
+                                <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-2 text-zinc-200">
+                                  • Electronics &amp; Laptops
+                                </div>
+                                <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-2 text-zinc-200">
+                                  • Indoor Objects &amp; Chairs
+                                </div>
+                              </div>
                             </div>
+                          )}
+
+                          {cvTab === 'specs' && (
+                            <div className="grid grid-cols-2 gap-2 text-center text-[11px] font-mono">
+                              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-2.5">
+                                <div className="text-white font-bold">OpenCV</div>
+                                <div className="text-[10px] text-zinc-500">Video Processing</div>
+                              </div>
+                              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-2.5">
+                                <div className="text-indigo-400 font-bold">PyTorch</div>
+                                <div className="text-[10px] text-zinc-500">Neural Network</div>
+                              </div>
+                            </div>
+                          )}
+
+                          <div className="pt-2 border-t border-white/[0.06] flex items-center justify-between text-[10px] text-zinc-400">
+                            <span>OpenCV + Deep Learning</span>
+                            <span className="text-indigo-400 font-semibold font-mono">Computer Vision</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* PREVIEW 3: Named Entity Recognition Parser */}
+                      {isNLP && (
+                        <div className="space-y-4">
+                          {/* Subtabs */}
+                          <div className="flex items-center justify-between border-b border-white/[0.06] pb-2 text-[11px]">
+                            <div className="flex items-center gap-2">
+                              {(['tester', 'pipeline', 'json'] as const).map((tab) => (
+                                <button
+                                  key={tab}
+                                  type="button"
+                                  onClick={() => setNlpTab(tab)}
+                                  className={`text-[10px] uppercase font-mono cursor-pointer transition-colors ${
+                                    nlpTab === tab ? 'text-sky-400 font-bold' : 'text-zinc-500 hover:text-zinc-300'
+                                  }`}
+                                >
+                                  {tab}
+                                </button>
+                              ))}
+                            </div>
+                            <span className="text-[10px] text-sky-400 font-mono">SpaCy / NLP</span>
+                          </div>
+
+                          {nlpTab === 'tester' && (
+                            <div className="space-y-3">
+                              {/* Sample Selector */}
+                              <div className="flex items-center justify-between text-[10px] text-zinc-400">
+                                <span>Preset Samples:</span>
+                                <div className="flex items-center gap-1">
+                                  {nlpPresetSamples.map((_, sIdx) => (
+                                    <button
+                                      key={sIdx}
+                                      type="button"
+                                      onClick={() => {
+                                        setSelectedNlpIdx(sIdx);
+                                        setCustomResult(null);
+                                        setCustomNlpInput('');
+                                      }}
+                                      className={`px-2 py-0.5 rounded text-[10px] cursor-pointer transition-colors ${
+                                        selectedNlpIdx === sIdx && !customResult
+                                          ? 'bg-sky-500/25 text-sky-300 font-bold'
+                                          : 'text-zinc-500 hover:text-zinc-300'
+                                      }`}
+                                    >
+                                      Sample #{sIdx + 1}
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Active Sentence & Extracted Entities */}
+                              <div className="rounded-xl border border-white/[0.08] bg-black/60 p-3 space-y-2 text-xs font-sans leading-relaxed">
+                                <p className="text-zinc-300 text-[11px]">
+                                  {customResult ? customNlpInput : nlpPresetSamples[selectedNlpIdx].text}
+                                </p>
+                                <div className="flex flex-wrap gap-1.5 pt-1.5 border-t border-white/[0.06]">
+                                  {(customResult || nlpPresetSamples[selectedNlpIdx].entities).map((ent) => (
+                                    <span
+                                      key={ent.text}
+                                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px] font-mono ${ent.color}`}
+                                    >
+                                      <strong>{ent.text}</strong>
+                                      <span className="opacity-75">[{ent.tag}]</span>
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Custom input form */}
+                              <form onSubmit={handleCustomNlpAnalyze} className="flex items-center gap-2">
+                                <input
+                                  type="text"
+                                  value={customNlpInput}
+                                  onChange={(e) => setCustomNlpInput(e.target.value)}
+                                  placeholder="Type a sentence (e.g., Saran used Python in Chennai)..."
+                                  className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-3 py-1.5 text-[11px] text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500/50 font-mono"
+                                />
+                                <button
+                                  type="submit"
+                                  className="px-3 py-1.5 rounded-xl bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[10px] font-mono font-bold hover:bg-blue-500/30 transition-colors shrink-0"
+                                >
+                                  Extract
+                                </button>
+                              </form>
+                            </div>
+                          )}
+
+                          {nlpTab === 'pipeline' && (
+                            <div className="space-y-2 text-xs font-sans">
+                              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-2.5">
+                                <div className="text-[11px] font-semibold text-white">1. Tokenization</div>
+                                <div className="text-[10px] text-zinc-400">Splits input sentences into discrete linguistic tokens.</div>
+                              </div>
+                              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-2.5">
+                                <div className="text-[11px] font-semibold text-white">2. Part-of-Speech Tagging</div>
+                                <div className="text-[10px] text-zinc-400">Identifies grammatical categories (nouns, verbs, adjectives).</div>
+                              </div>
+                              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-2.5">
+                                <div className="text-[11px] font-semibold text-white">3. Named Entity Classification</div>
+                                <div className="text-[10px] text-zinc-400">Tags entities into Person, Organization, Location, and Tech.</div>
+                              </div>
+                            </div>
+                          )}
+
+                          {nlpTab === 'json' && (
+                            <div className="rounded-xl border border-white/[0.08] bg-black/80 p-3 font-mono text-[10px] text-zinc-300 max-h-36 overflow-y-auto">
+                              <pre>{JSON.stringify({
+                                pipeline: "SpaCy NLP Entity Extraction",
+                                sentence: nlpPresetSamples[selectedNlpIdx].text,
+                                entities: nlpPresetSamples[selectedNlpIdx].entities.map(e => ({
+                                  entity: e.text,
+                                  type: e.tag
+                                }))
+                              }, null, 2)}</pre>
+                            </div>
+                          )}
+
+                          <div className="pt-2 border-t border-white/[0.06] flex items-center justify-between text-[10px] text-zinc-400">
+                            <span>SpaCy + Scikit-Learn</span>
+                            <span className="text-sky-400 font-semibold font-mono">NLP Pipeline</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Generic fallback preview */}
+                      {!isArthaX && !isVision && !isNLP && (
+                        <div className="space-y-3 font-sans text-xs">
+                          <div className="text-white font-semibold">{project.title}</div>
+                          <p className="text-zinc-400 text-[11px]">{project.description}</p>
+                          <div className="flex flex-wrap gap-1.5 pt-2">
+                            {project.tech_stack?.map((t) => (
+                              <span key={t} className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.08] text-[10px] font-mono text-zinc-300">
+                                {t}
+                              </span>
+                            ))}
                           </div>
                         </div>
                       )}
@@ -468,6 +791,83 @@ export default function ProjectsShowcase({ projects }: ProjectShowcaseProps) {
             </div>
           );
         })}
+        </div>
+      )}
+
+      {/* SYSTEM ARCHITECTURE & SCHEMAS MODAL */}
+      {inspectingProject && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl animate-in fade-in">
+          <div className="relative w-full max-w-2xl rounded-3xl border border-white/[0.12] bg-[#0c0d16] p-6 sm:p-8 shadow-2xl card-shine max-h-[90vh] overflow-y-auto">
+            
+            <div className="flex items-start justify-between border-b border-white/[0.08] pb-4">
+              <div>
+                <span className="text-[11px] font-mono uppercase tracking-wider text-blue-400 font-semibold">
+                  Technical Architecture
+                </span>
+                <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight mt-1">
+                  {inspectingProject.title}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setInspectingProject(null)}
+                className="p-1.5 rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-400 hover:text-white transition-colors cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="mt-6 space-y-6 text-xs text-zinc-300 font-mono">
+              {/* Architecture Blueprint */}
+              <div className="space-y-2">
+                <div className="text-zinc-400 uppercase text-[10px] tracking-wider flex items-center gap-1.5">
+                  <Workflow className="h-3.5 w-3.5 text-blue-400" />
+                  <span>Key Engineering Implementations</span>
+                </div>
+                <div className="rounded-2xl border border-white/[0.08] bg-black/50 p-4 space-y-2 font-sans text-xs">
+                  {inspectingProject.highlights?.map((h, i) => (
+                    <div key={i} className="flex items-start gap-2 text-zinc-200">
+                      <span className="text-blue-400 font-mono font-bold">0{i+1}.</span>
+                      <span>{h}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Technologies Applied */}
+              <div className="space-y-2">
+                <div className="text-zinc-400 uppercase text-[10px] tracking-wider flex items-center gap-1.5">
+                  <FileCode className="h-3.5 w-3.5 text-indigo-400" />
+                  <span>Technology Stack</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {inspectingProject.tech_stack?.map((t) => (
+                    <div key={t} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/[0.08] bg-white/[0.03] text-white">
+                      <BrandLogo name={t} size={15} badgeVariant="none" />
+                      <span>{t}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Code Access */}
+              <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between">
+                <span className="text-[11px] text-zinc-400 font-sans">Repository on GitHub</span>
+                {inspectingProject.github_url && (
+                  <a
+                    href={inspectingProject.github_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-zinc-950 font-bold hover:bg-zinc-200 transition-colors"
+                  >
+                    <span>View Repository</span>
+                    <ArrowUpRight className="h-3.5 w-3.5 text-zinc-950" />
+                  </a>
+                )}
+              </div>
+            </div>
+
+          </div>
         </div>
       )}
 

@@ -25,9 +25,14 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  :focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
 }
 
-/* Custom Sleek MNC-Grade Scrollbar */
+/* Custom Sleek Dark-Mode Scrollbar */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
@@ -82,7 +87,27 @@
   pointer-events: none;
 }
 
-/* Titanium, Sapphire, Emerald, & Amber Text Gradients */
+/* Interactive Card Spotlight Glow */
+.card-spotlight {
+  position: relative;
+  overflow: hidden;
+}
+.card-spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(59, 130, 246, 0.12), transparent 45%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+.card-spotlight:hover::after {
+  opacity: 1;
+}
+
+/* Modern Gradient Utility Classes */
 .text-gradient-titanium {
   background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 55%, #94a3b8 100%);
   -webkit-background-clip: text;
@@ -106,6 +131,22 @@
   background: linear-gradient(135deg, #ffffff 0%, #fbbf24 50%, #f59e0b 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* Ambient Aurora Movement */
+@keyframes aurora-drift {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(30px, -20px) scale(1.08);
+    opacity: 0.8;
+  }
+}
+
+.animate-aurora {
+  animation: aurora-drift 14s ease-in-out infinite alternate;
 }
 
 /* Smooth Section Scroll Offset for Fixed / Floating Navbar */
@@ -210,30 +251,6 @@ section[id] {
 /* Hide scrollbar for horizontal scroll containers */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-/* Atomic Orbital Keyframes for Skills Nucleus */
-@keyframes orbit-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes orbit-counter {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(-360deg);
-  }
-}
-
-/* Pause orbital rotation on user hover for effortless inspection */
-.orbit-stage:hover * {
-  animation-play-state: paused !important;
-}
 
 /* Ambient Pulse for Status Indicators */
 @keyframes subtle-pulse {

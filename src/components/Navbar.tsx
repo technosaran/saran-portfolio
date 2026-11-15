@@ -1,28 +1,41 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Terminal, Mail, Menu, X, Download } from 'lucide-react';
+import { Terminal, Mail, Menu, X, Download, Search, Command } from 'lucide-react';
 import { GithubIcon, LinkedinIcon, LeetCodeIcon } from './SocialIcons';
 import { Profile } from '@/lib/neon/db';
 
 interface NavbarProps {
   profile?: Profile;
+  onOpenCommandMenu?: () => void;
 }
 
-export default function Navbar({ profile }: NavbarProps) {
+export default function Navbar({ profile, onOpenCommandMenu }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [scrolled, setScrolled] = useState(false);
 
   const navLinks = [
-    { label: 'Overview', href: '#home', id: 'home' },
-    { label: 'Systems', href: '#projects', id: 'projects' },
+    { label: 'About', href: '#home', id: 'home' },
+    { label: 'Projects', href: '#projects', id: 'projects' },
     { label: 'Experience', href: '#experience', id: 'experience' },
     { label: 'Skills', href: '#skills', id: 'skills' },
-    { label: 'Credentials', href: '#certifications', id: 'certifications' },
+    { label: 'Certifications', href: '#certifications', id: 'certifications' },
     { label: 'Activity', href: '#activity', id: 'activity' },
     { label: 'Contact', href: '#contact', id: 'contact' },
   ];
+
+  // Listen for Cmd+K / Ctrl+K keyboard shortcut
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        onOpenCommandMenu?.();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onOpenCommandMenu]);
 
   // Detect scroll offset for backdrop shadow tuning
   useEffect(() => {
@@ -81,8 +94,10 @@ export default function Navbar({ profile }: NavbarProps) {
           
           {/* Brand */}
           <a href="#home" className="flex items-center gap-2.5 group">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/15 via-indigo-500/10 to-transparent text-blue-400 border border-blue-500/25 group-hover:border-blue-500/50 group-hover:bg-blue-500/20 transition-all duration-200">
-              <Terminal className="h-3.5 w-3.5 text-blue-400" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/20 via-indigo-500/15 to-transparent text-blue-300 border border-blue-500/30 group-hover:border-blue-400/60 group-hover:shadow-[0_0_15px_rgba(59,130,246,0.35)] transition-all duration-300">
+              <span className="font-mono font-black text-xs tracking-tighter text-blue-400 group-hover:text-blue-300">
+                &lt;S/&gt;
+              </span>
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -123,71 +138,107 @@ export default function Navbar({ profile }: NavbarProps) {
             })}
           </nav>
 
-          {/* Action icons & Contact CTA */}
-          <div className="hidden sm:flex items-center gap-1.5">
-            <a
-              href={githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-8 w-8 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-400 hover:text-white hover:border-white/20 hover:bg-white/[0.08] transition-all cursor-pointer"
-              title="GitHub Profile (@technosaran)"
-            >
-              <GithubIcon className="h-3.5 w-3.5" />
-            </a>
-            <a
-              href={linkedinUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-8 w-8 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-400 hover:text-blue-400 hover:border-blue-500/30 hover:bg-white/[0.08] transition-all cursor-pointer"
-              title="LinkedIn Profile"
-            >
-              <LinkedinIcon className="h-3.5 w-3.5" />
-            </a>
-            <a
-              href={leetcodeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-8 w-8 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-400 hover:text-amber-400 hover:border-amber-500/30 hover:bg-white/[0.08] transition-all cursor-pointer"
-              title="LeetCode (90+ Java Problems)"
-            >
-              <LeetCodeIcon className="h-3.5 w-3.5" />
-            </a>
+          {/* Action icons & Spotlight Trigger */}
+          <div className="flex items-center gap-2">
+            {/* Spotlight Command Search Trigger */}
+            {onOpenCommandMenu && (
+              <button
+                type="button"
+                onClick={onOpenCommandMenu}
+                className="inline-flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] hover:border-blue-500/30 text-xs text-zinc-400 hover:text-white transition-all cursor-pointer group"
+                title="Search portfolio (⌘K)"
+                aria-label="Open spotlight search"
+              >
+                <Search className="h-3.5 w-3.5 text-blue-400 group-hover:scale-110 transition-transform" />
+                <span className="hidden xl:inline text-[11px] font-sans">Quick Search</span>
+                <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-white/[0.1] bg-white/[0.05] px-1.5 py-0.2 text-[9px] font-mono text-zinc-400 group-hover:text-zinc-200">
+                  <Command className="h-2.5 w-2.5" /> K
+                </kbd>
+              </button>
+            )}
 
-            <div className="h-4 w-px bg-white/[0.08] mx-1" />
+            <div className="hidden sm:flex items-center gap-1.5">
+              <a
+                href={githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-8 w-8 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-400 hover:text-white hover:border-white/20 hover:bg-white/[0.08] transition-all cursor-pointer"
+                title="GitHub Profile (@technosaran)"
+              >
+                <GithubIcon className="h-3.5 w-3.5" />
+              </a>
+              <a
+                href={linkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-8 w-8 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-400 hover:text-blue-400 hover:border-blue-500/30 hover:bg-white/[0.08] transition-all cursor-pointer"
+                title="LinkedIn Profile"
+              >
+                <LinkedinIcon className="h-3.5 w-3.5" />
+              </a>
+              <a
+                href={leetcodeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-8 w-8 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-400 hover:text-amber-400 hover:border-amber-500/30 hover:bg-white/[0.08] transition-all cursor-pointer"
+                title="LeetCode (90+ Java Problems)"
+              >
+                <LeetCodeIcon className="h-3.5 w-3.5" />
+              </a>
 
-            <a
-              href="/resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] hover:border-blue-500/30 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:text-white transition-all cursor-pointer"
-              title="Download Resume (PDF)"
-            >
-              <Download className="h-3 w-3 text-blue-400" />
-              <span>CV</span>
-            </a>
+              <div className="h-4 w-px bg-white/[0.08] mx-0.5" />
 
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-white hover:bg-zinc-200 px-3.5 py-1.5 text-xs font-bold text-zinc-950 transition-all shadow-md shadow-white/10 hover:scale-[1.02] active:scale-[0.98]"
+              <a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] hover:border-blue-500/30 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:text-white transition-all cursor-pointer"
+                title="Download Resume (PDF)"
+              >
+                <Download className="h-3 w-3 text-blue-400" />
+                <span>CV</span>
+              </a>
+
+              <a
+                href="#contact"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-white hover:bg-zinc-200 px-3.5 py-1.5 text-xs font-bold text-zinc-950 transition-all shadow-md shadow-white/10 hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <Mail className="h-3 w-3 text-zinc-950" />
+                <span>Contact</span>
+              </a>
+            </div>
+
+            {/* Mobile menu toggle */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden text-zinc-400 hover:text-white p-1.5 cursor-pointer rounded-xl hover:bg-white/[0.06] transition-colors"
+              aria-label="Toggle navigation menu"
             >
-              <Mail className="h-3 w-3 text-zinc-950" />
-              <span>Contact</span>
-            </a>
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
           </div>
-
-          {/* Mobile menu toggle */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden text-zinc-400 hover:text-white p-1.5 cursor-pointer rounded-xl hover:bg-white/[0.06] transition-colors"
-            aria-label="Toggle navigation menu"
-          >
-            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
         </div>
 
         {/* Mobile Menu Dropdown */}
         {mobileMenuOpen && (
           <div className="lg:hidden border-t border-white/[0.08] px-5 py-4 space-y-3 bg-[#08090f]/95 rounded-b-2xl backdrop-blur-2xl">
+            {onOpenCommandMenu && (
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenCommandMenu();
+                }}
+                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-mono bg-blue-500/10 border border-blue-500/25 text-blue-300 hover:bg-blue-500/20 transition-all text-left"
+              >
+                <span className="flex items-center gap-2">
+                  <Search className="h-3.5 w-3.5" />
+                  <span>Spotlight Search...</span>
+                </span>
+                <span className="text-[10px] bg-blue-500/20 px-1.5 py-0.5 rounded">⌘K</span>
+              </button>
+            )}
+
             <div className="grid grid-cols-2 gap-1.5">
               {navLinks.map((link) => (
                 <a

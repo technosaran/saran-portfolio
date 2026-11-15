@@ -1,11 +1,15 @@
 export const revalidate = 3600;
 
-import Navbar from '@/components/Navbar';
+import PortfolioClientShell from '@/components/PortfolioClientShell';
 import InteractiveHero from '@/components/InteractiveHero';
 import ProjectsShowcase from '@/components/ProjectsShowcase';
+import ExperienceTimeline from '@/components/ExperienceTimeline';
 import SkillsNucleus from '@/components/SkillsNucleus';
+import CertificatesShowcase from '@/components/CertificatesShowcase';
 import ActivityShowcase from '@/components/ActivityShowcase';
+import ContactSection from '@/components/ContactSection';
 import ScrollReveal from '@/components/ScrollReveal';
+import BrandLogo from '@/components/BrandLogo';
 import { GithubIcon, LinkedinIcon, LeetCodeIcon } from '@/components/SocialIcons';
 import { 
   fetchProfile, 
@@ -20,21 +24,13 @@ import {
   Certificate 
 } from '@/lib/neon/db';
 import { 
-  Mail, 
-  Phone, 
-  MapPin, 
-  GraduationCap, 
-  Briefcase, 
-  Award, 
+  Zap, 
   Code2, 
+  Award, 
+  Activity, 
   Terminal, 
-  ArrowUpRight,
   ArrowUp,
-  Zap,
-  ShieldCheck,
-  Activity,
-  ExternalLink,
-  Download
+  Mail
 } from 'lucide-react';
 
 const FALLBACK_PROFILE: Profile = {
@@ -180,9 +176,7 @@ export default async function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#07080c] text-slate-100 selection:bg-blue-500/25 selection:text-blue-200">
-      <Navbar profile={profile} />
-
+    <PortfolioClientShell profile={profile}>
       {/* Hero Section */}
       <InteractiveHero 
         profile={profile} 
@@ -201,13 +195,13 @@ export default async function Home() {
             <div className="space-y-2 mb-10">
               <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/25 bg-blue-500/10 px-3 py-1 text-xs font-mono font-medium text-blue-300 backdrop-blur-md">
                 <Zap className="h-3.5 w-3.5" />
-                <span>Production &amp; Research</span>
+                <span>Featured Work</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                Featured Systems
+                Projects
               </h2>
               <p className="max-w-2xl text-xs sm:text-sm text-zinc-400">
-                Full-stack personal wealth terminal, real-time computer vision inference stream, and NLP sequence tagging pipeline.
+                Full-stack web applications, computer vision systems, and natural language processing pipelines built with modern technologies.
               </p>
             </div>
           </ScrollReveal>
@@ -223,152 +217,13 @@ export default async function Home() {
       {/* Experience & Education Section */}
       <section id="experience" className="py-20 md:py-24 border-b border-white/[0.08] relative">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 items-start">
-            
-            {/* Experience Column */}
-            <ScrollReveal>
-              <div>
-                <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/25 bg-blue-500/10 px-3 py-1 text-xs font-mono font-medium text-blue-300 backdrop-blur-md">
-                  <Briefcase className="h-3.5 w-3.5" />
-                  <span>Professional Background</span>
-                </div>
-                <h2 className="mt-2 text-3xl font-extrabold text-white tracking-tight">
-                  Work Experience
-                </h2>
-                <p className="mt-1 text-xs text-zinc-400">
-                  Applied engineering internships focused on machine learning models and cloud deployment.
-                </p>
-
-                <div className="mt-8 space-y-4">
-                  {experience.map((exp) => (
-                    <div
-                      key={exp.id}
-                      className="rounded-2xl border border-white/[0.08] bg-[#0c0d15]/80 p-5 md:p-6 backdrop-blur-2xl hover:border-blue-500/30 transition-all duration-300 shadow-xl card-shine group"
-                    >
-                      <div className="flex flex-wrap items-baseline justify-between gap-2">
-                        <h3 className="text-base font-bold text-white tracking-tight group-hover:text-blue-300 transition-colors">
-                          {exp.role}
-                        </h3>
-                        <span className="rounded-full bg-blue-500/10 px-2.5 py-0.5 text-xs font-mono font-medium text-blue-300 border border-blue-500/20">
-                          {exp.period}
-                        </span>
-                      </div>
-
-                      <p className="mt-1 text-xs font-medium text-blue-400">
-                        {exp.company} · <span className="text-zinc-400">{exp.location}</span>
-                      </p>
-
-                      <ul className="mt-3.5 space-y-2 text-xs text-zinc-300/90 leading-relaxed">
-                        {exp.description?.map((item, idx) => (
-                          <li key={idx} className="flex items-start gap-2.5">
-                            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-400" />
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </ScrollReveal>
-
-            {/* Education & Academic Rigor */}
-            <ScrollReveal delay={120}>
-              <div>
-                <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/25 bg-blue-500/10 px-3 py-1 text-xs font-mono font-medium text-blue-300 backdrop-blur-md">
-                  <GraduationCap className="h-3.5 w-3.5" />
-                  <span>Academic Foundation</span>
-                </div>
-                <h2 className="mt-2 text-3xl font-extrabold text-white tracking-tight">
-                  Education &amp; Rigor
-                </h2>
-                <p className="mt-1 text-xs text-zinc-400">
-                  Formal undergraduate engineering curriculum in Artificial Intelligence &amp; Systems.
-                </p>
-
-                <div className="mt-8 rounded-2xl border border-white/[0.08] bg-[#0c0d15]/80 p-6 backdrop-blur-2xl shadow-xl space-y-6 card-shine">
-                  <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-white/[0.06] pb-4">
-                    <div>
-                      <h3 className="text-lg font-bold text-white tracking-tight">{profile.college}</h3>
-                      <p className="mt-0.5 text-sm font-medium text-blue-300">
-                        {profile.degree}
-                      </p>
-                      <p className="mt-0.5 text-xs text-zinc-400">{profile.location}</p>
-                    </div>
-                    <span className="rounded-full bg-blue-500/10 px-2.5 py-0.5 text-xs font-mono font-medium text-blue-300 border border-blue-500/20">
-                      {profile.graduation_year}
-                    </span>
-                  </div>
-
-                  {/* Coursework Matrix */}
-                  <div>
-                    <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-zinc-400 mb-2.5">
-                      Core CS Fundamentals:
-                    </h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                      {displayedCoursework.map((course) => (
-                        <div
-                          key={course}
-                          className="flex items-center gap-2 rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-2 text-zinc-300 hover:border-white/15 transition-colors"
-                        >
-                          <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />
-                          <span>{course}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Problem Solving Summary */}
-                  <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 flex items-center justify-between hover:border-amber-500/35 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                        <Terminal className="h-4 w-4" />
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold text-white">Java Algorithmic Problem Solving</div>
-                        <div className="text-[11px] text-zinc-400">90 Problems Solved on LeetCode (81 Easy, 9 Medium)</div>
-                      </div>
-                    </div>
-                    <a
-                      href={profile.leetcode_url || 'https://leetcode.com/u/Saran-R/'}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1"
-                    >
-                      <span>Profile</span>
-                      <ArrowUpRight className="h-3 w-3" />
-                    </a>
-                  </div>
-
-                  {/* Verified Resume & Credentials Badge */}
-                  <div className="rounded-xl border border-blue-500/20 bg-blue-500/5 p-4 flex items-center justify-between hover:border-blue-500/35 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                        <Download className="h-4 w-4" />
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold text-white">Verified Curriculum Vitae</div>
-                        <div className="text-[11px] text-zinc-400">Complete Engineering Background PDF</div>
-                      </div>
-                    </div>
-                    <a
-                      href="/resume.pdf"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1"
-                    >
-                      <span>Download</span>
-                      <ArrowUpRight className="h-3 w-3" />
-                    </a>
-                  </div>
-
-                </div>
-              </div>
-            </ScrollReveal>
-
-          </div>
-
+          <ScrollReveal>
+            <ExperienceTimeline 
+              experience={experience} 
+              profile={profile} 
+              displayedCoursework={displayedCoursework} 
+            />
+          </ScrollReveal>
         </div>
       </section>
 
@@ -380,18 +235,18 @@ export default async function Home() {
             <div className="space-y-2 text-center max-w-2xl mx-auto mb-10">
               <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/25 bg-blue-500/10 px-3 py-1 text-xs font-mono font-medium text-blue-300 backdrop-blur-md">
                 <Code2 className="h-3.5 w-3.5" />
-                <span>Atomic Competencies</span>
+                <span>Technical Stack</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                Skills Nucleus &amp; Architecture
+                Skills &amp; Technologies
               </h2>
               <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-                Interactive atomic orbital visualizer featuring core technologies revolving around the energy nucleus (E = mc²).
+                Programming languages, frameworks, AI/ML tools, databases, and developer environments I work with.
               </p>
             </div>
           </ScrollReveal>
 
-          {/* Interactive Atomic Skills Orbit Visualizer */}
+          {/* Interactive Skills Showcase */}
           <ScrollReveal delay={100}>
             <SkillsNucleus skills={skills} />
           </ScrollReveal>
@@ -404,60 +259,22 @@ export default async function Home() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           
           <ScrollReveal>
-            <div className="space-y-2">
+            <div className="space-y-2 mb-10">
               <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/25 bg-blue-500/10 px-3 py-1 text-xs font-mono font-medium text-blue-300 backdrop-blur-md">
                 <Award className="h-3.5 w-3.5" />
                 <span>Credentials</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                Certifications &amp; Honors
+                Certifications
               </h2>
               <p className="max-w-2xl text-xs sm:text-sm text-zinc-400">
-                Industry credentials acquired across cloud architecture, data science, deep learning, and enterprise Java.
+                Verified certifications acquired across cloud computing, data science, artificial intelligence, and Java.
               </p>
             </div>
           </ScrollReveal>
 
-          <ScrollReveal delay={100} variant="stagger">
-            <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {certificates.map((cert) => (
-                <div
-                  key={cert.id}
-                  className="flex flex-col justify-between rounded-2xl border border-white/[0.08] bg-[#0c0d15]/80 p-5 backdrop-blur-xl hover:border-blue-500/30 transition-all duration-300 shadow-md group card-shine"
-                >
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-blue-400">
-                        {cert.provider}
-                      </span>
-                      <ShieldCheck className="h-4 w-4 text-emerald-400" />
-                    </div>
-                    {cert.url ? (
-                      <a
-                        href={cert.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-2 text-sm font-bold text-white group-hover:text-blue-300 transition-colors leading-snug inline-flex items-center gap-1.5"
-                      >
-                        <span>{cert.title}</span>
-                        <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity text-blue-400 shrink-0" />
-                      </a>
-                    ) : (
-                      <h3 className="mt-2 text-sm font-bold text-white group-hover:text-blue-300 transition-colors leading-snug">
-                        {cert.title}
-                      </h3>
-                    )}
-                  </div>
-
-                  <div className="mt-4 flex items-center justify-between border-t border-white/[0.06] pt-3 text-xs text-zinc-500 font-mono">
-                    <span className="text-[11px] text-zinc-400">ID: {cert.credential_id || 'VERIFIED'}</span>
-                    <span className="rounded-full bg-blue-500/10 px-2 py-0.5 text-[10px] text-blue-300 font-medium border border-blue-500/20">
-                      {cert.issue_date || '2025'}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <ScrollReveal delay={100}>
+            <CertificatesShowcase certificates={certificates} />
           </ScrollReveal>
 
         </div>
@@ -471,13 +288,13 @@ export default async function Home() {
             <div className="space-y-2 mb-10">
               <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/25 bg-blue-500/10 px-3 py-1 text-xs font-mono font-medium text-blue-300 backdrop-blur-md">
                 <Activity className="h-3.5 w-3.5" />
-                <span>Velocity &amp; Practice</span>
+                <span>Problem Solving &amp; Code</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                Development Activity &amp; Algorithmic Mastery
+                Coding Activity &amp; Repositories
               </h2>
               <p className="max-w-2xl text-xs sm:text-sm text-zinc-400">
-                Continuous code delivery across Git repositories, open-source architectures, and daily Java algorithmic problem solving.
+                GitHub repository development, open-source code delivery, and problem solving on LeetCode.
               </p>
             </div>
           </ScrollReveal>
@@ -491,111 +308,9 @@ export default async function Home() {
 
       {/* Dedicated Clean Contact Section */}
       <section id="contact" className="py-20 md:py-28 relative overflow-hidden">
-        {/* Subtle background glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-blue-600/10 blur-[140px] pointer-events-none rounded-full" />
-
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 text-center relative">
-          
-          <ScrollReveal>
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/25 bg-blue-500/10 px-3.5 py-1 text-xs font-mono font-medium text-blue-300 backdrop-blur-md">
-              <Mail className="h-3.5 w-3.5" />
-              <span>Get in Touch</span>
-            </div>
-            
-            <h2 className="mt-3 text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
-              Let&apos;s Build Something Impactful
-            </h2>
-            
-            <p className="mt-3 text-sm sm:text-base text-zinc-400 max-w-xl mx-auto leading-relaxed">
-              I am actively seeking software engineering and AI/ML internship or full-time opportunities. Reach out directly for collaboration or inquiries.
-            </p>
-          </ScrollReveal>
-
-          <ScrollReveal delay={120} variant="scale">
-            <div className="mt-10 rounded-3xl border border-white/[0.08] bg-[#0c0d15]/80 p-8 sm:p-10 shadow-2xl backdrop-blur-2xl card-shine">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                
-                <div className="space-y-1.5">
-                  <div className="h-10 w-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center mx-auto border border-blue-500/20">
-                    <Mail className="h-4 w-4" />
-                  </div>
-                  <div className="text-xs font-mono text-zinc-400">Email Address</div>
-                  <a
-                    href={`mailto:${profile.email}`}
-                    className="text-sm font-semibold text-white hover:text-blue-400 transition-colors block"
-                  >
-                    {profile.email}
-                  </a>
-                </div>
-
-                <div className="space-y-1.5">
-                  <div className="h-10 w-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center mx-auto border border-blue-500/20">
-                    <Phone className="h-4 w-4" />
-                  </div>
-                  <div className="text-xs font-mono text-zinc-400">Phone Number</div>
-                  <a
-                    href={`tel:${profile.phone}`}
-                    className="text-sm font-semibold text-white hover:text-blue-400 transition-colors block"
-                  >
-                    {profile.phone}
-                  </a>
-                </div>
-
-                <div className="space-y-1.5">
-                  <div className="h-10 w-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center mx-auto border border-blue-500/20">
-                    <MapPin className="h-4 w-4" />
-                  </div>
-                  <div className="text-xs font-mono text-zinc-400">Current Location</div>
-                  <div className="text-sm font-semibold text-white">
-                    {profile.location}
-                  </div>
-                </div>
-
-              </div>
-
-              <div className="mt-8 pt-6 border-t border-white/[0.06] flex flex-wrap items-center justify-center gap-3">
-                <a
-                  href={`mailto:${profile.email}`}
-                  className="inline-flex items-center gap-2 rounded-xl bg-white hover:bg-zinc-200 px-6 py-3 text-xs font-bold text-zinc-950 transition-all shadow-md shadow-white/10 hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  <Mail className="h-3.5 w-3.5 text-zinc-950" />
-                  <span>Send Direct Email</span>
-                </a>
-
-                <a
-                  href="/resume.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl border border-blue-500/30 bg-blue-500/10 hover:bg-blue-500/20 hover:border-blue-500/50 px-5 py-3 text-xs font-semibold text-blue-300 transition-all hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  <Download className="h-3.5 w-3.5 text-blue-400" />
-                  <span>Download Resume (PDF)</span>
-                </a>
-
-                <a
-                  href={profile.linkedin_url || 'https://linkedin.com/in/saran-r-b2b1a5275'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/[0.1] bg-white/[0.04] hover:bg-white/[0.08] hover:border-blue-500/40 px-5 py-3 text-xs font-semibold text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  <LinkedinIcon className="h-3.5 w-3.5 text-zinc-300" />
-                  <span>Connect on LinkedIn</span>
-                </a>
-
-                <a
-                  href={profile.github_url || 'https://github.com/technosaran'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/[0.1] bg-white/[0.04] hover:bg-white/[0.08] hover:border-blue-500/40 px-5 py-3 text-xs font-semibold text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  <GithubIcon className="h-3.5 w-3.5 text-zinc-300" />
-                  <span>Follow on GitHub</span>
-                </a>
-              </div>
-            </div>
-          </ScrollReveal>
-
-        </div>
+        <ScrollReveal>
+          <ContactSection profile={profile} />
+        </ScrollReveal>
       </section>
 
       {/* Clean Modern Footer */}
@@ -624,25 +339,40 @@ export default async function Home() {
               <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white">
                 Stack &amp; Architecture
               </h4>
-              <div className="space-y-2 text-xs text-zinc-400 font-mono">
-                <div className="flex items-center justify-between border-b border-white/[0.04] pb-1">
-                  <span>Framework</span>
+              <div className="space-y-2.5 text-xs text-zinc-400 font-mono">
+                <div className="flex items-center justify-between border-b border-white/[0.04] pb-1.5">
+                  <span className="flex items-center gap-1.5">
+                    <BrandLogo name="Next.js 16" size={14} badgeVariant="none" />
+                    <span>Framework</span>
+                  </span>
                   <span className="text-zinc-200">Next.js 16 (App Router)</span>
                 </div>
-                <div className="flex items-center justify-between border-b border-white/[0.04] pb-1">
-                  <span>Database</span>
-                  <span className="text-blue-400">Neon Serverless PostgreSQL</span>
+                <div className="flex items-center justify-between border-b border-white/[0.04] pb-1.5">
+                  <span className="flex items-center gap-1.5">
+                    <BrandLogo name="Neon" size={14} badgeVariant="none" />
+                    <span>Database</span>
+                  </span>
+                  <span className="text-emerald-400">Neon Serverless Postgres</span>
                 </div>
-                <div className="flex items-center justify-between border-b border-white/[0.04] pb-1">
-                  <span>Styling</span>
+                <div className="flex items-center justify-between border-b border-white/[0.04] pb-1.5">
+                  <span className="flex items-center gap-1.5">
+                    <BrandLogo name="Tailwind CSS" size={14} badgeVariant="none" />
+                    <span>Styling</span>
+                  </span>
                   <span className="text-zinc-200">Tailwind CSS 4</span>
                 </div>
-                <div className="flex items-center justify-between border-b border-white/[0.04] pb-1">
-                  <span>Cloud Infra</span>
+                <div className="flex items-center justify-between border-b border-white/[0.04] pb-1.5">
+                  <span className="flex items-center gap-1.5">
+                    <BrandLogo name="AWS Cloud" size={14} badgeVariant="none" />
+                    <span>Cloud Infra</span>
+                  </span>
                   <span className="text-amber-400">Vercel &amp; AWS</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>Language</span>
+                  <span className="flex items-center gap-1.5">
+                    <BrandLogo name="TypeScript" size={14} badgeVariant="none" />
+                    <span>Language</span>
+                  </span>
                   <span className="text-zinc-200">TypeScript 5 &amp; Java 21</span>
                 </div>
               </div>
@@ -716,6 +446,6 @@ export default async function Home() {
           </div>
         </div>
       </footer>
-    </div>
+    </PortfolioClientShell>
   );
 }
