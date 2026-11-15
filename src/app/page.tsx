@@ -313,64 +313,64 @@ export default async function Home() {
         </ScrollReveal>
       </section>
 
-      {/* Clean Modern Footer */}
-      <footer className="border-t border-white/[0.08] bg-[#050608] pt-14 pb-10 text-xs text-zinc-400">
+      {/* Compact Modern Footer */}
+      <footer className="border-t border-white/[0.08] bg-[#050608] py-6 sm:py-7 text-xs text-zinc-400">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="grid grid-cols-1 gap-10 md:grid-cols-3 pb-10 border-b border-white/[0.06]">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3 pb-5 border-b border-white/[0.06]">
             
             {/* Column 1: Brand & Summary */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2.5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                  <Terminal className="h-4 w-4" />
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                  <Terminal className="h-3 w-3" />
                 </div>
-                <span className="font-bold text-white text-sm tracking-tight font-sans">SARAN R</span>
+                <span className="font-bold text-white text-xs tracking-tight font-sans">SARAN R</span>
               </div>
-              <p className="text-xs text-zinc-400 leading-relaxed max-w-sm">
-                AI &amp; ML engineering student at {profile.college}. Focused on building production-grade web applications, cloud infrastructure, and intelligent systems.
+              <p className="text-[11px] text-zinc-400 leading-snug max-w-xs">
+                AI &amp; ML engineering student at {profile.college}. Building production-grade web applications, cloud infrastructure, and intelligent systems.
               </p>
-              <div className="text-[11px] font-mono text-zinc-500">
+              <div className="text-[10px] font-mono text-zinc-500">
                 {profile.location} · {profile.graduation_year}
               </div>
             </div>
 
             {/* Column 2: System Architecture */}
-            <div className="space-y-2.5">
-              <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white">
+            <div className="space-y-2">
+              <h4 className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-300">
                 Stack &amp; Architecture
               </h4>
-              <div className="space-y-2.5 text-xs text-zinc-400 font-mono">
-                <div className="flex items-center justify-between border-b border-white/[0.04] pb-1.5">
+              <div className="space-y-1.5 text-[11px] text-zinc-400 font-mono">
+                <div className="flex items-center justify-between border-b border-white/[0.03] pb-1">
                   <span className="flex items-center gap-1.5">
-                    <BrandLogo name="Next.js 16" size={14} badgeVariant="none" />
+                    <BrandLogo name="Next.js 16" size={12} badgeVariant="none" />
                     <span>Framework</span>
                   </span>
                   <span className="text-zinc-200">Next.js 16 (App Router)</span>
                 </div>
-                <div className="flex items-center justify-between border-b border-white/[0.04] pb-1.5">
+                <div className="flex items-center justify-between border-b border-white/[0.03] pb-1">
                   <span className="flex items-center gap-1.5">
-                    <BrandLogo name="Neon" size={14} badgeVariant="none" />
+                    <BrandLogo name="Neon" size={12} badgeVariant="none" />
                     <span>Database</span>
                   </span>
                   <span className="text-emerald-400">Neon Serverless Postgres</span>
                 </div>
-                <div className="flex items-center justify-between border-b border-white/[0.04] pb-1.5">
+                <div className="flex items-center justify-between border-b border-white/[0.03] pb-1">
                   <span className="flex items-center gap-1.5">
-                    <BrandLogo name="Tailwind CSS" size={14} badgeVariant="none" />
+                    <BrandLogo name="Tailwind CSS" size={12} badgeVariant="none" />
                     <span>Styling</span>
                   </span>
                   <span className="text-zinc-200">Tailwind CSS 4</span>
                 </div>
-                <div className="flex items-center justify-between border-b border-white/[0.04] pb-1.5">
+                <div className="flex items-center justify-between border-b border-white/[0.03] pb-1">
                   <span className="flex items-center gap-1.5">
-                    <BrandLogo name="AWS Cloud" size={14} badgeVariant="none" />
+                    <BrandLogo name="AWS Cloud" size={12} badgeVariant="none" />
                     <span>Cloud Infra</span>
                   </span>
                   <span className="text-amber-400">Vercel &amp; AWS</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-1.5">
-                    <BrandLogo name="TypeScript" size={14} badgeVariant="none" />
+                    <BrandLogo name="TypeScript" size={12} badgeVariant="none" />
                     <span>Language</span>
                   </span>
                   <span className="text-zinc-200">TypeScript 5 &amp; Java 21</span>
@@ -379,11 +379,11 @@ export default async function Home() {
             </div>
 
             {/* Column 3: Connect & Socials */}
-            <div className="space-y-2.5">
-              <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white">
+            <div className="space-y-2">
+              <h4 className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-300">
                 Connect
               </h4>
-              <ul className="space-y-2 text-xs">
+              <ul className="space-y-1.5 text-[11px]">
                 <li>
                   <a
                     href={profile.github_url || 'https://github.com/technosaran'}
@@ -391,7 +391,7 @@ export default async function Home() {
                     rel="noopener noreferrer"
                     className="hover:text-white transition-colors inline-flex items-center gap-1.5"
                   >
-                    <GithubIcon className="h-3.5 w-3.5 text-zinc-400" />
+                    <GithubIcon className="h-3 w-3 text-zinc-400" />
                     <span>GitHub (@technosaran)</span>
                   </a>
                 </li>
@@ -402,7 +402,7 @@ export default async function Home() {
                     rel="noopener noreferrer"
                     className="hover:text-white transition-colors inline-flex items-center gap-1.5"
                   >
-                    <LinkedinIcon className="h-3.5 w-3.5 text-zinc-400" />
+                    <LinkedinIcon className="h-3 w-3 text-zinc-400" />
                     <span>LinkedIn (Saran R)</span>
                   </a>
                 </li>
@@ -413,7 +413,7 @@ export default async function Home() {
                     rel="noopener noreferrer"
                     className="hover:text-white transition-colors inline-flex items-center gap-1.5"
                   >
-                    <LeetCodeIcon className="h-3.5 w-3.5 text-amber-400" />
+                    <LeetCodeIcon className="h-3 w-3 text-amber-400" />
                     <span>LeetCode (90+ Solved)</span>
                   </a>
                 </li>
@@ -422,7 +422,7 @@ export default async function Home() {
                     href={`mailto:${profile.email}`}
                     className="hover:text-white transition-colors inline-flex items-center gap-1.5"
                   >
-                    <Mail className="h-3.5 w-3.5 text-zinc-400" />
+                    <Mail className="h-3 w-3 text-zinc-400" />
                     <span>{profile.email}</span>
                   </a>
                 </li>
@@ -432,7 +432,7 @@ export default async function Home() {
           </div>
 
           {/* Bottom Bar */}
-          <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-zinc-500 font-mono">
+          <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] text-zinc-500 font-mono">
             <div>
               © {new Date().getFullYear()} Saran R · Engineered with Next.js 16 &amp; Neon
             </div>
@@ -441,7 +441,7 @@ export default async function Home() {
               className="inline-flex items-center gap-1 text-zinc-400 hover:text-blue-400 transition-colors"
             >
               <span>Back to top</span>
-              <ArrowUp className="h-3 w-3" />
+              <ArrowUp className="h-2.5 w-2.5" />
             </a>
           </div>
         </div>

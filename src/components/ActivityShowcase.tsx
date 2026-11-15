@@ -10,7 +10,6 @@ import {
   Flame, 
   Activity, 
   FolderGit2, 
-  Layers, 
   TrendingUp, 
   Cpu, 
   Terminal,
@@ -91,7 +90,6 @@ const SAMPLE_JAVA_SOLUTIONS = [
 
 export default function ActivityShowcase({ profile, projects = [], skills = [] }: ActivityShowcaseProps) {
   const { toast } = useToast();
-  const [viewMode, setViewMode] = useState<'all' | 'github' | 'leetcode'>('all');
   const [githubTab, setGithubTab] = useState<'heatmap' | 'repos' | 'commits'>('heatmap');
   const [leetcodeTab, setLeetcodeTab] = useState<'metrics' | 'patterns' | 'solutions' | 'practices'>('metrics');
   const [copiedHandle, setCopiedHandle] = useState<string | null>(null);
@@ -310,68 +308,14 @@ export default function ActivityShowcase({ profile, projects = [], skills = [] }
 
   return (
     <div className="space-y-8">
-      
-      {/* Top Filter Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.06] pb-5">
-        <div>
-          <h3 className="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
-            <span>Coding Activity &amp; Problem Solving</span>
-          </h3>
-          <p className="text-xs text-zinc-400 mt-0.5">
-            GitHub repository development and algorithmic problem solving on LeetCode.
-          </p>
-        </div>
-
-        {/* View Mode Switcher */}
-        <div className="flex items-center rounded-xl bg-white/[0.04] p-1 border border-white/[0.08]">
-          <button
-            type="button"
-            onClick={() => setViewMode('all')}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all cursor-pointer ${
-              viewMode === 'all'
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            <Layers className="h-3.5 w-3.5" />
-            <span>Unified View</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setViewMode('github')}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all cursor-pointer ${
-              viewMode === 'github'
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            <GithubIcon className="h-3.5 w-3.5" />
-            <span>GitHub</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setViewMode('leetcode')}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all cursor-pointer ${
-              viewMode === 'leetcode'
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            <LeetCodeIcon className="h-3.5 w-3.5" />
-            <span>LeetCode</span>
-          </button>
-        </div>
-      </div>
-
       {/* Main Grid Display */}
-      <div className={`grid grid-cols-1 gap-8 ${viewMode === 'all' ? 'lg:grid-cols-2' : 'max-w-4xl mx-auto'}`}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         {/* ======================================================== */}
         {/* LEFT CARD: GITHUB REPOSITORIES & ACTIVITY */}
         {/* ======================================================== */}
-        {(viewMode === 'all' || viewMode === 'github') && (
-          <div 
-            onMouseMove={handleCardMouseMove}
+        <div 
+          onMouseMove={handleCardMouseMove}
             className="flex flex-col justify-between rounded-2xl border border-white/[0.08] bg-[#0c0d15]/95 p-6 backdrop-blur-xl hover:border-blue-500/30 transition-all shadow-xl card-shine card-spotlight"
           >
             <div className="space-y-6">
@@ -642,14 +586,12 @@ export default function ActivityShowcase({ profile, projects = [], skills = [] }
               </a>
             </div>
           </div>
-        )}
 
         {/* ======================================================== */}
         {/* RIGHT CARD: LEETCODE PROBLEM SOLVING */}
         {/* ======================================================== */}
-        {(viewMode === 'all' || viewMode === 'leetcode') && (
-          <div 
-            onMouseMove={handleCardMouseMove}
+        <div 
+          onMouseMove={handleCardMouseMove}
             className="flex flex-col justify-between rounded-2xl border border-white/[0.08] bg-[#0c0d15]/95 p-6 backdrop-blur-xl hover:border-amber-500/30 transition-all shadow-xl card-shine card-spotlight"
           >
             <div className="space-y-6">
@@ -1009,7 +951,6 @@ export default function ActivityShowcase({ profile, projects = [], skills = [] }
               </a>
             </div>
           </div>
-        )}
 
       </div>
 

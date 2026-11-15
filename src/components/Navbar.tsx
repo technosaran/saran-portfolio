@@ -79,7 +79,6 @@ export default function Navbar({ profile, onOpenCommandMenu }: NavbarProps) {
   const linkedinUrl = profile?.linkedin_url || 'https://linkedin.com/in/saran-r-b2b1a5275';
   const leetcodeUrl = profile?.leetcode_url || 'https://leetcode.com/u/Saran-R/';
   const fullName = profile?.full_name || 'SARAN R';
-  const headline = profile?.title || 'AI/ML & Systems Engineer';
 
   return (
     <header className="sticky top-2 sm:top-3.5 z-50 w-full px-3 sm:px-6 transition-all duration-300">
@@ -99,19 +98,14 @@ export default function Navbar({ profile, onOpenCommandMenu }: NavbarProps) {
                 &lt;S/&gt;
               </span>
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-white text-xs sm:text-sm tracking-tight font-sans group-hover:text-blue-300 transition-colors">
-                  {fullName}
-                </span>
-                <span className="relative flex h-1.5 w-1.5" title="Available for opportunities">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400"></span>
-                </span>
-              </div>
-              <p className="text-[10px] text-zinc-400 font-mono tracking-tight hidden sm:block">
-                {headline}
-              </p>
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-white text-xs sm:text-sm tracking-tight font-sans group-hover:text-blue-300 transition-colors">
+                {fullName}
+              </span>
+              <span className="relative flex h-1.5 w-1.5" title="Available for opportunities">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400"></span>
+              </span>
             </div>
           </a>
 
