@@ -358,23 +358,23 @@ export default function AdminDashboardPage() {
     <div className="min-h-screen bg-neutral-950 text-neutral-100 selection:bg-emerald-500 selection:text-black">
       {/* Top Header */}
       <header className="border-b border-neutral-800 bg-neutral-900/60 backdrop-blur-xl sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 sm:py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shrink-0">
               <Shield className="h-5 w-5" />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="font-bold text-white text-base">Saran R · Admin Control Panel</h1>
-                <span className="flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-400 border border-emerald-500/20">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="font-bold text-white text-sm sm:text-base truncate">Saran R · Admin Control Panel</h1>
+                <span className="flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-400 border border-emerald-500/20 shrink-0">
                   <Database className="h-2.5 w-2.5" /> Neon Synced
                 </span>
               </div>
-              <p className="text-[11px] text-neutral-400">Authenticated as: {adminEmail}</p>
+              <p className="text-[11px] text-neutral-400 truncate">Authenticated as: {adminEmail}</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-end">
             <a
               href="/"
               target="_blank"
@@ -382,14 +382,14 @@ export default function AdminDashboardPage() {
               className="flex items-center gap-1.5 rounded-lg border border-neutral-700 bg-neutral-800 hover:bg-neutral-700 px-3 py-1.5 text-xs font-semibold text-neutral-200 transition-colors"
             >
               <ExternalLink className="h-3.5 w-3.5" />
-              Live Portfolio
+              <span>Live Portfolio</span>
             </a>
             <button
               onClick={handleLogout}
               className="flex items-center gap-1.5 rounded-lg border border-red-500/30 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 text-xs font-semibold text-red-300 transition-colors cursor-pointer"
             >
               <LogOut className="h-3.5 w-3.5" />
-              Logout
+              <span>Logout</span>
             </button>
           </div>
         </div>
@@ -397,7 +397,7 @@ export default function AdminDashboardPage() {
 
       {/* Status notification toast */}
       {statusMsg && (
-        <div className="fixed top-20 right-6 z-50">
+        <div className="fixed top-20 right-4 sm:right-6 z-50">
           <div className={`rounded-xl border px-4 py-3 shadow-2xl flex items-center gap-2 text-xs font-medium backdrop-blur-xl ${
             statusMsg.type === 'success' 
               ? 'border-emerald-500/30 bg-emerald-950/90 text-emerald-300' 
@@ -410,9 +410,9 @@ export default function AdminDashboardPage() {
       )}
 
       {/* Main Content Area */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Navigation Tabs */}
-        <div className="flex flex-wrap gap-2 border-b border-neutral-800 pb-4 mb-8">
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-2 sm:pb-4 mb-6 sm:mb-8 border-b border-neutral-800">
           {[
             { id: 'profile', name: 'Profile & Bio', icon: User },
             { id: 'projects', name: `Projects (${projects.length})`, icon: Layers },
@@ -427,14 +427,14 @@ export default function AdminDashboardPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as typeof activeTab)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   isActive
-                    ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20'
+                    ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20 font-bold'
                     : 'bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-700'
                 }`}
               >
                 <Icon className="h-3.5 w-3.5" />
-                {tab.name}
+                <span>{tab.name}</span>
               </button>
             );
           })}

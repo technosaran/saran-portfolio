@@ -32,7 +32,7 @@ export default function BrandLogo({
     setCandidateIndex((prev) => prev + 1);
   };
 
-  const FallbackComponent = getSkillLogo(name);
+  const FallbackSvg = getSkillLogo(name);
 
   // Badge styles
   const getBadgeStyle = () => {
@@ -45,7 +45,7 @@ export default function BrandLogo({
         return 'bg-transparent border-0';
       case 'glass':
       default:
-        return 'bg-white/[0.06] backdrop-blur-md border border-white/[0.1] shadow-sm hover:border-blue-500/30';
+        return 'bg-white/[0.05] backdrop-blur-md border border-white/[0.08] shadow-sm hover:border-indigo-500/40 hover:bg-white/[0.08]';
     }
   };
 
@@ -80,7 +80,7 @@ export default function BrandLogo({
         />
       ) : (
         <div className="flex items-center justify-center w-full h-full p-0.5">
-          <FallbackComponent className="w-full h-full object-contain" />
+          {React.createElement(FallbackSvg, { className: 'w-full h-full object-contain' })}
         </div>
       )}
     </div>

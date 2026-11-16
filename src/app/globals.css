@@ -9,6 +9,11 @@
   :root {
     --font-sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
     --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    --brand-indigo: #6366f1;
+    --brand-cyan: #38bdf8;
+    --brand-violet: #8b5cf6;
+    --brand-emerald: #10b981;
+    --brand-amber: #f59e0b;
   }
 
   html {
@@ -17,60 +22,87 @@
   }
 
   body {
-    background-color: #07080c;
+    background-color: #050609;
     color: #f1f5f9;
     font-family: var(--font-sans);
     letter-spacing: -0.012em;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  /* Eliminate mobile tap delay & optimize touch gestures */
+  a, button, input, select, textarea {
+    touch-action: manipulation;
+  }
+
+  /* Balanced responsive text wrap */
+  h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Safe container width prevents flexbox overflows */
+  pre, code {
+    max-width: 100%;
+  }
+
+  ::selection {
+    background-color: rgba(99, 102, 241, 0.28);
+    color: #e0e7ff;
   }
 
   :focus-visible {
-    outline: 2px solid #3b82f6;
+    outline: 2px solid #6366f1;
     outline-offset: 2px;
   }
 }
 
-/* Custom Sleek Dark-Mode Scrollbar */
+/* Custom World-Class Dark-Mode Scrollbar */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #07080c;
+  background: #050609;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #1c1f33;
   border-radius: 9999px;
+  transition: background 0.2s ease;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #4f46e5;
 }
 
-/* Background Grids & Modern Aesthetics */
+/* Background Grids & Modern Visual Canvas */
 .bg-grid {
   background-size: 32px 32px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
 }
 
 .bg-grid-faded {
   background-size: 40px 40px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
   mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 60%, transparent 100%);
   -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 60%, transparent 100%);
 }
 
 .bg-dots-pattern {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 
-/* Luxury Card Top-Edge Light Inset (The Signature Linear / Vercel Bevel) */
+/* Luxury Card Top-Edge Light Inset (Linear / Vercel Specular Bevel) */
 .card-shine {
   position: relative;
 }
@@ -80,14 +112,14 @@
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.03) 40%, transparent 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(99, 102, 241, 0.12) 20%, rgba(255, 255, 255, 0.03) 50%, transparent 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
 }
 
-/* Interactive Card Spotlight Glow */
+/* Interactive Card Spotlight Glow (Dual Tone Indigo + Cyan) */
 .card-spotlight {
   position: relative;
   overflow: hidden;
@@ -97,7 +129,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: radial-gradient(500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(59, 130, 246, 0.12), transparent 45%);
+  background: radial-gradient(550px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(99, 102, 241, 0.13), rgba(56, 189, 248, 0.06) 40%, transparent 70%);
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -107,89 +139,118 @@
   opacity: 1;
 }
 
-/* Modern Gradient Utility Classes */
+/* Elite Typography Gradients */
 .text-gradient-titanium {
-  background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 55%, #94a3b8 100%);
+  background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 45%, #94a3b8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.text-gradient-blue,
-.text-gradient-sapphire {
-  background: linear-gradient(135deg, #ffffff 0%, #60a5fa 50%, #3b82f6 100%);
+.text-gradient-brand {
+  background: linear-gradient(135deg, #ffffff 0%, #818cf8 35%, #6366f1 70%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-aurora {
+  background: linear-gradient(135deg, #c084fc 0%, #818cf8 35%, #38bdf8 70%, #34d399 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-cyan {
+  background: linear-gradient(135deg, #ffffff 0%, #38bdf8 50%, #0284c7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-violet {
+  background: linear-gradient(135deg, #ffffff 0%, #c084fc 50%, #7c3aed 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .text-gradient-emerald {
-  background: linear-gradient(135deg, #ffffff 0%, #34d399 50%, #10b981 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #34d399 50%, #059669 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .text-gradient-amber {
-  background: linear-gradient(135deg, #ffffff 0%, #fbbf24 50%, #f59e0b 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #fbbf24 50%, #d97706 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Ambient Aurora Movement */
-@keyframes aurora-drift {
+/* Accent Glow Utility Shadows */
+.glow-indigo {
+  box-shadow: 0 0 30px -5px rgba(99, 102, 241, 0.35);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 30px -5px rgba(56, 189, 248, 0.35);
+}
+
+.glow-emerald {
+  box-shadow: 0 0 30px -5px rgba(16, 185, 129, 0.35);
+}
+
+.glow-amber {
+  box-shadow: 0 0 30px -5px rgba(245, 158, 11, 0.35);
+}
+
+/* Multi-Layer Ambient Aurora Drift */
+@keyframes aurora-drift-1 {
   0%, 100% {
     transform: translate(0, 0) scale(1);
-    opacity: 0.6;
+    opacity: 0.55;
   }
   50% {
-    transform: translate(30px, -20px) scale(1.08);
-    opacity: 0.8;
+    transform: translate(40px, -25px) scale(1.12);
+    opacity: 0.85;
   }
 }
 
-.animate-aurora {
-  animation: aurora-drift 14s ease-in-out infinite alternate;
+@keyframes aurora-drift-2 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.45;
+  }
+  50% {
+    transform: translate(-35px, 20px) scale(1.08);
+    opacity: 0.75;
+  }
 }
 
-/* Smooth Section Scroll Offset for Fixed / Floating Navbar */
+.animate-aurora-1 {
+  animation: aurora-drift-1 16s ease-in-out infinite alternate;
+}
+
+.animate-aurora-2 {
+  animation: aurora-drift-2 19s ease-in-out infinite alternate;
+}
+
+/* Responsive Section Scroll Offset for Fixed / Floating Navbar */
 section[id] {
-  scroll-margin-top: 6.5rem;
+  scroll-margin-top: 5rem;
 }
 
-/* ========================================= */
+@media (min-width: 768px) {
+  section[id] {
+    scroll-margin-top: 6.5rem;
+  }
+}
+
+/* Safe area insets for mobile dynamic islands and home indicators */
+.safe-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+}
+
+.safe-top {
+  padding-top: max(0.5rem, env(safe-area-inset-top, 0px));
+}
+
 /* Section Entrance Animations (Scroll-based) */
-/* ========================================= */
-@keyframes fade-slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(28px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fade-scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.92);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes stagger-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .animate-on-scroll {
   opacity: 0;
   transform: translateY(28px);
@@ -266,6 +327,125 @@ section[id] {
 
 .animate-subtle-pulse {
   animation: subtle-pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ======================================================== */
+/* Quantum Nucleus & Relativity Orbital Animations          */
+/* ======================================================== */
+@keyframes orbit-spin-cw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbit-spin-ccw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes counter-spin-cw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes counter-spin-ccw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes nucleus-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 35px rgba(56, 189, 248, 0.45), 0 0 75px rgba(99, 102, 241, 0.3), inset 0 0 20px rgba(56, 189, 248, 0.35);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 60px rgba(56, 189, 248, 0.7), 0 0 110px rgba(99, 102, 241, 0.5), inset 0 0 30px rgba(56, 189, 248, 0.55);
+  }
+}
+
+@keyframes event-horizon-spin {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.03);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes spacetime-ripple {
+  0% {
+    transform: scale(0.75);
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+@keyframes particle-drift {
+  0%, 100% {
+    transform: translateY(0px) scale(0.9);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-8px) scale(1.1);
+    opacity: 0.9;
+  }
+}
+
+.animate-orbit-cw {
+  animation: orbit-spin-cw 50s linear infinite;
+}
+
+.animate-orbit-ccw {
+  animation: orbit-spin-ccw 50s linear infinite;
+}
+
+.animate-counter-cw {
+  animation: counter-spin-cw 50s linear infinite;
+}
+
+.animate-counter-ccw {
+  animation: counter-spin-ccw 50s linear infinite;
+}
+
+.animate-nucleus-pulse {
+  animation: nucleus-pulse 3.8s ease-in-out infinite;
+}
+
+.animate-event-horizon {
+  animation: event-horizon-spin 18s linear infinite;
+}
+
+.animate-spacetime-ripple {
+  animation: spacetime-ripple 4s cubic-bezier(0.1, 0.5, 0.4, 1) infinite;
+}
+
+.animate-particle-drift {
+  animation: particle-drift 3s ease-in-out infinite;
 }
 
 /* WCAG 2.2 AA Accessibility: Respect user prefers-reduced-motion setting */

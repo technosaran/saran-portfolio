@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -13,6 +13,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
   display: "swap",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  viewportFit: "cover",
+  themeColor: "#050609",
+  colorScheme: "dark",
+};
 
 export const metadata: Metadata = {
   title: "Saran R — AI & ML Engineer | Full-Stack Cloud Architect",
@@ -93,7 +103,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-screen bg-[#07080c] text-zinc-100 font-sans selection:bg-blue-500/25 selection:text-blue-200">
+      <body className="min-h-screen bg-[#050609] text-slate-100 font-sans selection:bg-indigo-500/30 selection:text-indigo-200 overflow-x-hidden antialiased">
         {children}
       </body>
     </html>

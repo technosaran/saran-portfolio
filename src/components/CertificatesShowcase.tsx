@@ -117,26 +117,6 @@ export default function CertificatesShowcase({ certificates }: CertificatesShowc
   return (
     <div className="space-y-6">
       
-      {/* Top Credential Metrics Strip */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-3 text-center card-shine">
-          <div className="text-xl font-bold font-mono text-white">{certificates.length}</div>
-          <div className="text-[11px] text-zinc-400 mt-0.5">Certifications</div>
-        </div>
-        <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-3 text-center card-shine">
-          <div className="text-xl font-bold font-mono text-emerald-400">Verified</div>
-          <div className="text-[11px] text-zinc-400 mt-0.5">Credential Status</div>
-        </div>
-        <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-3 text-center card-shine">
-          <div className="text-xl font-bold font-mono text-blue-400">{providers.length}</div>
-          <div className="text-[11px] text-zinc-400 mt-0.5">Issuing Organizations</div>
-        </div>
-        <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-3 text-center card-shine">
-          <div className="text-xl font-bold font-mono text-amber-400">2025</div>
-          <div className="text-[11px] text-zinc-400 mt-0.5">Latest Issued</div>
-        </div>
-      </div>
-
       {/* Controls Bar: Provider Chips & Search */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-white/[0.06] pb-4">
         
@@ -147,8 +127,8 @@ export default function CertificatesShowcase({ certificates }: CertificatesShowc
             onClick={() => setSelectedProvider('all')}
             className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer whitespace-nowrap ${
               selectedProvider === 'all'
-                ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40 font-semibold shadow-sm'
-                : 'text-zinc-400 hover:text-white bg-white/[0.02] border border-white/[0.06]'
+                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-semibold shadow-sm'
+                : 'text-slate-400 hover:text-white bg-white/[0.02] border border-white/[0.06]'
             }`}
           >
             All Providers ({certificates.length})
@@ -160,8 +140,8 @@ export default function CertificatesShowcase({ certificates }: CertificatesShowc
               onClick={() => setSelectedProvider(selectedProvider === p ? 'all' : p)}
               className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer whitespace-nowrap ${
                 selectedProvider === p
-                  ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40 font-semibold shadow-sm'
-                  : 'text-zinc-400 hover:text-white bg-white/[0.02] border border-white/[0.06]'
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-semibold shadow-sm'
+                  : 'text-slate-400 hover:text-white bg-white/[0.02] border border-white/[0.06]'
               }`}
             >
               <BrandLogo name={p} size={15} badgeVariant="none" />
@@ -172,20 +152,20 @@ export default function CertificatesShowcase({ certificates }: CertificatesShowc
 
         {/* Search Input */}
         <div className="relative w-full sm:w-64">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-cyan-400" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search certification or ID..."
-            className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-white/[0.08] bg-white/[0.02] text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500/50 font-mono"
+            className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-white/[0.08] bg-white/[0.02] text-sm sm:text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/50 font-mono transition-colors"
           />
         </div>
       </div>
 
       {/* Grid of Certificates */}
       {filteredCertificates.length === 0 ? (
-        <div className="rounded-2xl border border-white/[0.08] bg-[#0c0d15]/60 p-10 text-center font-mono text-xs text-zinc-400">
+        <div className="rounded-2xl border border-white/[0.08] bg-[#090b16]/60 p-10 text-center font-mono text-xs text-slate-400">
           No certifications match your search filter.
         </div>
       ) : (
@@ -194,11 +174,11 @@ export default function CertificatesShowcase({ certificates }: CertificatesShowc
             <div
               key={cert.id}
               onMouseMove={handleCardMouseMove}
-              className="flex flex-col justify-between rounded-2xl border border-white/[0.08] bg-[#0c0d15]/85 p-5 backdrop-blur-xl hover:border-blue-500/40 transition-all duration-300 shadow-md group card-shine hover:shadow-xl hover:shadow-blue-950/20 card-spotlight"
+              className="flex flex-col justify-between rounded-2xl border border-white/[0.08] bg-[#090b16]/85 p-4 sm:p-5 backdrop-blur-xl hover:border-emerald-500/40 transition-all duration-300 shadow-md group card-shine hover:shadow-xl hover:shadow-emerald-950/20 card-spotlight"
             >
               <div>
                 <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
                     <BrandLogo
                       name={cert.provider}
                       size={38}
@@ -207,58 +187,58 @@ export default function CertificatesShowcase({ certificates }: CertificatesShowc
                       className="group-hover:scale-105 transition-transform shrink-0"
                     />
                     <div className="min-w-0">
-                      <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-blue-400 truncate block">
+                      <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-emerald-400 truncate block">
                         {cert.provider}
                       </span>
-                      <span className="text-[10px] text-zinc-500 font-mono">
+                      <span className="text-[10px] text-slate-500 font-mono">
                         Verified Credential
                       </span>
                     </div>
                   </div>
                   <div className="flex items-center gap-1 text-emerald-400 shrink-0 mt-0.5" title="Verified Credential">
                     <ShieldCheck className="h-4 w-4" />
-                    <span className="text-[10px] font-mono hidden group-hover:inline">Verified</span>
+                    <span className="text-[10px] font-mono hidden sm:inline">Verified</span>
                   </div>
                 </div>
 
                 <h3 
                   onClick={() => setInspectingCert(cert)}
-                  className="mt-3.5 text-sm font-bold text-white group-hover:text-blue-300 transition-colors leading-snug cursor-pointer flex items-center justify-between"
+                  className="mt-3.5 text-sm font-bold text-white group-hover:text-emerald-300 transition-colors leading-snug cursor-pointer flex items-center justify-between"
                 >
-                  <span>{cert.title}</span>
-                  <ExternalLink className="h-3 w-3 text-zinc-500 group-hover:text-blue-400 opacity-60 group-hover:opacity-100 shrink-0 ml-1" />
+                  <span className="line-clamp-2">{cert.title}</span>
+                  <ExternalLink className="h-3 w-3 text-slate-500 group-hover:text-cyan-400 opacity-60 group-hover:opacity-100 shrink-0 ml-1.5" />
                 </h3>
               </div>
 
-              <div className="mt-5 flex items-center justify-between border-t border-white/[0.06] pt-3 text-xs text-zinc-400 font-mono">
+              <div className="mt-5 flex items-center justify-between border-t border-white/[0.06] pt-3 text-xs text-slate-400 font-mono gap-2">
                 <button
                   type="button"
                   onClick={() => copyCredentialId(cert.id, cert.credential_id || 'VERIFIED')}
-                  className="inline-flex items-center gap-1.5 text-[11px] text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-[11px] text-slate-400 hover:text-white transition-colors cursor-pointer min-w-0"
                   title="Click to copy credential ID"
                 >
                   {copiedId === cert.id ? (
                     <>
-                      <Check className="h-3 w-3 text-emerald-400" />
+                      <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
                       <span className="text-emerald-400 font-semibold">Copied!</span>
                     </>
                   ) : (
                     <>
-                      <Copy className="h-3 w-3 text-zinc-500" />
-                      <span>ID: {cert.credential_id || 'VERIFIED'}</span>
+                      <Copy className="h-3.5 w-3.5 text-slate-500 shrink-0" />
+                      <span className="truncate max-w-[120px] xs:max-w-[160px]">ID: {cert.credential_id || 'VERIFIED'}</span>
                     </>
                   )}
                 </button>
 
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1.5 shrink-0">
                   <button
                     type="button"
                     onClick={() => setInspectingCert(cert)}
-                    className="text-[10px] text-blue-400 hover:text-blue-300 font-mono hover:underline cursor-pointer"
+                    className="text-[10px] text-cyan-400 hover:text-cyan-300 font-mono hover:underline cursor-pointer"
                   >
                     Details
                   </button>
-                  <span className="rounded-full bg-blue-500/10 px-2 py-0.5 text-[10px] text-blue-300 font-medium border border-blue-500/20">
+                  <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] text-emerald-300 font-medium border border-emerald-500/20">
                     {cert.issue_date || '2025'}
                   </span>
                 </div>
@@ -271,7 +251,7 @@ export default function CertificatesShowcase({ certificates }: CertificatesShowc
       {/* CREDENTIAL DETAILS MODAL */}
       {inspectingCert && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl animate-in fade-in">
-          <div className="relative w-full max-w-md rounded-3xl border border-white/[0.12] bg-[#0c0d16] p-6 sm:p-7 shadow-2xl card-shine">
+          <div className="relative w-full max-w-md rounded-3xl border border-white/[0.12] bg-[#090b16] p-6 sm:p-7 shadow-2xl card-shine">
             <div className="flex items-start justify-between border-b border-white/[0.08] pb-4">
               <div className="flex items-center gap-3">
                 <BrandLogo
@@ -282,7 +262,7 @@ export default function CertificatesShowcase({ certificates }: CertificatesShowc
                   className="shrink-0"
                 />
                 <div>
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-blue-400 font-semibold block">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-semibold block">
                     {inspectingCert.provider}
                   </span>
                   <h3 className="text-base font-bold text-white tracking-tight mt-0.5">
@@ -293,15 +273,15 @@ export default function CertificatesShowcase({ certificates }: CertificatesShowc
               <button
                 type="button"
                 onClick={() => setInspectingCert(null)}
-                className="p-1.5 rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                className="p-1.5 rounded-xl border border-white/[0.08] bg-white/[0.03] text-slate-400 hover:text-white transition-colors cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
-            <div className="mt-4 space-y-4 text-xs font-mono text-zinc-300">
+            <div className="mt-4 space-y-4 text-xs font-mono text-slate-300">
               <div className="space-y-1.5">
-                <span className="text-zinc-500 text-[10px] uppercase tracking-wider">Key Topics &amp; Competencies</span>
+                <span className="text-slate-500 text-[10px] uppercase tracking-wider">Key Topics &amp; Competencies</span>
                 <div className="space-y-1 font-sans">
                   {(CERT_COMPETENCIES[inspectingCert.credential_id || ''] || [
                     'Core technical principles and implementation',
@@ -309,8 +289,8 @@ export default function CertificatesShowcase({ certificates }: CertificatesShowc
                     'Practical coursework & assessment',
                     'Issued upon successful completion'
                   ]).map((comp, idx) => (
-                    <div key={idx} className="flex items-start gap-2 text-zinc-200">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-blue-400 shrink-0 mt-0.5" />
+                    <div key={idx} className="flex items-start gap-2 text-slate-200">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0 mt-0.5" />
                       <span>{comp}</span>
                     </div>
                   ))}
@@ -319,19 +299,19 @@ export default function CertificatesShowcase({ certificates }: CertificatesShowc
 
               <div className="rounded-xl border border-white/[0.06] bg-black/50 p-3 flex items-center justify-between">
                 <div>
-                  <div className="text-[10px] text-zinc-500">Credential Identifier</div>
+                  <div className="text-[10px] text-slate-500">Credential Identifier</div>
                   <div className="text-white font-bold">{inspectingCert.credential_id || 'VERIFIED'}</div>
                 </div>
                 <button
                   type="button"
                   onClick={() => copyCredentialId(inspectingCert.id, inspectingCert.credential_id || 'VERIFIED')}
-                  className="px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-300 border border-blue-500/20 text-[10px] hover:bg-blue-500/20 transition-colors cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 text-[10px] hover:bg-emerald-500/20 transition-colors cursor-pointer"
                 >
                   Copy ID
                 </button>
               </div>
 
-              <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between text-[11px] text-zinc-400 font-sans">
+              <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between text-[11px] text-slate-400 font-sans">
                 <span className="flex items-center gap-1.5 text-emerald-400">
                   <ShieldCheck className="h-4 w-4" />
                   <span>Verified Certification</span>
