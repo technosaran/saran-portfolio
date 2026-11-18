@@ -35,7 +35,7 @@ export default function PortfolioClientShell({ profile, children }: PortfolioCli
   return (
     <ToastProvider>
       <CommandMenuContext.Provider value={{ openCommandMenu, closeCommandMenu }}>
-        <div className="relative min-h-screen bg-[#07080c] text-slate-100 selection:bg-blue-500/25 selection:text-blue-200">
+        <div className="relative min-h-screen bg-[#09090b] text-zinc-100 selection:bg-emerald-500/20 selection:text-emerald-200">
           {/* Top Reading Progress Bar & Floating Quick Pill */}
           <ScrollProgressBar onOpenCommandMenu={openCommandMenu} />
 

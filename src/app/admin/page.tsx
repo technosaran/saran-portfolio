@@ -942,7 +942,7 @@ export default function AdminDashboardPage() {
             <form onSubmit={handleAddCert} className="bg-neutral-900/50 border border-neutral-800 rounded-2xl p-6 backdrop-blur-md space-y-4">
               <h3 className="text-base font-bold text-white flex items-center gap-2">
                 <Plus className="h-4 w-4 text-emerald-400" />
-                Add Verified Certificate
+                Add Certificate
               </h3>
 
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">

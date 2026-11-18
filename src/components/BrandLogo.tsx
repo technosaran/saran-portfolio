@@ -45,7 +45,7 @@ export default function BrandLogo({
         return 'bg-transparent border-0';
       case 'glass':
       default:
-        return 'bg-white/[0.05] backdrop-blur-md border border-white/[0.08] shadow-sm hover:border-indigo-500/40 hover:bg-white/[0.08]';
+        return 'bg-[#14151b] border border-[#20222a] hover:border-zinc-700';
     }
   };
 

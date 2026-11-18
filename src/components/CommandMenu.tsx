@@ -110,16 +110,16 @@ export default function CommandMenu({
       category: 'Navigation',
       icon: Award,
       action: () => navigateTo('#certifications'),
-      badge: '6 Verified',
+      badge: '6 Certs',
     },
     {
       id: 'nav-activity',
-      title: 'Activity & Algorithmic Velocity',
-      subtitle: 'GitHub contribution stream & LeetCode Java mastery',
+      title: 'Activity & Problem Solving',
+      subtitle: 'GitHub activity & LeetCode problem solving',
       category: 'Navigation',
       icon: Activity,
       action: () => navigateTo('#activity'),
-      badge: '90+ DSA',
+      badge: '90+ Solved',
     },
     {
       id: 'nav-contact',
@@ -140,18 +140,18 @@ export default function CommandMenu({
       action: () => {
         navigateTo('#projects');
       },
-      badge: 'Production Live',
+      badge: 'Live',
     },
     {
       id: 'system-cv',
       title: 'Real-Time Object Detection System',
-      subtitle: '60 FPS visual inference stream with PyTorch & OpenCV',
+      subtitle: 'Computer vision video analysis with PyTorch & OpenCV',
       category: 'Systems',
       icon: Terminal,
       action: () => {
         navigateTo('#projects');
       },
-      badge: 'CUDA Accelerated',
+      badge: 'Computer Vision',
     },
     {
       id: 'system-nlp',
@@ -279,10 +279,10 @@ export default function CommandMenu({
       {/* Background click dismiss */}
       <div className="fixed inset-0 -z-10" onClick={onClose} />
 
-      <div className="w-full max-w-xl rounded-2xl border border-white/[0.14] bg-[#090b16] shadow-[0_25px_60px_rgba(0,0,0,0.8)] overflow-hidden card-shine max-h-[85vh] flex flex-col m-2 sm:m-auto">
+      <div className="w-full max-w-xl rounded-xl border border-[#20222a] bg-[#111216] shadow-2xl overflow-hidden max-h-[85vh] flex flex-col m-2 sm:m-auto">
         {/* Search Input Bar */}
-        <div className="flex items-center gap-3 px-4 py-3.5 border-b border-white/[0.08] bg-[#060810]/95 shrink-0">
-          <Search className="h-4 w-4 text-cyan-400 shrink-0" />
+        <div className="flex items-center gap-3 px-4 py-3.5 border-b border-[#20222a] bg-[#0d0e12] shrink-0">
+          <Search className="h-4 w-4 text-zinc-400 shrink-0" />
           <input
             type="text"
             autoFocus
@@ -291,8 +291,8 @@ export default function CommandMenu({
               setQuery(e.target.value);
               setRawIndex(0);
             }}
-            placeholder="Search commands, systems, skills, or actions..."
-            className="w-full bg-transparent text-sm text-white placeholder-slate-500 focus:outline-none font-sans min-h-[36px]"
+            placeholder="Search commands, projects, skills, or actions..."
+            className="w-full bg-transparent text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none font-sans min-h-[36px]"
           />
           {query ? (
             <button
@@ -300,12 +300,12 @@ export default function CommandMenu({
                 setQuery('');
                 setRawIndex(0);
               }}
-              className="text-slate-500 hover:text-white p-2 rounded-md transition-colors cursor-pointer"
+              className="text-zinc-500 hover:text-white p-2 rounded-md transition-colors cursor-pointer"
             >
               <X className="h-3.5 w-3.5" />
             </button>
           ) : (
-            <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-white/[0.1] bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-mono text-slate-400">
+            <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-[#20222a] bg-[#14151b] px-1.5 py-0.5 text-[10px] font-mono text-zinc-400">
               ESC
             </kbd>
           )}
@@ -314,8 +314,8 @@ export default function CommandMenu({
         {/* Results List */}
         <div className="max-h-[340px] sm:max-h-[380px] overflow-y-auto p-2 space-y-1 scrollbar-thin">
           {filteredItems.length === 0 ? (
-            <div className="py-12 text-center text-xs font-mono text-slate-500">
-              No matching commands or systems found for &quot;{query}&quot;.
+            <div className="py-12 text-center text-xs font-mono text-zinc-500">
+              No matching commands found for &quot;{query}&quot;.
             </div>
           ) : (
             filteredItems.map((item, index) => {
@@ -328,35 +328,35 @@ export default function CommandMenu({
                   type="button"
                   onClick={item.action}
                   onMouseEnter={() => setRawIndex(index)}
-                  className={`w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-left transition-all cursor-pointer ${
+                  className={`w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg text-left transition-all cursor-pointer ${
                     isSelected
-                      ? 'bg-indigo-600/15 border border-indigo-500/30 text-white'
-                      : 'text-slate-300 hover:bg-white/[0.04] border border-transparent'
+                      ? 'bg-zinc-800 text-white'
+                      : 'text-zinc-300 hover:bg-zinc-800/40'
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <div
                       className={`flex h-8 w-8 items-center justify-center rounded-lg border transition-colors shrink-0 ${
                         isSelected
-                          ? 'bg-indigo-500/20 border-indigo-500/40 text-cyan-300'
-                          : 'bg-white/[0.03] border-white/[0.08] text-slate-400'
+                          ? 'bg-zinc-700 border-zinc-600 text-zinc-100'
+                          : 'bg-[#14151b] border-[#20222a] text-zinc-400'
                       }`}
                     >
                       <Icon className="h-4 w-4" />
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-semibold text-white truncate">
+                        <span className="text-xs font-semibold text-zinc-100 truncate">
                           {item.title}
                         </span>
                         {item.badge && (
-                          <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-md bg-white/[0.06] text-cyan-300 border border-white/[0.08]">
+                          <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-zinc-800 text-emerald-400 border border-zinc-700">
                             {item.badge}
                           </span>
                         )}
                       </div>
                       {item.subtitle && (
-                        <p className="text-[11px] text-slate-400 truncate font-mono">
+                        <p className="text-[11px] text-zinc-400 truncate font-mono">
                           {item.subtitle}
                         </p>
                       )}
@@ -364,11 +364,11 @@ export default function CommandMenu({
                   </div>
 
                   <div className="flex items-center gap-2 shrink-0">
-                    <span className="text-[10px] font-mono text-slate-500 uppercase">
+                    <span className="text-[10px] font-mono text-zinc-500 uppercase">
                       {item.category}
                     </span>
                     {isSelected && (
-                      <kbd className="hidden sm:inline-flex rounded bg-indigo-500/20 px-1 py-0.5 text-[10px] font-mono text-indigo-300 border border-indigo-500/30">
+                      <kbd className="hidden sm:inline-flex rounded bg-zinc-700 px-1 py-0.5 text-[10px] font-mono text-zinc-300">
                         ↵
                       </kbd>
                     )}
@@ -380,20 +380,19 @@ export default function CommandMenu({
         </div>
 
         {/* Footer shortcuts hint */}
-        <div className="flex items-center justify-between px-4 py-2 border-t border-white/[0.06] bg-[#060810]/80 text-[11px] font-mono text-slate-500">
+        <div className="flex items-center justify-between px-4 py-2.5 border-t border-[#20222a] bg-[#0d0e12] text-[11px] font-mono text-zinc-500">
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1">
-              <kbd className="rounded border border-white/[0.1] bg-white/[0.04] px-1 py-0.2">↑</kbd>
-              <kbd className="rounded border border-white/[0.1] bg-white/[0.04] px-1 py-0.2">↓</kbd>
+              <kbd className="rounded border border-[#20222a] bg-[#14151b] px-1 py-0.2">↑</kbd>
+              <kbd className="rounded border border-[#20222a] bg-[#14151b] px-1 py-0.2">↓</kbd>
               <span>to navigate</span>
             </span>
             <span className="flex items-center gap-1">
-              <kbd className="rounded border border-white/[0.1] bg-white/[0.04] px-1 py-0.2">↵</kbd>
+              <kbd className="rounded border border-[#20222a] bg-[#14151b] px-1 py-0.2">↵</kbd>
               <span>to select</span>
             </span>
           </div>
-          <span className="flex items-center gap-1 text-cyan-400/90">
-            <Sparkles className="h-3 w-3 text-cyan-400" />
+          <span className="flex items-center gap-1 text-zinc-400">
             <span>Saran R Spotlight</span>
           </span>
         </div>

@@ -37,7 +37,7 @@ describe('External Activity Services (Real Data & Graceful Fallbacks)', () => {
     const topLang = data.languages[0];
     expect(topLang.name).toBe('TypeScript');
     expect(topLang.share).toBeGreaterThan(50);
-  });
+  }, 20000);
 
   it('fetchLeetCodeData returns valid real metrics, languages and topics for Saran-R', async () => {
     const data = await fetchLeetCodeData('Saran-R');

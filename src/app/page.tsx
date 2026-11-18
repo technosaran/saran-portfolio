@@ -25,21 +25,13 @@ import {
 } from '@/lib/neon/db';
 import { fetchGitHubData, GitHubActivityData } from '@/services/github.service';
 import { fetchLeetCodeData, LeetCodeActivityData } from '@/services/leetcode.service';
-import { 
-  Zap, 
-  Code2, 
-  Award, 
-  Activity, 
-  Terminal, 
-  ArrowUp,
-  Mail
-} from 'lucide-react';
+import { ArrowUp, Mail } from 'lucide-react';
 
 const FALLBACK_PROFILE: Profile = {
   id: 1,
   full_name: 'SARAN R',
   title: 'Artificial Intelligence & Machine Learning Engineer',
-  headline: 'AI/ML Engineering Student | Cloud Infrastructure & Full-Stack Architect',
+  headline: 'AI/ML Engineering Student | Cloud Infrastructure & Full-Stack Developer',
   bio: 'Artificial Intelligence and Machine Learning engineering student with hands-on experience in cloud infrastructure (AWS) and full-stack development. Proven ability to architect scalable web applications, implement machine learning models, and solve algorithmic challenges. Passionate about modern software engineering practices, robust database architecture, and building production-grade systems.',
   email: 'iamsaran.ai@gmail.com',
   phone: '+91 6384957740',
@@ -57,7 +49,7 @@ const FALLBACK_PROJECTS: Project[] = [
   {
     id: 1,
     title: 'arthaX – Personal Wealth & Financial Terminal',
-    description: 'Full-stack financial terminal for real-time tracking of investments and net worth with modern dark-mode terminal experience.',
+    description: 'Full-stack financial terminal for real-time tracking of personal investments and net worth with responsive terminal experience.',
     tech_stack: ['Next.js 16', 'TypeScript', 'PostgreSQL', 'Supabase', 'Tailwind CSS'],
     github_url: 'https://github.com/technosaran/arthax',
     live_url: 'https://arthax.vercel.app',
@@ -198,26 +190,23 @@ export default async function Home() {
       />
 
       {/* Featured Projects Section */}
-      <section id="projects" className="pt-12 pb-16 md:pt-14 md:pb-20 border-b border-white/[0.06] relative">
-        <div className="mx-auto max-w-6xl px-3.5 sm:px-6 lg:px-8">
+      <section id="projects" className="py-14 md:py-20 border-b border-[#20222a]">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
           
-          {/* Section Header */}
           <ScrollReveal>
-            <div className="space-y-2 mb-8">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-xs font-mono font-medium text-indigo-300 backdrop-blur-md">
-                <Zap className="h-3.5 w-3.5 text-cyan-400" />
-                <span>Featured Systems</span>
+            <div className="mb-8 space-y-1">
+              <div className="text-xs font-mono uppercase tracking-wider text-emerald-400">
+                01 / Featured Work
               </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white">
-                <span className="text-gradient-titanium">Featured Projects</span>
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-100">
+                Projects
               </h2>
-              <p className="max-w-2xl text-xs sm:text-sm text-slate-400 leading-relaxed">
-                Full-stack financial terminals, real-time computer vision inference systems, and NLP sequence pipelines built with modern cloud and AI architectures.
+              <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl leading-relaxed">
+                Full-stack platforms, computer vision pipelines, and natural language processing applications.
               </p>
             </div>
           </ScrollReveal>
 
-          {/* Interactive Modern Projects Showcase */}
           <ScrollReveal delay={100}>
             <ProjectsShowcase projects={projects} />
           </ScrollReveal>
@@ -226,9 +215,20 @@ export default async function Home() {
       </section>
 
       {/* Experience & Education Section */}
-      <section id="experience" className="py-14 md:py-20 border-b border-white/[0.06] relative">
-        <div className="mx-auto max-w-6xl px-3.5 sm:px-6 lg:px-8">
+      <section id="experience" className="py-14 md:py-20 border-b border-[#20222a]">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <ScrollReveal>
+            <div className="mb-8 space-y-1">
+              <div className="text-xs font-mono uppercase tracking-wider text-sky-400">
+                02 / Background
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-100">
+                Experience &amp; Education
+              </h2>
+              <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl leading-relaxed">
+                Hands-on engineering internships, cloud infrastructure deployments, and core academic foundations.
+              </p>
+            </div>
             <ExperienceTimeline 
               experience={experience} 
               profile={profile} 
@@ -239,25 +239,23 @@ export default async function Home() {
       </section>
 
       {/* Technical Skills Section */}
-      <section id="skills" className="py-14 md:py-20 border-b border-white/[0.06] relative overflow-hidden">
-        <div className="mx-auto max-w-6xl px-3.5 sm:px-6 lg:px-8">
+      <section id="skills" className="py-14 md:py-20 border-b border-[#20222a]">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
           
           <ScrollReveal>
-            <div className="space-y-2 text-center max-w-2xl mx-auto mb-8">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 px-3 py-1 text-xs font-mono font-medium text-purple-300 backdrop-blur-md">
-                <Code2 className="h-3.5 w-3.5 text-purple-400" />
-                <span>Technical Stack</span>
+            <div className="mb-8 space-y-1">
+              <div className="text-xs font-mono uppercase tracking-wider text-purple-400">
+                03 / Capabilities
               </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white">
-                <span className="text-gradient-titanium">Skills &amp; Technologies</span>
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-100">
+                Skills &amp; Tooling
               </h2>
-              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                Core programming languages, frameworks, deep learning libraries, database systems, and cloud infrastructure I engineer with.
+              <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl leading-relaxed">
+                Core technologies used in production applications, deep learning architectures, and cloud deployments.
               </p>
             </div>
           </ScrollReveal>
 
-          {/* Interactive Skills Showcase */}
           <ScrollReveal delay={100}>
             <SkillsNucleus skills={skills} />
           </ScrollReveal>
@@ -265,52 +263,25 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Certifications Section */}
-      <section id="certifications" className="py-14 md:py-20 border-b border-white/[0.06] relative">
-        <div className="mx-auto max-w-6xl px-3.5 sm:px-6 lg:px-8">
+      {/* Engineering Activity Section (GitHub & LeetCode) */}
+      <section id="activity" className="py-14 md:py-20 border-b border-[#20222a]">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
           
           <ScrollReveal>
-            <div className="space-y-2 mb-8">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-mono font-medium text-emerald-300 backdrop-blur-md">
-                <Award className="h-3.5 w-3.5 text-emerald-400" />
-                <span>Verified Credentials</span>
+            <div className="mb-8 space-y-1">
+              <div className="text-xs font-mono uppercase tracking-wider text-amber-400">
+                04 / Activity
               </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white">
-                <span className="text-gradient-titanium">Certifications</span>
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-100">
+                Activity &amp; Problem Solving
               </h2>
-              <p className="max-w-2xl text-xs sm:text-sm text-slate-400 leading-relaxed">
-                Verified industry certifications acquired across cloud computing, data science, artificial intelligence, and Java development.
+              <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl leading-relaxed">
+                Open-source contributions on GitHub and algorithmic problem-solving on LeetCode.
               </p>
             </div>
           </ScrollReveal>
 
           <ScrollReveal delay={100}>
-            <CertificatesShowcase certificates={certificates} />
-          </ScrollReveal>
-
-        </div>
-      </section>
-
-      {/* Activity Section (GitHub & LeetCode) */}
-      <section id="activity" className="py-14 md:py-20 border-b border-white/[0.06] relative">
-        <div className="mx-auto max-w-6xl px-3.5 sm:px-6 lg:px-8">
-          
-          <ScrollReveal>
-            <div className="space-y-2 mb-10">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-mono font-medium text-amber-300 backdrop-blur-md">
-                <Activity className="h-3.5 w-3.5 text-amber-400" />
-                <span>Algorithmic Telemetry &amp; Code</span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white">
-                <span className="text-gradient-titanium">Coding Activity &amp; Repositories</span>
-              </h2>
-              <p className="max-w-2xl text-xs sm:text-sm text-slate-400 leading-relaxed">
-                GitHub repository development, open-source code delivery, and 90+ algorithmic problem solutions on LeetCode in Java.
-              </p>
-            </div>
-          </ScrollReveal>
-
-          <ScrollReveal delay={120}>
             <ActivityShowcase 
               profile={profile} 
               projects={projects} 
@@ -323,145 +294,123 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Dedicated Clean Contact Section */}
-      <section id="contact" className="py-14 md:py-20 relative overflow-hidden">
-        <ScrollReveal>
-          <ContactSection profile={profile} />
-        </ScrollReveal>
+      {/* Certifications Section */}
+      <section id="certifications" className="py-14 md:py-20 border-b border-[#20222a]">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          
+          <ScrollReveal>
+            <div className="mb-8 space-y-1">
+              <div className="text-xs font-mono uppercase tracking-wider text-emerald-400">
+                05 / Credentials
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-100">
+                Certifications
+              </h2>
+              <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl leading-relaxed">
+                Professional certifications across cloud computing, machine learning, and software development.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal delay={100}>
+            <CertificatesShowcase certificates={certificates} />
+          </ScrollReveal>
+
+        </div>
       </section>
 
-      {/* World-Class MNC Compact Footer */}
-      <footer className="border-t border-white/[0.06] bg-[#030407] py-8 sm:py-9 text-xs text-slate-400 relative overflow-hidden">
-        {/* Subtle Ambient Bottom Mesh */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[100px] bg-indigo-600/10 blur-[100px] pointer-events-none rounded-full" />
-
-        <div className="relative mx-auto max-w-6xl px-3.5 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3 pb-6 border-b border-white/[0.06]">
-            
-            {/* Column 1: Brand & Summary */}
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-500/15 text-cyan-400 border border-indigo-500/30">
-                  <Terminal className="h-3 w-3" />
-                </div>
-                <span className="font-bold text-white text-xs tracking-tight font-sans">SARAN R</span>
+      {/* Contact Section */}
+      <section id="contact" className="py-14 md:py-20 border-b border-[#20222a]">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <ScrollReveal>
+            <div className="mb-8 space-y-1">
+              <div className="text-xs font-mono uppercase tracking-wider text-sky-400">
+                06 / Connect
               </div>
-              <p className="text-[11px] text-slate-400 leading-relaxed max-w-xs">
-                AI &amp; ML engineering student at {profile.college}. Building production-grade web applications, cloud infrastructure, and intelligent systems.
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-100">
+                Get in Touch
+              </h2>
+              <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl leading-relaxed">
+                Open to full-time software engineering roles, AI/ML opportunities, and collaborative discussions.
               </p>
-              <div className="text-[10px] font-mono text-slate-500">
-                {profile.location} · {profile.graduation_year}
+            </div>
+            <ContactSection profile={profile} />
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* Minimalist Human Colophon Footer */}
+      <footer className="bg-[#09090b] py-10 text-xs text-zinc-400">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-6 border-b border-[#20222a]">
+            
+            {/* Identity & Bio */}
+            <div className="space-y-1 max-w-md">
+              <div className="font-semibold text-zinc-100 text-sm">
+                Saran R
+              </div>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                AI &amp; ML engineering student at {profile.college}. Building with Next.js, PostgreSQL, PyTorch, and AWS.
+              </p>
+              <div className="text-[11px] font-mono text-zinc-500">
+                {profile.location} · Class of 2027
               </div>
             </div>
 
-            {/* Column 2: System Architecture */}
-            <div className="space-y-2">
-              <h4 className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-300">
-                Stack &amp; Architecture
-              </h4>
-              <div className="space-y-1.5 text-[11px] text-slate-400 font-mono">
-                <div className="flex items-center justify-between border-b border-white/[0.03] pb-1">
-                  <span className="flex items-center gap-1.5">
-                    <BrandLogo name="Next.js 16" size={12} badgeVariant="none" />
-                    <span>Framework</span>
-                  </span>
-                  <span className="text-slate-200">Next.js 16 (App Router)</span>
-                </div>
-                <div className="flex items-center justify-between border-b border-white/[0.03] pb-1">
-                  <span className="flex items-center gap-1.5">
-                    <BrandLogo name="Neon" size={12} badgeVariant="none" />
-                    <span>Database</span>
-                  </span>
-                  <span className="text-emerald-400">Neon Serverless Postgres</span>
-                </div>
-                <div className="flex items-center justify-between border-b border-white/[0.03] pb-1">
-                  <span className="flex items-center gap-1.5">
-                    <BrandLogo name="Tailwind CSS" size={12} badgeVariant="none" />
-                    <span>Styling</span>
-                  </span>
-                  <span className="text-slate-200">Tailwind CSS 4</span>
-                </div>
-                <div className="flex items-center justify-between border-b border-white/[0.03] pb-1">
-                  <span className="flex items-center gap-1.5">
-                    <BrandLogo name="AWS Cloud" size={12} badgeVariant="none" />
-                    <span>Cloud Infra</span>
-                  </span>
-                  <span className="text-amber-400">Vercel &amp; AWS</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-1.5">
-                    <BrandLogo name="TypeScript" size={12} badgeVariant="none" />
-                    <span>Language</span>
-                  </span>
-                  <span className="text-slate-200">TypeScript 5 &amp; Java 21</span>
-                </div>
-              </div>
-            </div>
+            {/* Social Links */}
+            <div className="flex flex-wrap items-center gap-4 text-xs">
+              <a
+                href={profile.github_url || 'https://github.com/technosaran'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white transition-colors inline-flex items-center gap-1.5"
+              >
+                <GithubIcon className="h-3.5 w-3.5" />
+                <span>GitHub</span>
+              </a>
 
-            {/* Column 3: Connect & Socials */}
-            <div className="space-y-2">
-              <h4 className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-300">
-                Connect
-              </h4>
-              <ul className="space-y-1.5 text-[11px]">
-                <li>
-                  <a
-                    href={profile.github_url || 'https://github.com/technosaran'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-white transition-colors inline-flex items-center gap-1.5"
-                  >
-                    <GithubIcon className="h-3 w-3 text-slate-400" />
-                    <span>GitHub (@technosaran)</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href={profile.linkedin_url || 'https://linkedin.com/in/saran-r-b2b1a5275'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-cyan-400 transition-colors inline-flex items-center gap-1.5"
-                  >
-                    <LinkedinIcon className="h-3 w-3 text-slate-400" />
-                    <span>LinkedIn (Saran R)</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href={profile.leetcode_url || 'https://leetcode.com/u/Saran-R/'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-amber-400 transition-colors inline-flex items-center gap-1.5"
-                  >
-                    <LeetCodeIcon className="h-3 w-3 text-amber-400" />
-                    <span>LeetCode (90+ Solved)</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href={`mailto:${profile.email}`}
-                    className="hover:text-white transition-colors inline-flex items-center gap-1.5"
-                  >
-                    <Mail className="h-3 w-3 text-slate-400" />
-                    <span>{profile.email}</span>
-                  </a>
-                </li>
-              </ul>
+              <a
+                href={profile.linkedin_url || 'https://linkedin.com/in/saran-r-b2b1a5275'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white transition-colors inline-flex items-center gap-1.5"
+              >
+                <LinkedinIcon className="h-3.5 w-3.5" />
+                <span>LinkedIn</span>
+              </a>
+
+              <a
+                href={profile.leetcode_url || 'https://leetcode.com/u/Saran-R/'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white transition-colors inline-flex items-center gap-1.5"
+              >
+                <LeetCodeIcon className="h-3.5 w-3.5" />
+                <span>LeetCode</span>
+              </a>
+
+              <a
+                href={`mailto:${profile.email}`}
+                className="hover:text-white transition-colors inline-flex items-center gap-1.5"
+              >
+                <Mail className="h-3.5 w-3.5" />
+                <span>Email</span>
+              </a>
             </div>
 
           </div>
 
-          {/* Bottom Bar */}
-          <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] text-slate-500 font-mono">
+          {/* Sub-bar */}
+          <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] font-mono text-zinc-500">
             <div>
-              © {new Date().getFullYear()} Saran R · Engineered with Next.js 16 &amp; Neon
+              Designed &amp; built by Saran R · Next.js 16 &amp; Neon Postgres
             </div>
             <a
               href="#home"
-              className="inline-flex items-center gap-1 text-slate-400 hover:text-cyan-400 transition-colors"
+              className="inline-flex items-center gap-1 text-zinc-400 hover:text-zinc-200 transition-colors"
             >
               <span>Back to top</span>
-              <ArrowUp className="h-2.5 w-2.5" />
+              <ArrowUp className="h-3 w-3" />
             </a>
           </div>
         </div>

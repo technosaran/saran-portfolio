@@ -2,13 +2,13 @@
 
 import { useState, useMemo } from 'react';
 import { 
-  ShieldCheck, 
-  ExternalLink, 
+  Award, 
   Search, 
   Copy, 
   Check, 
-  X, 
-  CheckCircle2 
+  X,
+  ExternalLink,
+  ShieldCheck
 } from 'lucide-react';
 import { Certificate } from '@/lib/neon/db';
 import { useToast } from './Toast';
@@ -23,42 +23,36 @@ const CERT_COMPETENCIES: Record<string, string[]> = {
     'Java Programming Fundamentals',
     'Object-Oriented Programming (OOP)',
     'Collections Framework & Generics',
-    'Exception Handling & File Operations',
-    'Design Principles & Clean Code'
+    'Exception Handling & File Operations'
   ],
   'ORACLE-OCI-DS': [
     'Oracle Cloud Infrastructure',
-    'Data Science Environment & Tools',
     'Machine Learning Model Lifecycle',
     'Hyperparameter Optimization',
     'Model Deployment'
   ],
   'IBM-AI-FUND': [
-    'Artificial Intelligence Core Concepts',
+    'Artificial Intelligence Concepts',
     'Supervised & Unsupervised Learning',
-    'Deep Learning Basics',
-    'AI Ethics & Applications',
-    'IBM SkillsBuild Curriculum'
+    'Deep Learning Fundamentals',
+    'AI Ethics'
   ],
   'AWS-COURSERA': [
-    'AWS Cloud Fundamentals',
-    'Amazon EC2 Compute & VPC',
-    'Amazon S3 Object Storage',
+    'AWS Cloud Architecture',
+    'Amazon EC2 Compute & S3 Storage',
     'Identity & Access Management (IAM)',
-    'Cloud Architecture Principles'
+    'Virtual Private Cloud (VPC)'
   ],
   'GUVI-PROMPT': [
     'Prompt Engineering Techniques',
-    'Few-Shot & Zero-Shot Prompting',
     'Context Window Strategies',
-    'AI Model Integration',
-    'Practical AI Applications'
+    'Few-Shot & Zero-Shot Prompting',
+    'AI Model Integration'
   ],
   'NASSCOM-GOLD': [
     'Data Acquisition Fundamentals',
     'Data Cleansing & Transformation',
     'Feature Preparation',
-    'FutureSkills Prime Gold Standard',
     'Data Processing Workflows'
   ]
 };
@@ -68,14 +62,6 @@ export default function CertificatesShowcase({ certificates }: CertificatesShowc
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProvider, setSelectedProvider] = useState<string>('all');
   const [copiedId, setCopiedId] = useState<number | null>(null);
-  const [inspectingCert, setInspectingCert] = useState<Certificate | null>(null);
-
-  // Card mouse movement for spotlight
-  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-    e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-  };
 
   // Extract unique providers
   const providers = useMemo(() => {
@@ -103,11 +89,12 @@ export default function CertificatesShowcase({ certificates }: CertificatesShowc
     });
   }, [certificates, searchQuery, selectedProvider]);
 
-  const copyCredentialId = (id: number, credId: string) => {
+  const copyCredentialId = (cert: Certificate) => {
+    if (!cert.credential_id) return;
     try {
-      navigator.clipboard.writeText(credId);
-      setCopiedId(id);
-      toast(`Credential ID "${credId}" copied!`, 'success');
+      navigator.clipboard.writeText(cert.credential_id);
+      setCopiedId(cert.id);
+      toast('Credential ID copied', 'success');
       setTimeout(() => setCopiedId(null), 2000);
     } catch {
       toast('Failed to copy ID', 'error');
@@ -117,215 +104,146 @@ export default function CertificatesShowcase({ certificates }: CertificatesShowc
   return (
     <div className="space-y-6">
       
-      {/* Controls Bar: Provider Chips & Search */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-white/[0.06] pb-4">
+      {/* Controls */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         
-        {/* Provider Chips */}
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
+        {/* Provider Pills */}
+        <div className="flex flex-wrap items-center gap-1.5">
           <button
             type="button"
             onClick={() => setSelectedProvider('all')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer ${
               selectedProvider === 'all'
-                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-semibold shadow-sm'
-                : 'text-slate-400 hover:text-white bg-white/[0.02] border border-white/[0.06]'
+                ? 'bg-zinc-100 text-zinc-900 font-semibold shadow-sm'
+                : 'border border-[#20222a] bg-[#111216] text-zinc-400 hover:text-zinc-200'
             }`}
           >
-            All Providers ({certificates.length})
+            All Providers
           </button>
           {providers.map((p) => (
             <button
               key={p}
               type="button"
-              onClick={() => setSelectedProvider(selectedProvider === p ? 'all' : p)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer whitespace-nowrap ${
+              onClick={() => setSelectedProvider(p)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer ${
                 selectedProvider === p
-                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-semibold shadow-sm'
-                  : 'text-slate-400 hover:text-white bg-white/[0.02] border border-white/[0.06]'
+                  ? 'bg-zinc-100 text-zinc-900 font-semibold shadow-sm'
+                  : 'border border-[#20222a] bg-[#111216] text-zinc-400 hover:text-zinc-200'
               }`}
             >
-              <BrandLogo name={p} size={15} badgeVariant="none" />
-              <span>{p}</span>
+              {p}
             </button>
           ))}
         </div>
 
         {/* Search Input */}
-        <div className="relative w-full sm:w-64">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-cyan-400" />
+        <div className="relative sm:w-60">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search certification or ID..."
-            className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-white/[0.08] bg-white/[0.02] text-sm sm:text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/50 font-mono transition-colors"
+            placeholder="Search credentials..."
+            className="w-full rounded-lg border border-[#20222a] bg-[#111216] pl-9 pr-3 py-1.5 text-xs text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus:border-zinc-500"
           />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery('')}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
+            >
+              <X className="h-3 w-3" />
+            </button>
+          )}
         </div>
+
       </div>
 
-      {/* Grid of Certificates */}
-      {filteredCertificates.length === 0 ? (
-        <div className="rounded-2xl border border-white/[0.08] bg-[#090b16]/60 p-10 text-center font-mono text-xs text-slate-400">
-          No certifications match your search filter.
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredCertificates.map((cert) => (
+      {/* Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filteredCertificates.map((cert) => {
+          const competencies = cert.credential_id ? CERT_COMPETENCIES[cert.credential_id] : undefined;
+
+          return (
             <div
               key={cert.id}
-              onMouseMove={handleCardMouseMove}
-              className="flex flex-col justify-between rounded-2xl border border-white/[0.08] bg-[#090b16]/85 p-4 sm:p-5 backdrop-blur-xl hover:border-emerald-500/40 transition-all duration-300 shadow-md group card-shine hover:shadow-xl hover:shadow-emerald-950/20 card-spotlight"
+              className="flex flex-col justify-between rounded-xl border border-[#20222a] bg-[#111216] p-5 hover:border-zinc-700 transition-colors"
             >
-              <div>
+              <div className="space-y-3">
                 <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <BrandLogo
-                      name={cert.provider}
-                      size={38}
-                      badgeVariant="glass"
-                      showGlow
-                      className="group-hover:scale-105 transition-transform shrink-0"
-                    />
-                    <div className="min-w-0">
-                      <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-emerald-400 truncate block">
-                        {cert.provider}
-                      </span>
-                      <span className="text-[10px] text-slate-500 font-mono">
-                        Verified Credential
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1 text-emerald-400 shrink-0 mt-0.5" title="Verified Credential">
-                    <ShieldCheck className="h-4 w-4" />
-                    <span className="text-[10px] font-mono hidden sm:inline">Verified</span>
-                  </div>
-                </div>
-
-                <h3 
-                  onClick={() => setInspectingCert(cert)}
-                  className="mt-3.5 text-sm font-bold text-white group-hover:text-emerald-300 transition-colors leading-snug cursor-pointer flex items-center justify-between"
-                >
-                  <span className="line-clamp-2">{cert.title}</span>
-                  <ExternalLink className="h-3 w-3 text-slate-500 group-hover:text-cyan-400 opacity-60 group-hover:opacity-100 shrink-0 ml-1.5" />
-                </h3>
-              </div>
-
-              <div className="mt-5 flex items-center justify-between border-t border-white/[0.06] pt-3 text-xs text-slate-400 font-mono gap-2">
-                <button
-                  type="button"
-                  onClick={() => copyCredentialId(cert.id, cert.credential_id || 'VERIFIED')}
-                  className="inline-flex items-center gap-1.5 text-[11px] text-slate-400 hover:text-white transition-colors cursor-pointer min-w-0"
-                  title="Click to copy credential ID"
-                >
-                  {copiedId === cert.id ? (
-                    <>
-                      <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                      <span className="text-emerald-400 font-semibold">Copied!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-3.5 w-3.5 text-slate-500 shrink-0" />
-                      <span className="truncate max-w-[120px] xs:max-w-[160px]">ID: {cert.credential_id || 'VERIFIED'}</span>
-                    </>
-                  )}
-                </button>
-
-                <div className="flex items-center gap-1.5 shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => setInspectingCert(cert)}
-                    className="text-[10px] text-cyan-400 hover:text-cyan-300 font-mono hover:underline cursor-pointer"
-                  >
-                    Details
-                  </button>
-                  <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] text-emerald-300 font-medium border border-emerald-500/20">
+                  <BrandLogo name={cert.provider} size={32} badgeVariant="none" />
+                  <span className="text-[10px] font-mono text-zinc-500">
                     {cert.issue_date || '2025'}
                   </span>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
 
-      {/* CREDENTIAL DETAILS MODAL */}
-      {inspectingCert && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl animate-in fade-in">
-          <div className="relative w-full max-w-md rounded-3xl border border-white/[0.12] bg-[#090b16] p-6 sm:p-7 shadow-2xl card-shine">
-            <div className="flex items-start justify-between border-b border-white/[0.08] pb-4">
-              <div className="flex items-center gap-3">
-                <BrandLogo
-                  name={inspectingCert.provider}
-                  size={42}
-                  badgeVariant="glass"
-                  showGlow
-                  className="shrink-0"
-                />
                 <div>
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-semibold block">
-                    {inspectingCert.provider}
-                  </span>
-                  <h3 className="text-base font-bold text-white tracking-tight mt-0.5">
-                    {inspectingCert.title}
-                  </h3>
+                  <h4 className="text-sm font-semibold text-zinc-100 leading-snug">
+                    {cert.title}
+                  </h4>
+                  <div className="text-xs text-emerald-400 font-medium mt-1">
+                    {cert.provider}
+                  </div>
                 </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setInspectingCert(null)}
-                className="p-1.5 rounded-xl border border-white/[0.08] bg-white/[0.03] text-slate-400 hover:text-white transition-colors cursor-pointer"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
 
-            <div className="mt-4 space-y-4 text-xs font-mono text-slate-300">
-              <div className="space-y-1.5">
-                <span className="text-slate-500 text-[10px] uppercase tracking-wider">Key Topics &amp; Competencies</span>
-                <div className="space-y-1 font-sans">
-                  {(CERT_COMPETENCIES[inspectingCert.credential_id || ''] || [
-                    'Core technical principles and implementation',
-                    'Demonstrated problem-solving proficiency',
-                    'Practical coursework & assessment',
-                    'Issued upon successful completion'
-                  ]).map((comp, idx) => (
-                    <div key={idx} className="flex items-start gap-2 text-slate-200">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                      <span>{comp}</span>
+                {/* Competencies */}
+                {competencies && (
+                  <div className="pt-2 border-t border-[#20222a] space-y-1.5">
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
+                      Curriculum Competencies
                     </div>
-                  ))}
-                </div>
+                    <ul className="text-[11px] text-zinc-400 space-y-1">
+                      {competencies.slice(0, 3).map((comp, i) => (
+                        <li key={i} className="flex items-center gap-1.5">
+                          <span className="h-1 w-1 rounded-full bg-zinc-600" />
+                          <span>{comp}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
 
-              <div className="rounded-xl border border-white/[0.06] bg-black/50 p-3 flex items-center justify-between">
-                <div>
-                  <div className="text-[10px] text-slate-500">Credential Identifier</div>
-                  <div className="text-white font-bold">{inspectingCert.credential_id || 'VERIFIED'}</div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => copyCredentialId(inspectingCert.id, inspectingCert.credential_id || 'VERIFIED')}
-                  className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 text-[10px] hover:bg-emerald-500/20 transition-colors cursor-pointer"
-                >
-                  Copy ID
-                </button>
-              </div>
+              {/* Bottom ID / Action */}
+              <div className="pt-4 mt-3 border-t border-[#20222a] flex items-center justify-between text-[11px] font-mono">
+                {cert.credential_id ? (
+                  <button
+                    type="button"
+                    onClick={() => copyCredentialId(cert)}
+                    className="inline-flex items-center gap-1 text-zinc-400 hover:text-white cursor-pointer"
+                    title="Click to copy ID"
+                  >
+                    <span>ID: {cert.credential_id}</span>
+                    {copiedId === cert.id ? (
+                      <Check className="h-3 w-3 text-emerald-400" />
+                    ) : (
+                      <Copy className="h-3 w-3 text-zinc-500" />
+                    )}
+                  </button>
+                ) : (
+                  <span className="text-zinc-600">Credential</span>
+                )}
 
-              <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between text-[11px] text-slate-400 font-sans">
-                <span className="flex items-center gap-1.5 text-emerald-400">
-                  <ShieldCheck className="h-4 w-4" />
-                  <span>Verified Certification</span>
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setInspectingCert(null)}
-                  className="px-3 py-1 rounded-lg bg-white/[0.06] text-white hover:bg-white/[0.1] transition-colors cursor-pointer"
-                >
-                  Close
-                </button>
+                {cert.url && (
+                  <a
+                    href={cert.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-zinc-400 hover:text-white inline-flex items-center gap-1"
+                  >
+                    <span>Verify</span>
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                )}
               </div>
             </div>
-          </div>
+          );
+        })}
+      </div>
+
+      {filteredCertificates.length === 0 && (
+        <div className="text-center py-12 border border-dashed border-[#20222a] rounded-xl text-zinc-500 text-xs font-mono">
+          No certificates found matching &quot;{searchQuery}&quot;
         </div>
       )}
 
