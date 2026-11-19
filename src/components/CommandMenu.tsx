@@ -13,7 +13,8 @@ import {
   Download, 
   Copy, 
   X,
-  Sparkles
+  Sparkles,
+  Lock
 } from 'lucide-react';
 import { GithubIcon, LinkedinIcon, LeetCodeIcon } from './SocialIcons';
 import { useToast } from './Toast';
@@ -104,15 +105,6 @@ export default function CommandMenu({
       badge: 'E = mc²',
     },
     {
-      id: 'nav-certifications',
-      title: 'Certifications & Honors',
-      subtitle: 'Oracle, AWS, IBM SkillsBuild, Infosys & NASSCOM',
-      category: 'Navigation',
-      icon: Award,
-      action: () => navigateTo('#certifications'),
-      badge: '6 Certs',
-    },
-    {
       id: 'nav-activity',
       title: 'Activity & Problem Solving',
       subtitle: 'GitHub activity & LeetCode problem solving',
@@ -120,6 +112,15 @@ export default function CommandMenu({
       icon: Activity,
       action: () => navigateTo('#activity'),
       badge: '90+ Solved',
+    },
+    {
+      id: 'nav-certifications',
+      title: 'Certifications & Honors',
+      subtitle: 'Oracle, AWS, IBM SkillsBuild, Infosys & NASSCOM',
+      category: 'Navigation',
+      icon: Award,
+      action: () => navigateTo('#certifications'),
+      badge: '6 Certs',
     },
     {
       id: 'nav-contact',
@@ -193,6 +194,18 @@ export default function CommandMenu({
         window.open(resumeUrl, '_blank', 'noopener,noreferrer');
       },
       badge: 'PDF',
+    },
+    {
+      id: 'action-admin',
+      title: 'Admin Control Panel',
+      subtitle: 'Manage profile, projects, experience, skills & certificates',
+      category: 'Actions',
+      icon: Lock,
+      action: () => {
+        onClose();
+        window.location.href = '/admin';
+      },
+      badge: 'Admin',
     },
 
     // Socials

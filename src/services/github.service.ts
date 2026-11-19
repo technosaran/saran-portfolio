@@ -56,7 +56,7 @@ const FALLBACK_GITHUB_DATA: GitHubActivityData = {
   publicRepos: 3,
   followers: 5,
   following: 5,
-  totalContributions: 54,
+  totalContributions: 67,
   languages: [
     {
       name: 'TypeScript',
@@ -369,7 +369,7 @@ export async function fetchGitHubData(username = 'technosaran'): Promise<GitHubA
     }
 
     // 5. Total Contributions count
-    let totalContribs = 54;
+    let totalContribs = 67;
     try {
       const contribRes = await fetch(`https://github-contributions-api.jogruber.de/v4/${username}?y=last`, {
         next: { revalidate: 3600 },

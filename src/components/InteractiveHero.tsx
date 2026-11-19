@@ -108,7 +108,7 @@ export default function InteractiveHero({
               </div>
               <div className="inline-flex items-center gap-1.5 text-xs text-zinc-400 font-mono">
                 <MapPin className="h-3.5 w-3.5 text-zinc-500" />
-                <span>Chennai, India</span>
+                <span>{profile.location || 'Chennai, India'}</span>
               </div>
             </div>
 
@@ -118,21 +118,21 @@ export default function InteractiveHero({
                 Hey, I&apos;m {profile.full_name}.
                 <br />
                 <span className="text-zinc-400 font-normal">
-                  I build web platforms, cloud infrastructure, and practical machine learning systems.
+                  {profile.headline || 'I build web platforms, cloud infrastructure, and practical machine learning systems.'}
                 </span>
               </h1>
             </div>
 
             {/* Grounded Human Narrative */}
             <p className="text-sm sm:text-base text-zinc-300 leading-relaxed max-w-2xl font-normal">
-              I&apos;m an Artificial Intelligence &amp; Machine Learning engineering student at {profile.college} (graduating in 2027). I love architecting robust full-stack applications with Next.js and PostgreSQL, training computer vision and NLP models with PyTorch, and deploying cloud workloads on AWS. When I&apos;m not building products, I&apos;m solving algorithmic problems on LeetCode (90+ solved) and exploring distributed systems.
+              {profile.bio || `I'm an Artificial Intelligence & Machine Learning engineering student at ${profile.college} (graduating in ${profile.graduation_year || '2027'}). I love architecting robust full-stack applications with Next.js and PostgreSQL, training computer vision and NLP models with PyTorch, and deploying cloud workloads on AWS.`}
             </p>
 
             {/* Academic Credential Tag */}
             <div className="flex items-center gap-2 text-xs text-zinc-400">
               <div className="inline-flex items-center gap-2 rounded-lg border border-[#20222a] bg-[#111216] px-3 py-2 text-zinc-300">
                 <GraduationCap className="h-4 w-4 text-emerald-400 shrink-0" />
-                <span>{profile.college} · B.Tech AI &amp; ML ({profile.graduation_year})</span>
+                <span>{profile.college} · {profile.degree || 'B.Tech AI & ML'} ({profile.graduation_year})</span>
               </div>
             </div>
 

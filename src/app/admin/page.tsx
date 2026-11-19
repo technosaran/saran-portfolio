@@ -18,7 +18,9 @@ import {
   Loader2, 
   CheckCircle2, 
   AlertCircle,
-  Database
+  Database,
+  Pencil,
+  X
 } from 'lucide-react';
 import { Profile, Project, Experience, Skill, Certificate } from '@/lib/neon/db';
 
@@ -73,6 +75,36 @@ export default function AdminDashboardPage() {
   });
 
   const [newPassword, setNewPassword] = useState('');
+
+  // Editing State
+  const [editingProject, setEditingProject] = useState<{
+    id: number;
+    title: string;
+    description: string;
+    tech_stack: string;
+    github_url: string;
+    live_url: string;
+    highlights: string;
+  } | null>(null);
+
+  const [editingExp, setEditingExp] = useState<{
+    id: number;
+    intern_id: string;
+    role: string;
+    company: string;
+    period: string;
+    location: string;
+    description: string;
+  } | null>(null);
+
+  const [editingCert, setEditingCert] = useState<{
+    id: number;
+    credential_id: string;
+    title: string;
+    provider: string;
+    issue_date: string;
+    url: string;
+  } | null>(null);
 
   const notify = useCallback((type: 'success' | 'error', text: string) => {
     setStatusMsg({ type, text });
@@ -194,6 +226,41 @@ export default function AdminDashboardPage() {
     }
   };
 
+  // Update Project
+  const handleUpdateProject = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingProject || !editingProject.title.trim()) return;
+    setSaving(true);
+    try {
+      const payload = {
+        title: editingProject.title.trim(),
+        description: editingProject.description.trim(),
+        tech_stack: editingProject.tech_stack.split(',').map(s => s.trim()).filter(Boolean),
+        github_url: editingProject.github_url.trim() || null,
+        live_url: editingProject.live_url.trim() || null,
+        highlights: editingProject.highlights.split('\n').map(s => s.trim()).filter(Boolean),
+      };
+
+      const res = await fetch(`/api/admin/projects/${editingProject.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (data.success) {
+        notify('success', 'Project updated successfully in Neon database!');
+        setEditingProject(null);
+        loadData();
+      } else {
+        notify('error', data.error || 'Failed to update project');
+      }
+    } catch {
+      notify('error', 'Error updating project');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   // Add Experience
   const handleAddExp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -241,6 +308,41 @@ export default function AdminDashboardPage() {
       }
     } catch {
       notify('error', 'Failed to delete');
+    }
+  };
+
+  // Update Experience
+  const handleUpdateExp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingExp || !editingExp.role || !editingExp.company) return;
+    setSaving(true);
+    try {
+      const payload = {
+        intern_id: editingExp.intern_id.trim() || `exp-${editingExp.id}`,
+        role: editingExp.role.trim(),
+        company: editingExp.company.trim(),
+        period: editingExp.period.trim(),
+        location: editingExp.location.trim() || 'Remote',
+        description: editingExp.description.split('\n').map(s => s.trim()).filter(Boolean),
+      };
+
+      const res = await fetch(`/api/admin/experience/${editingExp.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (data.success) {
+        notify('success', 'Experience updated successfully in Neon database!');
+        setEditingExp(null);
+        loadData();
+      } else {
+        notify('error', data.error || 'Failed to update experience');
+      }
+    } catch {
+      notify('error', 'Error updating experience');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -315,6 +417,40 @@ export default function AdminDashboardPage() {
       }
     } catch {
       notify('error', 'Failed to delete');
+    }
+  };
+
+  // Update Certificate
+  const handleUpdateCert = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingCert || !editingCert.title || !editingCert.provider) return;
+    setSaving(true);
+    try {
+      const payload = {
+        credential_id: editingCert.credential_id.trim() || null,
+        title: editingCert.title.trim(),
+        provider: editingCert.provider.trim(),
+        issue_date: editingCert.issue_date.trim() || null,
+        url: editingCert.url.trim() || null,
+      };
+
+      const res = await fetch(`/api/admin/certificates/${editingCert.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (data.success) {
+        notify('success', 'Certificate updated successfully in Neon database!');
+        setEditingCert(null);
+        loadData();
+      } else {
+        notify('error', data.error || 'Failed to update certificate');
+      }
+    } catch {
+      notify('error', 'Error updating certificate');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -696,6 +832,106 @@ export default function AdminDashboardPage() {
               </button>
             </form>
 
+            {/* Edit Project Form */}
+            {editingProject && (
+              <form onSubmit={handleUpdateProject} className="bg-emerald-950/20 border border-emerald-500/40 rounded-2xl p-6 backdrop-blur-md space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-base font-bold text-white flex items-center gap-2">
+                    <Pencil className="h-4 w-4 text-emerald-400" />
+                    Edit Project #{editingProject.id}
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => setEditingProject(null)}
+                    className="text-neutral-400 hover:text-white p-1"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div className="sm:col-span-2">
+                    <label className="block text-xs font-semibold text-neutral-300">Project Title *</label>
+                    <input
+                      type="text"
+                      required
+                      value={editingProject.title}
+                      onChange={(e) => setEditingProject({ ...editingProject, title: e.target.value })}
+                      className="mt-1 block w-full rounded-xl bg-neutral-950 border border-neutral-800 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="block text-xs font-semibold text-neutral-300">Description</label>
+                    <textarea
+                      rows={2}
+                      value={editingProject.description}
+                      onChange={(e) => setEditingProject({ ...editingProject, description: e.target.value })}
+                      className="mt-1 block w-full rounded-xl bg-neutral-950 border border-neutral-800 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-neutral-300">Tech Stack (comma separated)</label>
+                    <input
+                      type="text"
+                      value={editingProject.tech_stack}
+                      onChange={(e) => setEditingProject({ ...editingProject, tech_stack: e.target.value })}
+                      className="mt-1 block w-full rounded-xl bg-neutral-950 border border-neutral-800 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-neutral-300">GitHub Repository URL</label>
+                    <input
+                      type="url"
+                      value={editingProject.github_url}
+                      onChange={(e) => setEditingProject({ ...editingProject, github_url: e.target.value })}
+                      className="mt-1 block w-full rounded-xl bg-neutral-950 border border-neutral-800 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-neutral-300">Live URL (optional)</label>
+                    <input
+                      type="url"
+                      value={editingProject.live_url}
+                      onChange={(e) => setEditingProject({ ...editingProject, live_url: e.target.value })}
+                      className="mt-1 block w-full rounded-xl bg-neutral-950 border border-neutral-800 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="block text-xs font-semibold text-neutral-300">Key Highlights / Bullets (one per line)</label>
+                    <textarea
+                      rows={3}
+                      value={editingProject.highlights}
+                      onChange={(e) => setEditingProject({ ...editingProject, highlights: e.target.value })}
+                      className="mt-1 block w-full rounded-xl bg-neutral-950 border border-neutral-800 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    type="submit"
+                    disabled={saving || !editingProject.title.trim()}
+                    className="flex items-center gap-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-4 py-2 text-xs transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
+                    Save Changes
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEditingProject(null)}
+                    className="rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-2 text-xs text-neutral-300 hover:text-white transition-colors cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            )}
+
             {/* Existing Projects List */}
             <div className="space-y-4">
               <h3 className="text-sm font-bold text-neutral-300 uppercase tracking-wider">
@@ -710,13 +946,32 @@ export default function AdminDashboardPage() {
                     <div>
                       <div className="flex items-start justify-between gap-2">
                         <h4 className="font-bold text-white text-sm">{p.title}</h4>
-                        <button
-                          onClick={() => handleDeleteProject(p.id)}
-                          className="text-neutral-500 hover:text-red-400 transition-colors p-1"
-                          title="Delete Project"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() => setEditingProject({
+                              id: p.id,
+                              title: p.title,
+                              description: p.description,
+                              tech_stack: Array.isArray(p.tech_stack) ? p.tech_stack.join(', ') : '',
+                              github_url: p.github_url || '',
+                              live_url: p.live_url || '',
+                              highlights: Array.isArray(p.highlights) ? p.highlights.join('\n') : '',
+                            })}
+                            className="text-neutral-500 hover:text-emerald-400 transition-colors p-1"
+                            title="Edit Project"
+                          >
+                            <Pencil className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteProject(p.id)}
+                            className="text-neutral-500 hover:text-red-400 transition-colors p-1"
+                            title="Delete Project"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
                       </div>
                       <p className="mt-2 text-xs text-neutral-300 leading-relaxed">{p.description}</p>
                       
@@ -827,6 +1082,98 @@ export default function AdminDashboardPage() {
               </button>
             </form>
 
+            {/* Edit Experience Form */}
+            {editingExp && (
+              <form onSubmit={handleUpdateExp} className="bg-emerald-950/20 border border-emerald-500/40 rounded-2xl p-6 backdrop-blur-md space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-base font-bold text-white flex items-center gap-2">
+                    <Pencil className="h-4 w-4 text-emerald-400" />
+                    Edit Experience #{editingExp.id}
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => setEditingExp(null)}
+                    className="text-neutral-400 hover:text-white p-1"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="block text-xs font-semibold text-neutral-300">Role / Position *</label>
+                    <input
+                      type="text"
+                      required
+                      value={editingExp.role}
+                      onChange={(e) => setEditingExp({ ...editingExp, role: e.target.value })}
+                      className="mt-1 block w-full rounded-xl bg-neutral-950 border border-neutral-800 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-neutral-300">Company / Organization *</label>
+                    <input
+                      type="text"
+                      required
+                      value={editingExp.company}
+                      onChange={(e) => setEditingExp({ ...editingExp, company: e.target.value })}
+                      className="mt-1 block w-full rounded-xl bg-neutral-950 border border-neutral-800 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-neutral-300">Period *</label>
+                    <input
+                      type="text"
+                      required
+                      value={editingExp.period}
+                      onChange={(e) => setEditingExp({ ...editingExp, period: e.target.value })}
+                      className="mt-1 block w-full rounded-xl bg-neutral-950 border border-neutral-800 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-neutral-300">Location</label>
+                    <input
+                      type="text"
+                      value={editingExp.location}
+                      onChange={(e) => setEditingExp({ ...editingExp, location: e.target.value })}
+                      className="mt-1 block w-full rounded-xl bg-neutral-950 border border-neutral-800 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="block text-xs font-semibold text-neutral-300">Description / Responsibilities (one per line)</label>
+                    <textarea
+                      rows={3}
+                      value={editingExp.description}
+                      onChange={(e) => setEditingExp({ ...editingExp, description: e.target.value })}
+                      className="mt-1 block w-full rounded-xl bg-neutral-950 border border-neutral-800 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    type="submit"
+                    disabled={saving || !editingExp.role || !editingExp.company}
+                    className="flex items-center gap-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-4 py-2 text-xs transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
+                    Save Changes
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEditingExp(null)}
+                    className="rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-2 text-xs text-neutral-300 hover:text-white transition-colors cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            )}
+
             <div className="space-y-4">
               <h3 className="text-sm font-bold text-neutral-300 uppercase tracking-wider">
                 Current Experience Records ({experience.length})
@@ -847,13 +1194,32 @@ export default function AdminDashboardPage() {
                         ))}
                       </ul>
                     </div>
-                    <button
-                      onClick={() => handleDeleteExp(exp.id)}
-                      className="text-neutral-500 hover:text-red-400 p-1"
-                      title="Delete Experience"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => setEditingExp({
+                          id: exp.id,
+                          intern_id: exp.intern_id,
+                          role: exp.role,
+                          company: exp.company,
+                          period: exp.period,
+                          location: exp.location || '',
+                          description: Array.isArray(exp.description) ? exp.description.join('\n') : '',
+                        })}
+                        className="text-neutral-500 hover:text-emerald-400 transition-colors p-1"
+                        title="Edit Experience"
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteExp(exp.id)}
+                        className="text-neutral-500 hover:text-red-400 transition-colors p-1"
+                        title="Delete Experience"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -1003,6 +1369,97 @@ export default function AdminDashboardPage() {
               </button>
             </form>
 
+            {/* Edit Certificate Form */}
+            {editingCert && (
+              <form onSubmit={handleUpdateCert} className="bg-emerald-950/20 border border-emerald-500/40 rounded-2xl p-6 backdrop-blur-md space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-base font-bold text-white flex items-center gap-2">
+                    <Pencil className="h-4 w-4 text-emerald-400" />
+                    Edit Certificate #{editingCert.id}
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => setEditingCert(null)}
+                    className="text-neutral-400 hover:text-white p-1"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="block text-xs font-semibold text-neutral-300">Certificate Title *</label>
+                    <input
+                      type="text"
+                      required
+                      value={editingCert.title}
+                      onChange={(e) => setEditingCert({ ...editingCert, title: e.target.value })}
+                      className="mt-1 block w-full rounded-xl bg-neutral-950 border border-neutral-800 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-neutral-300">Issuing Organization / Provider *</label>
+                    <input
+                      type="text"
+                      required
+                      value={editingCert.provider}
+                      onChange={(e) => setEditingCert({ ...editingCert, provider: e.target.value })}
+                      className="mt-1 block w-full rounded-xl bg-neutral-950 border border-neutral-800 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-neutral-300">Credential ID (optional)</label>
+                    <input
+                      type="text"
+                      value={editingCert.credential_id}
+                      onChange={(e) => setEditingCert({ ...editingCert, credential_id: e.target.value })}
+                      className="mt-1 block w-full rounded-xl bg-neutral-950 border border-neutral-800 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-neutral-300">Issue Year / Date</label>
+                    <input
+                      type="text"
+                      value={editingCert.issue_date}
+                      onChange={(e) => setEditingCert({ ...editingCert, issue_date: e.target.value })}
+                      className="mt-1 block w-full rounded-xl bg-neutral-950 border border-neutral-800 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="block text-xs font-semibold text-neutral-300">Certificate Verification URL (optional)</label>
+                    <input
+                      type="url"
+                      value={editingCert.url}
+                      onChange={(e) => setEditingCert({ ...editingCert, url: e.target.value })}
+                      className="mt-1 block w-full rounded-xl bg-neutral-950 border border-neutral-800 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    type="submit"
+                    disabled={saving || !editingCert.title || !editingCert.provider}
+                    className="flex items-center gap-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-4 py-2 text-xs transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
+                    Save Changes
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEditingCert(null)}
+                    className="rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-2 text-xs text-neutral-300 hover:text-white transition-colors cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            )}
+
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {certificates.map((cert) => (
                 <div key={cert.id} className="rounded-xl border border-neutral-800 bg-neutral-900/40 p-4 flex flex-col justify-between">
@@ -1015,13 +1472,31 @@ export default function AdminDashboardPage() {
                   </div>
                   <div className="mt-3 pt-2 border-t border-neutral-800 flex items-center justify-between">
                     <span className="text-[10px] text-neutral-400">{cert.issue_date}</span>
-                    <button
-                      onClick={() => handleDeleteCert(cert.id)}
-                      className="text-neutral-500 hover:text-red-400 p-1"
-                      title="Delete Certificate"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => setEditingCert({
+                          id: cert.id,
+                          credential_id: cert.credential_id || '',
+                          title: cert.title,
+                          provider: cert.provider,
+                          issue_date: cert.issue_date || '',
+                          url: cert.url || '',
+                        })}
+                        className="text-neutral-500 hover:text-emerald-400 transition-colors p-1"
+                        title="Edit Certificate"
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteCert(cert.id)}
+                        className="text-neutral-500 hover:text-red-400 p-1"
+                        title="Delete Certificate"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}

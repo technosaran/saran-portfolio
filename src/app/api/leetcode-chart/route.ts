@@ -23,6 +23,7 @@ const FALLBACK_SUBMISSIONS: Record<string, number> = {
   "1792627200": 13,
   "1793664000": 17,
   "1794268800": 25,
+  "1794787200": 1,
 };
 
 function generateCalendarSvg(submissionMap: Record<string, number>): string {
@@ -30,10 +31,13 @@ function generateCalendarSvg(submissionMap: Record<string, number>): string {
 
   // Map submissions by YYYY-MM-DD
   const dateSubmissions = new Map<string, number>();
+  let totalSubmissions = 0;
   for (const [ts, count] of Object.entries(submissionMap)) {
     const d = new Date(parseInt(ts, 10) * 1000);
     const key = d.toISOString().slice(0, 10);
-    dateSubmissions.set(key, (dateSubmissions.get(key) || 0) + Number(count));
+    const c = Number(count) || 0;
+    dateSubmissions.set(key, (dateSubmissions.get(key) || 0) + c);
+    totalSubmissions += c;
   }
 
   // 53 weeks ending on the current week's Saturday
@@ -86,14 +90,39 @@ function generateCalendarSvg(submissionMap: Record<string, number>): string {
     }
   }
 
+  const svgWidth = 663;
+  const svgHeight = 126;
+  const legendX = svgWidth - 110;
+  const legendY = svgHeight - 12;
+  const leetColors = ['#161b22', '#78350f', '#b45309', '#d97706', '#f59e0b'];
+
+  const legendSvg = `
+    <text x="${legendX - 28}" y="${legendY + 7}" fill="#71717a" font-family="monospace" font-size="8">Less</text>
+    ${leetColors.map((c, i) => `<rect x="${legendX + i * 11}" y="${legendY}" width="8" height="8" rx="1.5" fill="${c}"/>`).join('')}
+    <text x="${legendX + 5 * 11 + 4}" y="${legendY + 7}" fill="#71717a" font-family="monospace" font-size="8">More</text>
+  `;
+
+  const summarySvg = `
+    <text x="27" y="${legendY + 7}" fill="#a1a1aa" font-family="monospace" font-size="9" font-weight="bold">
+      ${totalSubmissions} submissions in the last year
+    </text>
+  `;
+
   return `<?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="663" height="104" viewBox="0 0 663 104">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 ${svgWidth} ${svgHeight}">
+  <style>
+    rect { transition: transform 0.15s ease, opacity 0.15s ease; }
+    rect:hover { opacity: 0.8; stroke: #fcd34d; stroke-width: 1px; }
+  </style>
+  <rect width="100%" height="100%" fill="transparent"/>
   <text style="fill:#71717a;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;font-size:9px;" x="0" y="40">Mon</text>
   <text style="fill:#71717a;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;font-size:9px;" x="0" y="64">Wed</text>
   <text style="fill:#71717a;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;font-size:9px;" x="0" y="89">Fri</text>
   ${monthLabels.join('\n  ')}
   ${rects.join('\n  ')}
+  ${summarySvg}
+  ${legendSvg}
 </svg>`;
 }
 

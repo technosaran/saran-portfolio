@@ -104,7 +104,7 @@ export default function ExperienceTimeline({
 
           <div className="flex items-center justify-between text-xs font-mono text-zinc-500 py-2 border-y border-[#20222a]">
             <span>Graduation: {profile.graduation_year}</span>
-            <span>Chennai, TN</span>
+            <span>{profile.location || 'Chennai, TN'}</span>
           </div>
 
           {/* Core Academic Coursework */}

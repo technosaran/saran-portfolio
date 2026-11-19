@@ -72,7 +72,7 @@ export interface LeetCodeActivityData {
 
 export const FALLBACK_LEETCODE_DATA: LeetCodeActivityData = {
   username: 'Saran-R',
-  ranking: 1868242,
+  ranking: 1871936,
   totalSolved: 90,
   totalQuestions: 4114,
   easySolved: 81,
@@ -82,10 +82,10 @@ export const FALLBACK_LEETCODE_DATA: LeetCodeActivityData = {
   hardSolved: 0,
   totalHard: 990,
   totalSubmissions: 450,
-  acceptedSubmissions: 274,
-  acceptanceRate: 60.9,
+  acceptedSubmissions: 275,
+  acceptanceRate: 61.1,
   streak: 9,
-  totalActiveDays: 13,
+  totalActiveDays: 14,
   languages: [
     { languageName: 'Pandas', problemsSolved: 49, share: 41 },
     { languageName: 'Python3', problemsSolved: 31, share: 26 },

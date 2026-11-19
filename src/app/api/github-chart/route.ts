@@ -10,16 +10,19 @@ try {
 
 export const revalidate = 3600;
 
-// Verified real contributions snapshot for technosaran (54 contributions in last year)
+// Verified real contributions snapshot for technosaran (67 contributions in last year)
 const FALLBACK_CONTRIBUTIONS: ContributionDay[] = [
   { date: '2026-06-30', count: 2, level: 2 },
   { date: '2026-08-02', count: 1, level: 1 },
   { date: '2026-10-03', count: 1, level: 1 },
   { date: '2026-11-11', count: 9, level: 4 },
-  { date: '2026-11-12', count: 4, level: 3 },
-  { date: '2026-11-13', count: 12, level: 4 },
-  { date: '2026-11-14', count: 18, level: 4 },
-  { date: '2026-11-15', count: 7, level: 3 },
+  { date: '2026-11-12', count: 4, level: 4 },
+  { date: '2026-11-13', count: 14, level: 4 },
+  { date: '2026-11-14', count: 22, level: 4 },
+  { date: '2026-11-15', count: 4, level: 4 },
+  { date: '2026-11-16', count: 4, level: 4 },
+  { date: '2026-11-17', count: 3, level: 3 },
+  { date: '2026-11-18', count: 3, level: 3 },
 ];
 
 function sanitizeSvg(svg: string): string {
@@ -42,7 +45,7 @@ export async function GET() {
     if (res.ok) {
       const data = await res.json();
       if (data && Array.isArray(data.contributions)) {
-        const total = data.total?.lastYear || 54;
+        const total = data.total?.lastYear ?? 67;
         const svg = generateContributionSvg(username, total, data.contributions);
 
         return new NextResponse(svg, {
@@ -88,7 +91,7 @@ export async function GET() {
   }
 
   // Strategy 3: Rock-solid verified real-data SVG grid
-  const fallbackSvg = generateContributionSvg(username, 54, FALLBACK_CONTRIBUTIONS);
+  const fallbackSvg = generateContributionSvg(username, 67, FALLBACK_CONTRIBUTIONS);
   return new NextResponse(fallbackSvg, {
     status: 200,
     headers: {

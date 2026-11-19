@@ -30,15 +30,26 @@ export function generateContributionSvg(
   
   // Normalize days: ensure we have 371 days ending at current week
   let dayList: ContributionDay[] = [...contributions];
+  if (dayList.length > 0) {
+    const firstDay = new Date(dayList[0].date);
+    const startPadCount = isNaN(firstDay.getTime()) ? 0 : firstDay.getUTCDay();
+    if (startPadCount > 0) {
+      const padding: ContributionDay[] = Array.from({ length: startPadCount }, (_, i) => ({
+        date: `pad-start-${i}`,
+        count: 0,
+        level: 0
+      }));
+      dayList = [...padding, ...dayList];
+    }
+  }
   if (dayList.length < totalDays) {
-    // Pad with empty days if needed
-    const padCount = totalDays - dayList.length;
-    const padding: ContributionDay[] = Array.from({ length: padCount }, (_, i) => ({
-      date: `pad-${i}`,
+    const endPadCount = totalDays - dayList.length;
+    const padding: ContributionDay[] = Array.from({ length: endPadCount }, (_, i) => ({
+      date: `pad-end-${i}`,
       count: 0,
       level: 0
     }));
-    dayList = [...padding, ...dayList];
+    dayList = [...dayList, ...padding];
   } else if (dayList.length > totalDays) {
     dayList = dayList.slice(dayList.length - totalDays);
   }
@@ -46,12 +57,31 @@ export function generateContributionSvg(
   const svgWidth = leftPadding + numWeeks * (cellSize + cellGap) + 16;
   const svgHeight = topPadding + 7 * (cellSize + cellGap) + bottomPadding;
 
-  // Month labels
-  const months = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'];
-  const monthLabelsSvg = months.map((m, idx) => {
-    const x = leftPadding + idx * Math.floor((numWeeks * (cellSize + cellGap)) / 12);
-    return `<text x="${x}" y="14" fill="#71717a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', monospace" font-size="9">${m}</text>`;
-  }).join('\n');
+  // Month labels: dynamically placed at the start of each month
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const monthLabelsList: { text: string; x: number }[] = [];
+  let lastMonth = -1;
+  let lastLabelWeek = -10;
+
+  for (let week = 0; week < numWeeks; week++) {
+    const firstDayOfWeek = dayList[week * 7];
+    if (firstDayOfWeek && firstDayOfWeek.date && !firstDayOfWeek.date.startsWith('pad')) {
+      const d = new Date(firstDayOfWeek.date);
+      if (!isNaN(d.getTime())) {
+        const m = d.getUTCMonth();
+        if (m !== lastMonth && week - lastLabelWeek >= 3 && week < numWeeks - 1) {
+          const x = leftPadding + week * (cellSize + cellGap);
+          monthLabelsList.push({ text: monthNames[m], x });
+          lastMonth = m;
+          lastLabelWeek = week;
+        }
+      }
+    }
+  }
+
+  const monthLabelsSvg = monthLabelsList.map(item => 
+    `<text x="${item.x}" y="14" fill="#71717a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', monospace" font-size="9">${item.text}</text>`
+  ).join('\n');
 
   // Day labels (Mon, Wed, Fri)
   const dayLabels = [

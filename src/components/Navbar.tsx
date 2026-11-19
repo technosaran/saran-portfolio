@@ -19,8 +19,8 @@ export default function Navbar({ profile, onOpenCommandMenu }: NavbarProps) {
     { label: 'Projects', href: '#projects', id: 'projects' },
     { label: 'Experience', href: '#experience', id: 'experience' },
     { label: 'Skills', href: '#skills', id: 'skills' },
-    { label: 'Certifications', href: '#certifications', id: 'certifications' },
     { label: 'Activity', href: '#activity', id: 'activity' },
+    { label: 'Certifications', href: '#certifications', id: 'certifications' },
     { label: 'Contact', href: '#contact', id: 'contact' },
   ];
 
@@ -90,21 +90,14 @@ export default function Navbar({ profile, onOpenCommandMenu }: NavbarProps) {
         <div className="flex items-center justify-between px-4 py-2.5 sm:px-5 sm:py-2.5">
           
           {/* Brand */}
-          <a href="#home" className="flex items-center gap-2.5 group">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500/25 via-cyan-500/15 to-purple-600/15 text-cyan-300 border border-indigo-500/40 group-hover:border-cyan-400/80 group-hover:shadow-[0_0_20px_rgba(99,102,241,0.45)] transition-all duration-300">
-              <span className="font-mono font-black text-xs tracking-tighter text-cyan-300 group-hover:text-white transition-colors">
-                &lt;S/&gt;
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-white text-xs sm:text-sm tracking-tight font-sans group-hover:text-cyan-300 transition-colors">
-                {fullName}
-              </span>
-              <span className="relative flex h-1.5 w-1.5" title="Available for opportunities">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400"></span>
-              </span>
-            </div>
+          <a href="#home" className="flex items-center gap-2 group">
+            <span className="font-bold text-white text-xs sm:text-sm tracking-tight font-sans group-hover:text-cyan-300 transition-colors">
+              {fullName}
+            </span>
+            <span className="relative flex h-1.5 w-1.5" title="Available for opportunities">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400"></span>
+            </span>
           </a>
 
           {/* Desktop Navigation with Scroll Spy */}

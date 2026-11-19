@@ -227,6 +227,116 @@ section[id] {
   animation: pulse-dot 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* ======================================================== */
+/* Quantum Skills Orbit & Relativity Core Animations        */
+/* ======================================================== */
+@keyframes orbit-spin-cw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbit-spin-ccw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes counter-spin-cw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes counter-spin-ccw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes nucleus-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 35px rgba(56, 189, 248, 0.45), 0 0 75px rgba(99, 102, 241, 0.3), inset 0 0 20px rgba(56, 189, 248, 0.35);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 60px rgba(56, 189, 248, 0.7), 0 0 110px rgba(99, 102, 241, 0.5), inset 0 0 30px rgba(56, 189, 248, 0.55);
+  }
+}
+
+@keyframes event-horizon-spin {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.03);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes spacetime-ripple {
+  0% {
+    transform: scale(0.75);
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+.animate-orbit-cw {
+  animation: orbit-spin-cw linear infinite;
+}
+
+.animate-orbit-ccw {
+  animation: orbit-spin-ccw linear infinite;
+}
+
+.animate-counter-cw {
+  animation: counter-spin-cw linear infinite;
+}
+
+.animate-counter-ccw {
+  animation: counter-spin-ccw linear infinite;
+}
+
+.animate-nucleus-pulse {
+  animation: nucleus-pulse 3.8s ease-in-out infinite;
+}
+
+.animate-event-horizon {
+  animation: event-horizon-spin 25s linear infinite;
+}
+
+.animate-spacetime-ripple {
+  animation: spacetime-ripple 4s cubic-bezier(0.1, 0.5, 0.4, 1) infinite;
+}
+
+/* Pause animation on hover of an orbit ring */
+.orbit-ring:hover,
+.orbit-ring:hover .orbit-counter {
+  animation-play-state: paused !important;
+}
+
 /* Reduced motion accessibility */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {

@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   ExternalLink, 
   Copy, 
   Check, 
   Flame,
+  Activity,
   CheckCircle2
 } from 'lucide-react';
 import { GithubIcon, LeetCodeIcon } from './SocialIcons';
@@ -22,6 +23,91 @@ interface ActivityShowcaseProps {
   initialLeetcodeData?: LeetCodeActivityData;
 }
 
+const DEFAULT_REAL_GITHUB: GitHubActivityData = {
+  username: 'technosaran',
+  name: 'SARAN',
+  avatarUrl: 'https://avatars.githubusercontent.com/u/130437013?v=4',
+  publicRepos: 3,
+  followers: 5,
+  following: 5,
+  totalContributions: 67,
+  languages: [
+    { name: 'TypeScript', share: 86, bytes: 2954244, color: 'bg-blue-500', textColor: 'text-blue-400', usage: 'Next.js 16 App Router, arthaX Wealth Terminal, Modern UI components' },
+    { name: 'SQL & PLpgSQL', share: 6, bytes: 209420, color: 'bg-indigo-500', textColor: 'text-indigo-400', usage: 'PostgreSQL schemas, Supabase Row-Level Security, Database functions' },
+    { name: 'Python', share: 5, bytes: 170146, color: 'bg-emerald-500', textColor: 'text-emerald-400', usage: 'PyTorch deep learning, OpenCV computer vision, SpaCy NLP pipelines' },
+    { name: 'JavaScript', share: 1, bytes: 23299, color: 'bg-amber-500', textColor: 'text-amber-400', usage: 'Interactive DOM interactions, Tailwind styling, automation tooling' }
+  ],
+  commits: [],
+  repos: [
+    {
+      name: 'arthaX',
+      desc: 'Full-stack personal wealth tracking terminal engineered with PostgreSQL and Next.js.',
+      stars: 0,
+      forks: 0,
+      lang: 'TypeScript',
+      tags: ['Next.js 16', 'PostgreSQL', 'Supabase', 'Tailwind CSS'],
+      url: 'https://github.com/technosaran/arthaX',
+      pushedAt: '2026-11-18'
+    },
+    {
+      name: 'saran-portfolio',
+      desc: 'Production portfolio web application built with Next.js 16 and Neon Serverless Postgres.',
+      stars: 0,
+      forks: 0,
+      lang: 'TypeScript',
+      tags: ['Next.js 16', 'Neon Postgres', 'Drizzle ORM', 'Tailwind 4'],
+      url: 'https://github.com/technosaran/saran-portfolio',
+      pushedAt: '2026-11-18'
+    },
+    {
+      name: 'orion-algo',
+      desc: 'Algorithmic problem solving and data structure implementations.',
+      stars: 0,
+      forks: 0,
+      lang: 'TypeScript',
+      tags: ['TypeScript', 'DSA', 'Algorithms'],
+      url: 'https://github.com/technosaran/orion-algo',
+      pushedAt: '2026-11-16'
+    }
+  ]
+};
+
+const DEFAULT_REAL_LEETCODE: LeetCodeActivityData = {
+  username: 'Saran-R',
+  ranking: 1871936,
+  totalSolved: 90,
+  totalQuestions: 4114,
+  easySolved: 81,
+  totalEasy: 976,
+  mediumSolved: 9,
+  totalMedium: 2148,
+  hardSolved: 0,
+  totalHard: 990,
+  totalSubmissions: 450,
+  acceptedSubmissions: 275,
+  acceptanceRate: 61.1,
+  streak: 9,
+  totalActiveDays: 14,
+  languages: [
+    { languageName: 'Pandas', problemsSolved: 49, share: 41 },
+    { languageName: 'Python3', problemsSolved: 31, share: 26 },
+    { languageName: 'PostgreSQL', problemsSolved: 19, share: 16 },
+    { languageName: 'MySQL', problemsSolved: 15, share: 13 },
+    { languageName: 'Python', problemsSolved: 3, share: 3 },
+    { languageName: 'C', problemsSolved: 2, share: 2 }
+  ],
+  topics: [
+    { title: 'Database & SQL Engineering', tagSlug: 'database', count: 43, complexity: 'O(N) Scan · Index Scans', desc: 'Inner/Left Joins, window functions, conditional aggregations, grouping', tag: 'Database' },
+    { title: 'Arrays & Slicing', tagSlug: 'array', count: 15, complexity: 'O(N) Time · O(1) Space', desc: 'In-place transformations, element frequency tracking, prefix sums', tag: 'Arrays' },
+    { title: 'Strings & Parsing', tagSlug: 'string', count: 14, complexity: 'O(N) Time · O(1) Space', desc: 'Sub-string matching, pattern evaluation, character frequencies', tag: 'Strings' },
+    { title: 'Two Pointers & Intervals', tagSlug: 'two-pointers', count: 11, complexity: 'O(N) Time · O(1) Space', desc: 'Fast and slow pointer cycles, converging boundary searches', tag: 'Pointers' },
+    { title: 'Hash Tables & Sets', tagSlug: 'hash-table', count: 10, complexity: 'O(1) Average Lookup', desc: 'Constant-time complement lookups, frequency counting, duplicate detection', tag: 'Hash Table' },
+    { title: 'Sorting & Ranking', tagSlug: 'sorting', count: 4, complexity: 'O(N log N) Time', desc: 'Custom multi-key sorting, stable rank ordering', tag: 'Sorting' }
+  ],
+  recentSubmissions: [],
+  solutions: []
+};
+
 export default function ActivityShowcase({ 
   profile, 
   projects,
@@ -31,87 +117,20 @@ export default function ActivityShowcase({
 }: ActivityShowcaseProps) {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<'all' | 'github' | 'leetcode'>('all');
+  const [githubData, setGithubData] = useState<GitHubActivityData>(initialGithubData || DEFAULT_REAL_GITHUB);
+  const [leetcodeData, setLeetcodeData] = useState<LeetCodeActivityData>(initialLeetcodeData || DEFAULT_REAL_LEETCODE);
 
-  const githubData: GitHubActivityData = initialGithubData || {
-    username: 'technosaran',
-    name: 'SARAN',
-    avatarUrl: 'https://avatars.githubusercontent.com/u/130437013?v=4',
-    publicRepos: 3,
-    followers: 5,
-    following: 5,
-    totalContributions: 54,
-    languages: [
-      { name: 'TypeScript', share: 89, bytes: 1942255, color: 'bg-blue-500', textColor: 'text-blue-400', usage: 'Next.js 16, arthaX Terminal' },
-      { name: 'SQL & PLpgSQL', share: 6, bytes: 112312, color: 'bg-indigo-500', textColor: 'text-indigo-400', usage: 'PostgreSQL schemas & RLS' },
-      { name: 'Python', share: 4, bytes: 83227, color: 'bg-emerald-500', textColor: 'text-emerald-400', usage: 'PyTorch CV, OpenCV, SpaCy NLP' },
-      { name: 'JavaScript', share: 1, bytes: 38821, color: 'bg-amber-500', textColor: 'text-amber-400', usage: 'Client hydration & DOM APIs' }
-    ],
-    commits: [],
-    repos: [
-      {
-        name: 'arthax',
-        desc: 'Personal Wealth & Financial Terminal built with Next.js 16 & PostgreSQL',
-        stars: 3,
-        forks: 0,
-        lang: 'TypeScript',
-        tags: ['Next.js', 'PostgreSQL', 'TypeScript'],
-        url: 'https://github.com/technosaran/arthax',
-        pushedAt: '2025'
-      },
-      {
-        name: 'realtime-object-detection',
-        desc: 'Live video stream object detection application using PyTorch & OpenCV',
-        stars: 2,
-        forks: 0,
-        lang: 'Python',
-        tags: ['PyTorch', 'OpenCV', 'Computer Vision'],
-        url: 'https://github.com/technosaran/realtime-object-detection',
-        pushedAt: '2025'
-      },
-      {
-        name: 'ner-system-nlp',
-        desc: 'Named Entity Recognition NLP pipeline extracting structured entities from text',
-        stars: 1,
-        forks: 0,
-        lang: 'Python',
-        tags: ['SpaCy', 'NLP', 'Scikit-Learn'],
-        url: 'https://github.com/technosaran/ner-system-nlp',
-        pushedAt: '2025'
-      }
-    ]
-  };
+  useEffect(() => {
+    fetch('/api/activity/github')
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => { if (d) setGithubData(d); })
+      .catch(() => {});
 
-  const leetcodeData: LeetCodeActivityData = initialLeetcodeData || {
-    username: 'Saran-R',
-    ranking: 1868242,
-    totalSolved: 90,
-    totalQuestions: 4114,
-    easySolved: 81,
-    totalEasy: 976,
-    mediumSolved: 9,
-    totalMedium: 2148,
-    hardSolved: 0,
-    totalHard: 990,
-    totalSubmissions: 450,
-    acceptedSubmissions: 274,
-    acceptanceRate: 60.9,
-    streak: 9,
-    totalActiveDays: 13,
-    languages: [
-      { languageName: 'Java', problemsSolved: 52, share: 58 },
-      { languageName: 'Python', problemsSolved: 38, share: 42 }
-    ],
-    topics: [
-      { title: 'Array', tagSlug: 'array', count: 42, complexity: 'O(N)', desc: 'Two Pointers, Prefix Sum', tag: 'Linear' },
-      { title: 'String', tagSlug: 'string', count: 28, complexity: 'O(N)', desc: 'Parsing, Substrings', tag: 'Text' },
-      { title: 'Hash Table', tagSlug: 'hash-table', count: 22, complexity: 'O(1)', desc: 'Frequency Maps, Sets', tag: 'Lookup' },
-      { title: 'Math', tagSlug: 'math', count: 18, complexity: 'O(log N)', desc: 'Number Theory, Modular', tag: 'Theory' },
-      { title: 'Two Pointers', tagSlug: 'two-pointers', count: 14, complexity: 'O(N)', desc: 'Sliding Windows', tag: 'Optimization' },
-      { title: 'Binary Search', tagSlug: 'binary-search', count: 8, complexity: 'O(log N)', desc: 'Divide & Conquer', tag: 'Search' }
-    ],
-    recentSubmissions: [],
-    solutions: []
-  };
+    fetch('/api/activity/leetcode')
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => { if (d) setLeetcodeData(d); })
+      .catch(() => {});
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -200,6 +219,34 @@ export default function ActivityShowcase({
               <div className="p-3 rounded-lg border border-[#20222a] bg-[#14151b]">
                 <div className="font-mono text-lg font-bold text-zinc-100">{githubData.followers}</div>
                 <div className="text-[10px] text-zinc-400 mt-0.5">Followers</div>
+              </div>
+            </div>
+
+            {/* GitHub Contribution Heatmap */}
+            <div className="space-y-2 pt-1">
+              <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-zinc-500">
+                <span className="flex items-center gap-1.5 text-zinc-300">
+                  <Activity className="h-3.5 w-3.5 text-sky-400" />
+                  <span>Contribution Activity</span>
+                </span>
+                <span className="text-zinc-400 text-[10px] font-mono">
+                  {githubData.totalContributions} contributions in the last year
+                </span>
+              </div>
+              <div className="p-3 rounded-lg border border-[#20222a] bg-[#14151b] overflow-hidden">
+                <div className="overflow-x-auto pb-1 scrollbar-thin">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/api/github-chart"
+                    alt={`Contribution Heatmap for ${githubData.username}`}
+                    className="w-full min-w-[540px] h-auto rounded select-none"
+                    loading="eager"
+                  />
+                </div>
+                <div className="flex items-center justify-between pt-1.5 text-[10px] font-mono text-zinc-500 border-t border-[#20222a]/50 mt-1">
+                  <span>Verified live from GitHub</span>
+                  <span className="text-sky-400">@{githubData.username}</span>
+                </div>
               </div>
             </div>
 
@@ -313,7 +360,7 @@ export default function ActivityShowcase({
             <div className="space-y-1.5">
               <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400">
                 <span>Problem Difficulty Ratio</span>
-                <span className="text-zinc-500">81 Easy · 9 Medium</span>
+                <span className="text-zinc-500">{leetcodeData.easySolved} Easy · {leetcodeData.mediumSolved} Medium</span>
               </div>
               <div className="h-2 w-full rounded-full bg-zinc-800 flex overflow-hidden">
                 <div 
@@ -324,6 +371,34 @@ export default function ActivityShowcase({
                   className="bg-amber-500 h-full" 
                   style={{ width: `${(leetcodeData.mediumSolved / leetcodeData.totalSolved) * 100}%` }} 
                 />
+              </div>
+            </div>
+
+            {/* LeetCode Submission Heatmap */}
+            <div className="space-y-2 pt-1">
+              <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-zinc-500">
+                <span className="flex items-center gap-1.5 text-zinc-300">
+                  <Flame className="h-3.5 w-3.5 text-amber-500" />
+                  <span>Submission Activity Calendar</span>
+                </span>
+                <span className="text-amber-400/90 font-mono text-[10px]">
+                  {leetcodeData.streak} Days Streak · {leetcodeData.totalActiveDays} Active Days
+                </span>
+              </div>
+              <div className="p-3 rounded-lg border border-[#20222a] bg-[#14151b] overflow-hidden">
+                <div className="overflow-x-auto pb-1 scrollbar-thin">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/api/leetcode-chart"
+                    alt={`LeetCode Submission Heatmap for ${leetcodeData.username}`}
+                    className="w-full min-w-[540px] h-auto rounded select-none"
+                    loading="eager"
+                  />
+                </div>
+                <div className="flex items-center justify-between pt-1.5 text-[10px] font-mono text-zinc-500 border-t border-[#20222a]/50 mt-1">
+                  <span>Verified live from LeetCode GraphQL</span>
+                  <span className="text-amber-500">u/{leetcodeData.username}</span>
+                </div>
               </div>
             </div>
 
@@ -348,7 +423,7 @@ export default function ActivityShowcase({
             )}
 
             <div className="pt-2 text-[11px] text-zinc-500 font-mono flex items-center justify-between">
-              <span>Primary Practice: Java &amp; Python</span>
+              <span>Primary Practice: {leetcodeData.languages?.slice(0, 2).map((l) => l.languageName).join(' & ') || 'Pandas & Python3'}</span>
               <span className="text-zinc-400">Continuous Problem Solving</span>
             </div>
 

@@ -14,6 +14,8 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://technosaran.vercel.app";
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -25,69 +27,97 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Saran R — AI & ML Engineer | Full-Stack Cloud Architect",
-  description: "Portfolio of Saran R - Artificial Intelligence & Machine Learning engineering student at Panimalar Engineering College, Full-Stack developer & AWS Cloud architect.",
-  keywords: ["Saran R", "AI Engineer", "Machine Learning", "Full Stack", "Next.js", "TypeScript", "AWS", "Neon Postgres"],
-  metadataBase: new URL("https://saran-portfolio-smoky.vercel.app"),
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Saran R — AI & ML Engineer | Full-Stack Cloud Architect",
+    template: "%s | Saran R — AI & ML Engineer",
+  },
+  description:
+    "Official engineering portfolio of Saran R — Artificial Intelligence & Machine Learning engineering student at Panimalar Engineering College (2023–2027). Architecting high-performance web systems with Next.js 16, PostgreSQL, AWS cloud workloads, and deep learning vision pipelines.",
+  applicationName: "Saran R Portfolio",
+  authors: [{ name: "Saran R", url: SITE_URL }],
+  generator: "Next.js 16",
+  keywords: [
+    "Saran R",
+    "Saran R Portfolio",
+    "Artificial Intelligence Engineer",
+    "Machine Learning Engineer",
+    "Full Stack Developer Chennai",
+    "Panimalar Engineering College AI",
+    "Next.js 16 Developer",
+    "TypeScript Full Stack",
+    "AWS Cloud Architect",
+    "PostgreSQL Neon Drizzle",
+    "PyTorch Deep Learning",
+    "Computer Vision Developer",
+    "NLP Pipelines SpaCy",
+    "technosaran",
+    "Saran-R LeetCode",
+    "Software Engineering 2027",
+    "arthaX Financial Terminal",
+    "Chennai Software Developer",
+  ],
+  creator: "Saran R",
+  publisher: "Saran R",
+  category: "technology",
+  classification: "Engineering Portfolio",
+  formatDetection: {
+    email: true,
+    address: true,
+    telephone: true,
+  },
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "Saran R — AI & ML Engineer",
-    description: "AI/ML Engineering Student | Cloud Infrastructure & Full-Stack Architect. Building production systems with Next.js, Neon PostgreSQL, and AWS Cloud.",
-    type: "website",
+    type: "profile",
+    firstName: "Saran",
+    lastName: "R",
+    username: "technosaran",
+    gender: "male",
+    title: "Saran R — AI & ML Engineer | Full-Stack Cloud Architect",
+    description:
+      "Engineering portfolio of Saran R. AI/ML Engineering student at Panimalar Engineering College building scalable full-stack web platforms, deep learning models, and AWS cloud architectures.",
+    url: SITE_URL,
+    siteName: "Saran R — Engineering Showcase",
     locale: "en_US",
-    siteName: "Saran R Portfolio",
     images: [
       {
-        url: "/og-image.svg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Saran R — AI & ML Engineer Portfolio",
+        type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Saran R — AI & ML Engineer",
-    description: "AI/ML Engineering Student | Cloud Infrastructure & Full-Stack Architect.",
-    images: ["/og-image.svg"],
+    title: "Saran R — AI & ML Engineer | Full-Stack Cloud Architect",
+    description:
+      "AI/ML engineering student at Panimalar Engineering College. Full-stack developer & AWS Cloud architect building real-time vision pipelines & financial terminals.",
+    creator: "@technosaran",
+    site: "@technosaran",
+    images: ["/twitter-image"],
   },
   robots: {
     index: true,
     follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: false,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
   icons: {
-    icon: '/favicon.svg',
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
   },
-};
-
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Person",
-      "@id": "https://saran-portfolio-smoky.vercel.app/#person",
-      "name": "Saran R",
-      "jobTitle": "Artificial Intelligence & Machine Learning Engineer",
-      "alumniOf": {
-        "@type": "CollegeOrUniversity",
-        "name": "Panimalar Engineering College"
-      },
-      "url": "https://saran-portfolio-smoky.vercel.app",
-      "sameAs": [
-        "https://github.com/technosaran",
-        "https://linkedin.com/in/saran-r-b2b1a5275",
-        "https://leetcode.com/u/Saran-R/"
-      ]
-    },
-    {
-      "@type": "WebSite",
-      "@id": "https://saran-portfolio-smoky.vercel.app/#website",
-      "url": "https://saran-portfolio-smoky.vercel.app",
-      "name": "Saran R — AI & ML Engineer Portfolio",
-      "publisher": {
-        "@id": "https://saran-portfolio-smoky.vercel.app/#person"
-      }
-    }
-  ]
 };
 
 export default function RootLayout({
@@ -98,10 +128,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} dark antialiased`}>
       <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <link rel="preconnect" href="https://assets.leetcode.com" />
+        <link rel="dns-prefetch" href="https://assets.leetcode.com" />
+        <link rel="preconnect" href="https://github.com" />
+        <link rel="dns-prefetch" href="https://github.com" />
       </head>
       <body className="min-h-screen bg-[#050609] text-slate-100 font-sans selection:bg-indigo-500/30 selection:text-indigo-200 overflow-x-hidden antialiased">
         {children}
