@@ -97,7 +97,7 @@ export function JavaScriptLogo({ className = 'w-6 h-6' }: LogoProps) {
 export function NextjsLogo({ className = 'w-6 h-6' }: LogoProps) {
   return (
     <svg className={className} viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="64" cy="64" r="64" fill="black" />
+      <circle cx="64" cy="64" r="60" fill="black" stroke="white" strokeWidth="5" />
       <path
         d="M104.9 107.5L52.8 40.5H41v46.9h8.3V52.8l48 61.8c2.6-2.1 5.1-4.4 7.6-7.1z"
         fill="url(#next-gradient)"
@@ -354,8 +354,22 @@ export function NumPyLogo({ className = 'w-6 h-6' }: LogoProps) {
 export function VercelLogo({ className = 'w-6 h-6' }: LogoProps) {
   return (
     <svg className={className} viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="64" cy="64" r="62" fill="black" stroke="white" strokeWidth="4" />
-      <path d="M64 28L104 96H24L64 28z" fill="white" />
+      <circle cx="64" cy="64" r="60" fill="#000000" stroke="#ffffff" strokeWidth="6" />
+      <path d="M64 26L104 96H24L64 26z" fill="#ffffff" />
+    </svg>
+  );
+}
+
+// 21. Render
+export function RenderLogo({ className = 'w-6 h-6' }: LogoProps) {
+  return (
+    <svg className={className} viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="128" height="128" rx="24" fill="#0b1320" stroke="#46E3B7" strokeWidth="4" />
+      <path
+        d="M36 94V34h32c16.57 0 30 13.43 30 30 0 13.5-8.9 24.9-21.2 28.6L92 94H74L60 74H50v20H36zm14-34h18c7.73 0 14-6.27 14-14s-6.27-14-14-14H50v28z"
+        fill="#46E3B7"
+      />
+      <circle cx="92" cy="38" r="6" fill="#46E3B7" />
     </svg>
   );
 }
@@ -674,6 +688,23 @@ export function GenericTechLogo({ name, className = 'w-6 h-6' }: { name: string;
   );
 }
 
+// Checks whether a skill has a handcrafted, dark-theme optimized vector SVG
+export function hasCustomLogo(name: string): boolean {
+  if (!name) return false;
+  const n = name.toLowerCase().trim();
+  const known = [
+    'python', 'java', 'typescript', 'ts', 'javascript', 'js', 'next', 'react',
+    'node', 'express', 'pytorch', 'torch', 'opencv', 'postgres', 'postgresql',
+    'docker', 'aws', 'amazon', 'cloud', 'supabase', 'mongo', 'mongodb', 'git',
+    'tailwind', 'scikit', 'sklearn', 'pandas', 'numpy', 'vercel', 'neon', 'render',
+    'oracle', 'ibm', 'infosys', 'coursera', 'google', 'leetcode', 'spacy',
+    'sql', 'mysql', 'database', 'dbms', 'dsa', 'data structure', 'algorithm',
+    'api', 'rest', 'microservice', 'devops', 'ci/cd', 'sdlc', 'software',
+    'operating system', 'os', 'linux', 'network', 'oop', 'object-oriented'
+  ];
+  return known.some((k) => n === k || n.includes(k));
+}
+
 // Unified Resolver: Returns the authentic high-resolution SVG logo component
 export function getSkillLogo(name: string): React.ComponentType<{ className?: string }> {
   const n = name.toLowerCase().trim();
@@ -699,6 +730,7 @@ export function getSkillLogo(name: string): React.ComponentType<{ className?: st
   if (n.includes('pandas')) return PandasLogo;
   if (n.includes('numpy')) return NumPyLogo;
   if (n.includes('vercel')) return VercelLogo;
+  if (n.includes('render')) return RenderLogo;
   if (n.includes('neon')) return NeonLogo;
   if (n.includes('oracle')) return OracleLogo;
   if (n.includes('ibm')) return IBMLogo;

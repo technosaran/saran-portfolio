@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { getCandidateLogoUrls, getEntityInfo } from '@/lib/logos';
-import { getSkillLogo } from './TechLogos';
+import { getSkillLogo, hasCustomLogo } from './TechLogos';
 
 export interface BrandLogoProps {
   name: string;
@@ -25,10 +25,17 @@ export default function BrandLogo({
   const [isLoaded, setIsLoaded] = useState(false);
 
   const info = getEntityInfo(name);
-  const candidateUrls = React.useMemo(() => getCandidateLogoUrls(name, size), [name, size]);
+  const isDedicated = React.useMemo(() => hasCustomLogo(name), [name]);
+  const candidateUrls = React.useMemo(() => {
+    // If we have a dedicated vector SVG designed for dark mode, do not make external HTTP requests
+    if (isDedicated) return [];
+    return getCandidateLogoUrls(name, size);
+  }, [name, size, isDedicated]);
+
   const activeUrl = candidateIndex < candidateUrls.length ? candidateUrls[candidateIndex] : null;
 
   const handleImageError = () => {
+    setIsLoaded(false);
     setCandidateIndex((prev) => prev + 1);
   };
 
@@ -60,7 +67,7 @@ export default function BrandLogo({
         width: size,
         height: size,
         borderRadius: `${borderRadius}px`,
-        boxShadow: showGlow && info?.brandColor ? `0 0 16px ${info.brandColor}33` : undefined,
+        boxShadow: showGlow && info?.brandColor ? `0 0 16px ${info.brandColor}40` : undefined,
       }}
       title={name}
     >
