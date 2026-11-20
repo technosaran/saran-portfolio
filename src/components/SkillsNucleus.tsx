@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { X } from 'lucide-react';
+import { X, Cpu } from 'lucide-react';
 import { Skill } from '@/lib/neon/db';
 import BrandLogo from './BrandLogo';
 
@@ -82,25 +82,50 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Merge database skills with default catalog if provided
+  // Map real database skills into the orbital system
   const allSkillsList: SkillItem[] = useMemo(() => {
-    if (!skills || skills.length === 0) return DEFAULT_SKILLS;
+    if (!skills || skills.length === 0) return [];
 
-    const mapped = DEFAULT_SKILLS.map((defaultItem) => {
-      const match = skills.find(
-        (s) => s.name.toLowerCase() === defaultItem.name.toLowerCase()
+    return skills.map((dbSkill, idx) => {
+      const match = DEFAULT_SKILLS.find(
+        (s) => s.name.toLowerCase() === dbSkill.name.toLowerCase()
       );
       if (match) {
         return {
-          ...defaultItem,
-          id: match.id,
-          proficiency: match.level || defaultItem.proficiency
+          ...match,
+          id: dbSkill.id,
+          proficiency: dbSkill.level || match.proficiency,
         };
       }
-      return defaultItem;
-    });
 
-    return mapped;
+      // Dynamic classification for new skills
+      const cat = (dbSkill.category || '').toLowerCase();
+      let orbit = 1;
+      let category: SkillItem['category'] = 'languages';
+      if (cat.includes('ai') || cat.includes('machine') || cat.includes('data') || cat.includes('learning')) {
+        orbit = 2;
+        category = 'aiml';
+      } else if (cat.includes('web') || cat.includes('framework') || cat.includes('frontend') || cat.includes('backend')) {
+        orbit = 3;
+        category = 'frameworks';
+      } else if (cat.includes('database') || cat.includes('storage') || cat.includes('cloud') || cat.includes('devops')) {
+        orbit = 4;
+        category = cat.includes('cloud') ? 'cloud' : 'database';
+      } else {
+        orbit = (idx % 4) + 1;
+      }
+
+      return {
+        id: dbSkill.id,
+        name: dbSkill.name,
+        category,
+        categoryLabel: dbSkill.category,
+        context: `${dbSkill.name} (${dbSkill.level || 'Proficient'})`,
+        projects: ['Portfolio Project'],
+        orbit,
+        proficiency: dbSkill.level || 'Proficient',
+      };
+    });
   }, [skills]);
 
   // Group skills into the 4 Bohr orbits matching exact visual choreography
@@ -108,6 +133,23 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
   const orbit2Skills = useMemo(() => allSkillsList.filter((s) => s.orbit === 2).slice(0, 5), [allSkillsList]);
   const orbit3Skills = useMemo(() => allSkillsList.filter((s) => s.orbit === 3).slice(0, 6), [allSkillsList]);
   const orbit4Skills = useMemo(() => allSkillsList.filter((s) => s.orbit === 4).slice(0, 4), [allSkillsList]);
+
+  // If database has 0 skills, render the clean waiting state
+  if (!skills || skills.length === 0) {
+    return (
+      <div className="rounded-xl border border-dashed border-[#262b3a] bg-[#0c0e14]/50 p-8 sm:p-12 text-center space-y-3">
+        <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-lg border border-[#2b3142] bg-[#141722] text-zinc-400">
+          <Cpu className="h-5 w-5 text-emerald-400" />
+        </div>
+        <h3 className="text-sm sm:text-base font-semibold text-zinc-200">
+          No skills in database
+        </h3>
+        <p className="text-xs text-zinc-400 max-w-md mx-auto">
+          Database was cleared. All newly added technical skills from the admin panel or database will orbit here in real time without refreshing.
+        </p>
+      </div>
+    );
+  }
 
   const activeInspected = hoveredSkill || selectedSkill;
 
