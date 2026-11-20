@@ -56,5 +56,5 @@ describe('External Activity Services (Real Data & Graceful Fallbacks)', () => {
     expect(langNames).toContain('Pandas');
     expect(langNames).toContain('Python3');
     expect(langNames).toContain('PostgreSQL');
-  });
+  }, 20000);
 });

@@ -5,7 +5,7 @@ import Navbar from './Navbar';
 import CommandMenu from './CommandMenu';
 import ScrollProgressBar from './ScrollProgressBar';
 import { ToastProvider } from './Toast';
-import { Profile } from '@/lib/neon/db';
+import RealtimePortfolioProvider, { useRealtimeData, PortfolioData } from './RealtimePortfolioProvider';
 
 interface CommandMenuContextType {
   openCommandMenu: () => void;
@@ -22,11 +22,12 @@ export function useCommandMenu() {
 }
 
 interface PortfolioClientShellProps {
-  profile: Profile;
+  initialData: PortfolioData;
   children: ReactNode;
 }
 
-export default function PortfolioClientShell({ profile, children }: PortfolioClientShellProps) {
+function PortfolioClientShellInner({ children }: { children: ReactNode }) {
+  const { profile } = useRealtimeData();
   const [commandMenuOpen, setCommandMenuOpen] = useState(false);
 
   const openCommandMenu = () => setCommandMenuOpen(true);
@@ -39,7 +40,7 @@ export default function PortfolioClientShell({ profile, children }: PortfolioCli
           {/* Top Reading Progress Bar */}
           <ScrollProgressBar />
 
-          {/* Sticky Modern Navbar */}
+          {/* Sticky Modern Navbar with Live Realtime Profile */}
           <Navbar 
             profile={profile} 
             onOpenCommandMenu={openCommandMenu} 
@@ -63,5 +64,15 @@ export default function PortfolioClientShell({ profile, children }: PortfolioCli
         </div>
       </CommandMenuContext.Provider>
     </ToastProvider>
+  );
+}
+
+export default function PortfolioClientShell({ initialData, children }: PortfolioClientShellProps) {
+  return (
+    <RealtimePortfolioProvider initialData={initialData}>
+      <PortfolioClientShellInner>
+        {children}
+      </PortfolioClientShellInner>
+    </RealtimePortfolioProvider>
   );
 }

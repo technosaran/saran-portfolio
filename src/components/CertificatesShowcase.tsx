@@ -115,7 +115,7 @@ export default function CertificatesShowcase({ certificates }: CertificatesShowc
             className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer ${
               selectedProvider === 'all'
                 ? 'bg-zinc-100 text-zinc-900 font-semibold shadow-sm'
-                : 'border border-[#20222a] bg-[#111216] text-zinc-400 hover:text-zinc-200'
+                : 'border border-[#1b1f2b] bg-[#0f1118] text-zinc-400 hover:text-zinc-200'
             }`}
           >
             All Providers
@@ -128,7 +128,7 @@ export default function CertificatesShowcase({ certificates }: CertificatesShowc
               className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer ${
                 selectedProvider === p
                   ? 'bg-zinc-100 text-zinc-900 font-semibold shadow-sm'
-                  : 'border border-[#20222a] bg-[#111216] text-zinc-400 hover:text-zinc-200'
+                  : 'border border-[#1b1f2b] bg-[#0f1118] text-zinc-400 hover:text-zinc-200'
               }`}
             >
               {p}
@@ -144,7 +144,7 @@ export default function CertificatesShowcase({ certificates }: CertificatesShowc
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search credentials..."
-            className="w-full rounded-lg border border-[#20222a] bg-[#111216] pl-9 pr-3 py-1.5 text-xs text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus:border-zinc-500"
+            className="w-full rounded-lg border border-[#1b1f2b] bg-[#0f1118] pl-9 pr-3 py-1.5 text-xs text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus:border-zinc-500"
           />
           {searchQuery && (
             <button
@@ -167,7 +167,7 @@ export default function CertificatesShowcase({ certificates }: CertificatesShowc
           return (
             <div
               key={cert.id}
-              className="flex flex-col justify-between rounded-xl border border-[#20222a] bg-[#111216] p-5 hover:border-zinc-700 transition-colors"
+              className="flex flex-col justify-between rounded-xl border border-[#1f2432] bg-[#0f1118] p-5 hover:border-[#2d3448] transition-colors"
             >
               <div className="space-y-3">
                 <div className="flex items-start justify-between gap-3">
@@ -188,7 +188,7 @@ export default function CertificatesShowcase({ certificates }: CertificatesShowc
 
                 {/* Competencies */}
                 {competencies && (
-                  <div className="pt-2 border-t border-[#20222a] space-y-1.5">
+                  <div className="pt-2 border-t border-[#1b1f2b] space-y-1.5">
                     <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
                       Curriculum Competencies
                     </div>
@@ -243,7 +243,9 @@ export default function CertificatesShowcase({ certificates }: CertificatesShowc
 
       {filteredCertificates.length === 0 && (
         <div className="text-center py-12 border border-dashed border-[#20222a] rounded-xl text-zinc-500 text-xs font-mono">
-          No certificates found matching &quot;{searchQuery}&quot;
+          {certificates.length === 0 
+            ? "No certificates in database. Add certifications in admin panel to stream here in real time."
+            : `No certificates found matching "${searchQuery}"`}
         </div>
       )}
 

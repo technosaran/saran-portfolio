@@ -34,10 +34,16 @@ export default function ExperienceTimeline({
         </div>
 
         <div className="space-y-6">
-          {experience.map((exp) => (
+          {experience.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-[#262b3a] bg-[#0c0e14]/50 p-6 text-center space-y-2">
+              <Briefcase className="mx-auto h-5 w-5 text-zinc-500" />
+              <p className="text-xs text-zinc-400">No experience records currently in database. Add internships or roles in admin panel to sync live.</p>
+            </div>
+          ) : (
+            experience.map((exp) => (
             <div 
               key={exp.id}
-              className="rounded-xl border border-[#20222a] bg-[#111216] p-6 hover:border-zinc-700 transition-colors"
+              className="rounded-xl border border-[#1f2432] bg-[#0f1118] p-6 hover:border-[#2d3448] transition-colors"
             >
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
                 <div>
@@ -68,7 +74,7 @@ export default function ExperienceTimeline({
               )}
 
               {/* Meta details */}
-              <div className="mt-4 pt-4 border-t border-[#20222a] flex items-center justify-between text-[11px] font-mono text-zinc-500">
+              <div className="mt-4 pt-4 border-t border-[#1b1f2b] flex items-center justify-between text-[11px] font-mono text-zinc-500">
                 <span className="flex items-center gap-1">
                   <MapPin className="h-3 w-3 text-zinc-600" />
                   <span>{exp.location || 'Remote'}</span>
@@ -78,20 +84,21 @@ export default function ExperienceTimeline({
                 </span>
               </div>
             </div>
-          ))}
+          ))
+          )}
         </div>
       </div>
 
       {/* Right Column: Academic Foundation (5 cols) */}
       <div className="lg:col-span-5 space-y-6">
         <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
-          <GraduationCap className="h-4 w-4 text-sky-400" />
+          <GraduationCap className="h-4 w-4 text-emerald-400" />
           <span className="uppercase tracking-wider">Education &amp; Foundations</span>
         </div>
 
-        <div className="rounded-xl border border-[#20222a] bg-[#111216] p-6 space-y-5">
+        <div className="rounded-xl border border-[#1f2432] bg-[#0f1118] p-6 space-y-5">
           <div>
-            <div className="text-[11px] font-mono text-sky-400 font-medium">
+            <div className="text-[11px] font-mono text-emerald-400 font-medium">
               Undergraduate Degree
             </div>
             <h3 className="text-base font-bold text-zinc-100 mt-1">
@@ -102,7 +109,7 @@ export default function ExperienceTimeline({
             </p>
           </div>
 
-          <div className="flex items-center justify-between text-xs font-mono text-zinc-500 py-2 border-y border-[#20222a]">
+          <div className="flex items-center justify-between text-xs font-mono text-zinc-500 py-2 border-y border-[#1b1f2b]">
             <span>Graduation: {profile.graduation_year}</span>
             <span>{profile.location || 'Chennai, TN'}</span>
           </div>
@@ -117,7 +124,7 @@ export default function ExperienceTimeline({
               {displayedCoursework.map((course) => (
                 <span
                   key={course}
-                  className="rounded-md border border-[#20222a] bg-[#14151b] px-2.5 py-1 text-[11px] font-mono text-zinc-300"
+                  className="rounded-md border border-[#202534] bg-[#131620] px-2.5 py-1 text-[11px] font-mono text-zinc-300"
                 >
                   {course}
                 </span>
@@ -125,7 +132,7 @@ export default function ExperienceTimeline({
             </div>
           </div>
 
-          <div className="p-3.5 rounded-lg border border-[#252834] bg-[#14151b] text-xs text-zinc-300 leading-relaxed">
+          <div className="p-3.5 rounded-lg border border-[#202534] bg-[#131620] text-xs text-zinc-300 leading-relaxed">
             Rigorous four-year engineering curriculum integrating machine learning theory, algorithmic problem solving, database system design, and software engineering principles.
           </div>
         </div>

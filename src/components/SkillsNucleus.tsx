@@ -20,6 +20,17 @@ export interface SkillItem {
   proficiency?: string;
 }
 
+// Physical Celestial Orbital Mechanics (Kepler's Third Law: T ∝ r^1.5)
+// In real celestial systems (solar systems, accretion disks), conservation of angular momentum
+// dictates that all orbits revolve in the same uniform prograde (counter-clockwise) direction,
+// and inner celestial bodies revolve significantly faster than outer bodies.
+const CELESTIAL_ORBITS = {
+  orbit1: { radius: 135, duration: 24, offset: 0 },    // Core Languages: Fast inner orbit (24s)
+  orbit2: { radius: 215, duration: 48, offset: 36 },   // AI & ML: Mid-inner orbit (~48s, Keplerian ratio ~2.01x)
+  orbit3: { radius: 290, duration: 76, offset: 18 },   // Frameworks & Web: Mid-outer orbit (~76s, Keplerian ratio ~3.15x)
+  orbit4: { radius: 365, duration: 108, offset: 45 },  // Cloud & Databases: Outer gas giant orbit (~108s, Keplerian ratio ~4.45x)
+} as const;
+
 // Curated 20 technologies perfectly balanced across the 4 celestial orbits
 const DEFAULT_SKILLS: SkillItem[] = [
   // Orbit 1: Core Languages (Radius: 135px)
@@ -197,7 +208,7 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
             />
             <div 
               className="absolute -inset-7 rounded-full border border-dotted border-blue-400/20 pointer-events-none animate-event-horizon"
-              style={{ animationDirection: 'reverse', animationDuration: '32s' }} 
+              style={{ animationDuration: '36s' }} 
             />
 
             {/* Pulsating Tech Nucleus Core Body */}
@@ -233,16 +244,17 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
           </div>
 
           {/* =================================================== */}
-          {/* 2. ORBIT 1: LANGUAGES (Radius: 135px, Clockwise)    */}
+          {/* 2. ORBIT 1: LANGUAGES (Radius: 135px, Prograde CCW) */}
           {/* =================================================== */}
           <div
             className="orbit-ring absolute inset-0 pointer-events-none origin-center"
             style={{
-              animation: 'orbit-spin-cw 34s linear infinite',
+              animation: `orbit-spin-ccw ${CELESTIAL_ORBITS.orbit1.duration}s linear infinite`,
+              animationPlayState: selectedSkill ? 'paused' : 'running',
             }}
           >
             {orbit1Skills.map((skill, idx) => {
-              const angle = (360 / orbit1Skills.length) * idx;
+              const angle = (360 / orbit1Skills.length) * idx + CELESTIAL_ORBITS.orbit1.offset;
               const isCurrent = activeInspected?.name === skill.name;
 
               return (
@@ -250,20 +262,21 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
                   key={skill.id}
                   className="absolute left-1/2 top-1/2 pointer-events-auto origin-center"
                   style={{
-                    transform: `rotate(${angle}deg) translate(135px) rotate(-${angle}deg)`,
+                    transform: `rotate(${angle}deg) translate(${CELESTIAL_ORBITS.orbit1.radius}px) rotate(-${angle}deg)`,
                   }}
                 >
                   <div
                     className="orbit-counter w-0 h-0 flex items-center justify-center origin-center"
                     style={{
-                      animation: 'counter-spin-cw 34s linear infinite',
+                      animation: `counter-spin-ccw ${CELESTIAL_ORBITS.orbit1.duration}s linear infinite`,
+                      animationPlayState: selectedSkill ? 'paused' : 'running',
                     }}
                   >
                     <div
                       onMouseEnter={() => setHoveredSkill(skill)}
                       onMouseLeave={() => setHoveredSkill(null)}
                       onClick={() => setSelectedSkill(skill)}
-                      className={`group relative flex items-center gap-2 px-2.5 py-1.5 rounded-full border transition-all duration-200 cursor-pointer ${
+                      className={`group orbit-badge relative flex items-center gap-2 px-2.5 py-1.5 rounded-full border transition-all duration-200 cursor-pointer ${
                         isCurrent
                           ? 'bg-cyan-950/90 border-cyan-400 shadow-[0_0_20px_rgba(56,189,248,0.7)] scale-110 z-30'
                           : 'bg-[#0a0f1d]/90 hover:bg-[#101932] border-cyan-500/30 hover:border-cyan-400 hover:shadow-[0_0_16px_rgba(56,189,248,0.4)] hover:scale-105 z-10'
@@ -282,16 +295,17 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
           </div>
 
           {/* =================================================== */}
-          {/* 3. ORBIT 2: AI & ML (Radius: 215px, Counter-CW)     */}
+          {/* 3. ORBIT 2: AI & ML (Radius: 215px, Prograde CCW)   */}
           {/* =================================================== */}
           <div
             className="orbit-ring absolute inset-0 pointer-events-none origin-center"
             style={{
-              animation: 'orbit-spin-ccw 46s linear infinite',
+              animation: `orbit-spin-ccw ${CELESTIAL_ORBITS.orbit2.duration}s linear infinite`,
+              animationPlayState: selectedSkill ? 'paused' : 'running',
             }}
           >
             {orbit2Skills.map((skill, idx) => {
-              const angle = (360 / orbit2Skills.length) * idx;
+              const angle = (360 / orbit2Skills.length) * idx + CELESTIAL_ORBITS.orbit2.offset;
               const isCurrent = activeInspected?.name === skill.name;
 
               return (
@@ -299,20 +313,21 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
                   key={skill.id}
                   className="absolute left-1/2 top-1/2 pointer-events-auto origin-center"
                   style={{
-                    transform: `rotate(${angle}deg) translate(215px) rotate(-${angle}deg)`,
+                    transform: `rotate(${angle}deg) translate(${CELESTIAL_ORBITS.orbit2.radius}px) rotate(-${angle}deg)`,
                   }}
                 >
                   <div
                     className="orbit-counter w-0 h-0 flex items-center justify-center origin-center"
                     style={{
-                      animation: 'counter-spin-ccw 46s linear infinite',
+                      animation: `counter-spin-ccw ${CELESTIAL_ORBITS.orbit2.duration}s linear infinite`,
+                      animationPlayState: selectedSkill ? 'paused' : 'running',
                     }}
                   >
                     <div
                       onMouseEnter={() => setHoveredSkill(skill)}
                       onMouseLeave={() => setHoveredSkill(null)}
                       onClick={() => setSelectedSkill(skill)}
-                      className={`group relative flex items-center gap-2 px-2.5 py-1.5 rounded-full border transition-all duration-200 cursor-pointer ${
+                      className={`group orbit-badge relative flex items-center gap-2 px-2.5 py-1.5 rounded-full border transition-all duration-200 cursor-pointer ${
                         isCurrent
                           ? 'bg-purple-950/90 border-purple-400 shadow-[0_0_20px_rgba(168,85,247,0.7)] scale-110 z-30'
                           : 'bg-[#100c22]/90 hover:bg-[#1a1236] border-purple-500/30 hover:border-purple-400 hover:shadow-[0_0_16px_rgba(168,85,247,0.4)] hover:scale-105 z-10'
@@ -331,16 +346,17 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
           </div>
 
           {/* =================================================== */}
-          {/* 4. ORBIT 3: FRAMEWORKS & WEB (Radius: 290px, CW)    */}
+          {/* 4. ORBIT 3: FRAMEWORKS & WEB (Radius: 290px, CCW)   */}
           {/* =================================================== */}
           <div
             className="orbit-ring absolute inset-0 pointer-events-none origin-center"
             style={{
-              animation: 'orbit-spin-cw 58s linear infinite',
+              animation: `orbit-spin-ccw ${CELESTIAL_ORBITS.orbit3.duration}s linear infinite`,
+              animationPlayState: selectedSkill ? 'paused' : 'running',
             }}
           >
             {orbit3Skills.map((skill, idx) => {
-              const angle = (360 / orbit3Skills.length) * idx - 90;
+              const angle = (360 / orbit3Skills.length) * idx + CELESTIAL_ORBITS.orbit3.offset;
               const isCurrent = activeInspected?.name === skill.name;
 
               return (
@@ -348,20 +364,21 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
                   key={skill.id}
                   className="absolute left-1/2 top-1/2 pointer-events-auto origin-center"
                   style={{
-                    transform: `rotate(${angle}deg) translate(290px) rotate(-${angle}deg)`,
+                    transform: `rotate(${angle}deg) translate(${CELESTIAL_ORBITS.orbit3.radius}px) rotate(-${angle}deg)`,
                   }}
                 >
                   <div
                     className="orbit-counter w-0 h-0 flex items-center justify-center origin-center"
                     style={{
-                      animation: 'counter-spin-cw 58s linear infinite',
+                      animation: `counter-spin-ccw ${CELESTIAL_ORBITS.orbit3.duration}s linear infinite`,
+                      animationPlayState: selectedSkill ? 'paused' : 'running',
                     }}
                   >
                     <div
                       onMouseEnter={() => setHoveredSkill(skill)}
                       onMouseLeave={() => setHoveredSkill(null)}
                       onClick={() => setSelectedSkill(skill)}
-                      className={`group relative flex items-center gap-2 px-2.5 py-1.5 rounded-full border transition-all duration-200 cursor-pointer ${
+                      className={`group orbit-badge relative flex items-center gap-2 px-2.5 py-1.5 rounded-full border transition-all duration-200 cursor-pointer ${
                         isCurrent
                           ? 'bg-blue-950/90 border-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.7)] scale-110 z-30'
                           : 'bg-[#0a0f26]/90 hover:bg-[#121a42] border-blue-500/30 hover:border-blue-400 hover:shadow-[0_0_16px_rgba(59,130,246,0.4)] hover:scale-105 z-10'
@@ -385,11 +402,12 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
           <div
             className="orbit-ring absolute inset-0 pointer-events-none origin-center"
             style={{
-              animation: 'orbit-spin-ccw 72s linear infinite',
+              animation: `orbit-spin-ccw ${CELESTIAL_ORBITS.orbit4.duration}s linear infinite`,
+              animationPlayState: selectedSkill ? 'paused' : 'running',
             }}
           >
             {orbit4Skills.map((skill, idx) => {
-              const angle = (360 / orbit4Skills.length) * idx - 45;
+              const angle = (360 / orbit4Skills.length) * idx + CELESTIAL_ORBITS.orbit4.offset;
               const isCurrent = activeInspected?.name === skill.name;
 
               return (
@@ -397,20 +415,21 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
                   key={skill.id}
                   className="absolute left-1/2 top-1/2 pointer-events-auto origin-center"
                   style={{
-                    transform: `rotate(${angle}deg) translate(365px) rotate(-${angle}deg)`,
+                    transform: `rotate(${angle}deg) translate(${CELESTIAL_ORBITS.orbit4.radius}px) rotate(-${angle}deg)`,
                   }}
                 >
                   <div
                     className="orbit-counter w-0 h-0 flex items-center justify-center origin-center"
                     style={{
-                      animation: 'counter-spin-ccw 72s linear infinite',
+                      animation: `counter-spin-ccw ${CELESTIAL_ORBITS.orbit4.duration}s linear infinite`,
+                      animationPlayState: selectedSkill ? 'paused' : 'running',
                     }}
                   >
                     <div
                       onMouseEnter={() => setHoveredSkill(skill)}
                       onMouseLeave={() => setHoveredSkill(null)}
                       onClick={() => setSelectedSkill(skill)}
-                      className={`group relative flex items-center gap-2 px-2.5 py-1.5 rounded-full border transition-all duration-200 cursor-pointer ${
+                      className={`group orbit-badge relative flex items-center gap-2 px-2.5 py-1.5 rounded-full border transition-all duration-200 cursor-pointer ${
                         isCurrent
                           ? 'bg-emerald-950/90 border-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.7)] scale-110 z-30'
                           : 'bg-[#091815]/90 hover:bg-[#0f2a24] border-emerald-500/30 hover:border-emerald-400 hover:shadow-[0_0_16px_rgba(16,185,129,0.4)] hover:scale-105 z-10'

@@ -106,10 +106,25 @@ export default function AdminDashboardPage() {
     url: string;
   } | null>(null);
 
+  const broadcastRealtimeUpdate = useCallback(() => {
+    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+      try {
+        const bc = new BroadcastChannel('portfolio_realtime_channel');
+        bc.postMessage({ type: 'portfolio_updated', timestamp: Date.now() });
+        bc.close();
+      } catch {
+        // BroadcastChannel fallback
+      }
+    }
+  }, []);
+
   const notify = useCallback((type: 'success' | 'error', text: string) => {
     setStatusMsg({ type, text });
     setTimeout(() => setStatusMsg(null), 4000);
-  }, []);
+    if (type === 'success') {
+      broadcastRealtimeUpdate();
+    }
+  }, [broadcastRealtimeUpdate]);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -129,6 +144,46 @@ export default function AdminDashboardPage() {
       setLoading(false);
     }
   }, [notify]);
+
+  // Real-time synchronization in Admin Panel
+  useEffect(() => {
+    let eventSource: EventSource | null = null;
+    let bc: BroadcastChannel | null = null;
+
+    try {
+      eventSource = new EventSource('/api/portfolio/stream');
+      eventSource.onmessage = (event) => {
+        try {
+          const payload = JSON.parse(event.data);
+          if (payload.type === 'update') {
+            loadData();
+          }
+        } catch {
+          // ignore parse errors
+        }
+      };
+    } catch {
+      // ignore
+    }
+
+    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+      try {
+        bc = new BroadcastChannel('portfolio_realtime_channel');
+        bc.onmessage = (event) => {
+          if (event.data?.type === 'portfolio_updated') {
+            loadData();
+          }
+        };
+      } catch {
+        // ignore
+      }
+    }
+
+    return () => {
+      if (eventSource) eventSource.close();
+      if (bc) bc.close();
+    };
+  }, [loadData]);
 
   // 1. Verify Auth
   useEffect(() => {

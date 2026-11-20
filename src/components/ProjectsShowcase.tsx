@@ -44,18 +44,34 @@ export default function ProjectsShowcase({ projects }: ProjectsShowcaseProps) {
   const flagship = projects.find(p => p.title.toLowerCase().includes('arthax')) || projects[0];
   const secondaryProjects = projects.filter(p => p.id !== flagship?.id);
 
+  if (!projects || projects.length === 0) {
+    return (
+      <div className="rounded-xl border border-dashed border-[#262b3a] bg-[#0c0e14]/50 p-8 sm:p-12 text-center space-y-3">
+        <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-lg border border-[#2b3142] bg-[#141722] text-zinc-400">
+          <Terminal className="h-5 w-5 text-emerald-400" />
+        </div>
+        <h3 className="text-sm sm:text-base font-semibold text-zinc-200">
+          No projects in database
+        </h3>
+        <p className="text-xs text-zinc-400 max-w-md mx-auto">
+          Database was cleared. All newly added projects from the admin panel or database will stream here in real time without refreshing.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       
       {/* 1. Flagship Featured Project */}
       {flagship && (
-        <div className="rounded-xl border border-[#20222a] bg-[#111216] p-6 sm:p-8 hover:border-zinc-700 transition-all duration-200">
+        <div className="rounded-xl border border-[#1f2432] bg-[#0f1118] p-6 sm:p-8 hover:border-[#2d3448] transition-all duration-200">
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
             
             {/* Left Content */}
             <div className="space-y-4 max-w-2xl">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center rounded-md border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-mono font-medium text-emerald-400">
+                <span className="inline-flex items-center rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-mono font-medium text-emerald-400">
                   Featured Project · Full-Stack
                 </span>
                 {flagship.live_url && (
@@ -92,7 +108,7 @@ export default function ProjectsShowcase({ projects }: ProjectsShowcaseProps) {
                 {flagship.tech_stack.map((tech) => (
                   <span
                     key={tech}
-                    className="inline-flex items-center gap-1.5 rounded-md border border-[#252834] bg-[#161820] px-2.5 py-1 text-xs font-mono text-zinc-300"
+                    className="inline-flex items-center gap-1.5 rounded-md border border-[#202534] bg-[#131620] px-2.5 py-1 text-xs font-mono text-zinc-300"
                   >
                     <BrandLogo name={tech} size={14} badgeVariant="none" />
                     <span>{tech}</span>
@@ -108,7 +124,7 @@ export default function ProjectsShowcase({ projects }: ProjectsShowcaseProps) {
                   href={flagship.live_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-zinc-100 hover:bg-white text-zinc-900 px-4 py-2.5 text-xs font-semibold transition-all shadow-sm"
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-zinc-100 hover:bg-white text-zinc-900 px-4 py-2.5 text-xs font-semibold transition-all shadow-sm active:scale-[0.98]"
                 >
                   <span>Live Demo</span>
                   <ArrowUpRight className="h-4 w-4" />
@@ -120,7 +136,7 @@ export default function ProjectsShowcase({ projects }: ProjectsShowcaseProps) {
                   href={flagship.github_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-[#2b2e38] bg-[#14151b] hover:bg-[#1a1c24] hover:border-zinc-500 px-4 py-2.5 text-xs font-medium text-zinc-200 transition-all"
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-[#262b3a] bg-[#12151e] hover:bg-[#181c28] hover:border-zinc-500 px-4 py-2.5 text-xs font-medium text-zinc-200 transition-all"
                 >
                   <GithubIcon className="h-4 w-4 text-zinc-300" />
                   <span>View Source Code</span>
@@ -130,7 +146,7 @@ export default function ProjectsShowcase({ projects }: ProjectsShowcaseProps) {
               <button
                 type="button"
                 onClick={() => copyCloneCommand(flagship)}
-                className="w-full inline-flex items-center justify-between rounded-lg border border-[#20222a] bg-[#0d0e12] hover:bg-[#14151b] px-3 py-2 text-[11px] font-mono text-zinc-400 hover:text-zinc-200 transition-all cursor-pointer"
+                className="w-full inline-flex items-center justify-between rounded-lg border border-[#1b1f2b] bg-[#0c0e14] hover:bg-[#12151e] px-3 py-2 text-[11px] font-mono text-zinc-400 hover:text-zinc-200 transition-all cursor-pointer"
                 title="Copy git clone command"
               >
                 <span className="truncate">git clone {flagship.github_url?.replace('https://github.com/', '')}</span>
@@ -151,11 +167,11 @@ export default function ProjectsShowcase({ projects }: ProjectsShowcaseProps) {
         {secondaryProjects.map((project) => (
           <div
             key={project.id}
-            className="flex flex-col justify-between rounded-xl border border-[#20222a] bg-[#111216] p-6 hover:border-zinc-700 transition-all duration-200"
+            className="flex flex-col justify-between rounded-xl border border-[#1f2432] bg-[#0f1118] p-6 hover:border-[#2d3448] transition-all duration-200"
           >
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="inline-flex items-center rounded-md border border-[#252834] bg-[#161820] px-2.5 py-0.5 text-[11px] font-mono text-zinc-400">
+                <span className="inline-flex items-center rounded-md border border-[#202534] bg-[#131620] px-2.5 py-0.5 text-[11px] font-mono text-zinc-400">
                   {project.title.toLowerCase().includes('object') ? 'Computer Vision · PyTorch' : 'NLP · Scikit-Learn'}
                 </span>
                 

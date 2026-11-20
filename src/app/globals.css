@@ -10,13 +10,13 @@
     --font-sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
     --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     
-    /* Human Developer Palette: Neutral Dark with Emerald & Sky Accents */
-    --bg-base: #09090b;
-    --bg-surface: #111216;
-    --bg-surface-elevated: #17181e;
-    --border-subtle: #20222a;
-    --border-default: #2b2e38;
-    --border-hover: #3d4250;
+    /* Human Craft Palette: Obsidian & Slate with Pure Emerald Accent */
+    --bg-base: #090a0f;
+    --bg-surface: #0f1117;
+    --bg-surface-elevated: #151821;
+    --border-subtle: #1a1e28;
+    --border-default: #262b3a;
+    --border-hover: #3b4359;
     
     --accent-emerald: #10b981;
     --accent-sky: #0284c7;
@@ -29,10 +29,10 @@
   }
 
   body {
-    background-color: #09090b;
-    color: #e4e4e7;
+    background-color: #090a0f;
+    color: #e2e8f0;
     font-family: var(--font-sans);
-    letter-spacing: -0.015em;
+    letter-spacing: -0.012em;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -48,6 +48,7 @@
   /* Balanced responsive text wrap */
   h1, h2, h3, h4, h5, h6 {
     text-wrap: balance;
+    letter-spacing: -0.025em;
   }
 
   p {
@@ -72,22 +73,22 @@
 
 /* Minimalist Dark Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #09090b;
+  background: #090a0f;
 }
 ::-webkit-scrollbar-thumb {
-  background: #20222a;
+  background: #1f2432;
   border-radius: 9999px;
   transition: background 0.2s ease;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #373b47;
+  background: #31384c;
 }
 
-/* Clean Technical Background Dots (Subtle, Not Loud) */
+/* Subtle Technical Grid Background */
 .bg-subtle-grid {
   background-size: 32px 32px;
   background-image: 
@@ -96,24 +97,26 @@
 }
 
 .bg-subtle-dots {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 
-/* Subtle Card Inset Border for High-Craft Feel */
+/* Human-Craft Card */
 .card-craft {
   position: relative;
-  background-color: #111216;
-  border: 1px solid #20222a;
-  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+  background-color: #0f1117;
+  border: 1px solid #1c202b;
+  transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card-craft:hover {
-  border-color: #313542;
-  background-color: #14151b;
+  border-color: #2e3547;
+  background-color: #13161f;
 }
 
-/* Subtle mouse spotlight for high-craft cards */
+/* Subtle mouse spotlight */
 .card-spotlight {
   position: relative;
 }
@@ -122,24 +125,24 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.035), transparent 70%);
+  background: radial-gradient(350px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.03), transparent 70%);
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s ease;
   z-index: 1;
 }
 .card-spotlight:hover::after {
   opacity: 1;
 }
 
-/* Section Scroll Offset for Fixed / Floating Navbar */
+/* Section Scroll Offset */
 section[id] {
   scroll-margin-top: 5rem;
 }
 
 @media (min-width: 768px) {
   section[id] {
-    scroll-margin-top: 6rem;
+    scroll-margin-top: 5.5rem;
   }
 }
 
@@ -155,9 +158,9 @@ section[id] {
 /* Smooth Entrance on Scroll */
 .animate-on-scroll {
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(12px);
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .animate-on-scroll.is-visible {
@@ -167,9 +170,9 @@ section[id] {
 
 .animate-on-scroll-scale {
   opacity: 0;
-  transform: scale(0.96);
-  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: scale(0.98);
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .animate-on-scroll-scale.is-visible {
@@ -179,9 +182,9 @@ section[id] {
 
 .stagger-children > * {
   opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(8px);
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .stagger-children.is-visible > * {
@@ -199,7 +202,7 @@ section[id] {
   background: linear-gradient(
     90deg,
     rgba(255,255,255,0.02) 25%,
-    rgba(255,255,255,0.06) 50%,
+    rgba(255,255,255,0.05) 50%,
     rgba(255,255,255,0.02) 75%
   );
   background-size: 200% 100%;
@@ -218,7 +221,7 @@ section[id] {
     transform: scale(1);
   }
   50% {
-    opacity: 0.5;
+    opacity: 0.4;
     transform: scale(0.95);
   }
 }
@@ -228,17 +231,10 @@ section[id] {
 }
 
 /* ======================================================== */
-/* Quantum Skills Orbit & Relativity Core Animations        */
+/* Celestial Orbit & Gravitational Physics Core Animations  */
 /* ======================================================== */
-@keyframes orbit-spin-cw {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 
+/* Prograde (Counter-Clockwise) Orbital Revolution */
 @keyframes orbit-spin-ccw {
   from {
     transform: rotate(0deg);
@@ -248,15 +244,17 @@ section[id] {
   }
 }
 
-@keyframes counter-spin-cw {
+/* Retrograde / Clockwise Orbital Revolution */
+@keyframes orbit-spin-cw {
   from {
     transform: rotate(0deg);
   }
   to {
-    transform: rotate(-360deg);
+    transform: rotate(360deg);
   }
 }
 
+/* Synchronous Counter-Rotation for Prograde Orbit (keeps badges level and upright) */
 @keyframes counter-spin-ccw {
   from {
     transform: rotate(0deg);
@@ -266,36 +264,49 @@ section[id] {
   }
 }
 
+/* Counter-Rotation for Clockwise Orbit */
+@keyframes counter-spin-cw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+/* Central Nucleus Gravitational Pulsation */
 @keyframes nucleus-pulse {
   0%, 100% {
     transform: scale(1);
     box-shadow: 0 0 35px rgba(56, 189, 248, 0.45), 0 0 75px rgba(99, 102, 241, 0.3), inset 0 0 20px rgba(56, 189, 248, 0.35);
   }
   50% {
-    transform: scale(1.05);
+    transform: scale(1.04);
     box-shadow: 0 0 60px rgba(56, 189, 248, 0.7), 0 0 110px rgba(99, 102, 241, 0.5), inset 0 0 30px rgba(56, 189, 248, 0.55);
   }
 }
 
+/* Event Horizon Prograde Accretion Spin */
 @keyframes event-horizon-spin {
   0% {
     transform: rotate(0deg) scale(1);
   }
   50% {
-    transform: rotate(180deg) scale(1.03);
+    transform: rotate(-180deg) scale(1.02);
   }
   100% {
-    transform: rotate(360deg) scale(1);
+    transform: rotate(-360deg) scale(1);
   }
 }
 
+/* Spacetime Gravitational Wave Ripple */
 @keyframes spacetime-ripple {
   0% {
     transform: scale(0.75);
-    opacity: 0.9;
+    opacity: 0.85;
   }
   50% {
-    opacity: 0.4;
+    opacity: 0.35;
   }
   100% {
     transform: scale(2.2);
@@ -303,20 +314,20 @@ section[id] {
   }
 }
 
-.animate-orbit-cw {
-  animation: orbit-spin-cw linear infinite;
-}
-
 .animate-orbit-ccw {
   animation: orbit-spin-ccw linear infinite;
 }
 
-.animate-counter-cw {
-  animation: counter-spin-cw linear infinite;
+.animate-orbit-cw {
+  animation: orbit-spin-cw linear infinite;
 }
 
 .animate-counter-ccw {
   animation: counter-spin-ccw linear infinite;
+}
+
+.animate-counter-cw {
+  animation: counter-spin-cw linear infinite;
 }
 
 .animate-nucleus-pulse {
@@ -331,9 +342,11 @@ section[id] {
   animation: spacetime-ripple 4s cubic-bezier(0.1, 0.5, 0.4, 1) infinite;
 }
 
-/* Pause animation on hover of an orbit ring */
+/* Pause animation on hover of an orbit ring or any badge inside */
 .orbit-ring:hover,
-.orbit-ring:hover .orbit-counter {
+.orbit-ring:has(:hover),
+.orbit-ring:hover .orbit-counter,
+.orbit-ring:has(:hover) .orbit-counter {
   animation-play-state: paused !important;
 }
 

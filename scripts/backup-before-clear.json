@@ -1,0 +1,402 @@
+{
+  "backupTimestamp": "2026-11-20T15:35:00.431Z",
+  "tables": {
+    "profile": [
+      {
+        "id": 1,
+        "full_name": "SARAN R",
+        "title": "Artificial Intelligence & Machine Learning Engineer",
+        "headline": "AI/ML Engineering Student | Cloud Infrastructure & Full-Stack Architect",
+        "bio": "Innovative Artificial Intelligence and Machine Learning engineering student with hands-on experience in cloud infrastructure (AWS) and full-stack development. Proven ability to architect scalable web applications and implement data-driven algorithms. Passionate about leveraging DevOps principles and modern software engineering practices to solve complex enterprise challenges.",
+        "email": "iamsaran.ai@gmail.com",
+        "phone": "+91 6384957740",
+        "location": "Chennai, Tamil Nadu",
+        "college": "Panimalar Engineering College",
+        "degree": "Bachelor of Technology in Artificial Intelligence and Machine Learning",
+        "graduation_year": "2023 – 2027",
+        "github_url": "https://github.com/technosaran",
+        "linkedin_url": "https://linkedin.com/in/saran-r-b2b1a5275",
+        "website_url": "https://technosaran.vercel.app",
+        "leetcode_url": "https://leetcode.com/u/Saran-R/",
+        "updated_at": "2026-11-13T12:46:51.155Z"
+      }
+    ],
+    "projects": [
+      {
+        "id": 1,
+        "title": "arthaX – Enterprise Personal Financial Management Terminal",
+        "description": "Full-stack wealth terminal for real-time tracking of investments and net worth with dark-mode financial terminal experience.",
+        "tech_stack": [
+          "Next.js",
+          "TypeScript",
+          "PostgreSQL",
+          "Supabase",
+          "TailwindCSS"
+        ],
+        "github_url": "https://github.com/technosaran/arthaX",
+        "live_url": "https://arthax.vercel.app",
+        "highlights": [
+          "Architected a full-stack wealth terminal for real-time tracking of investments and net worth.",
+          "Engineered secure PostgreSQL database schemas with Row Level Security (RLS) and automated parsing pipelines.",
+          "Designed a dark-mode UI with Next.js App Router, cutting client-side load time by 35%."
+        ],
+        "created_at": "2026-11-11T13:02:57.908Z"
+      },
+      {
+        "id": 2,
+        "title": "Real-Time Object Detection System",
+        "description": "Live video stream object detection application using deep learning visual inference algorithms.",
+        "tech_stack": [
+          "Python",
+          "OpenCV",
+          "PyTorch",
+          "Deep Learning"
+        ],
+        "github_url": null,
+        "live_url": null,
+        "highlights": [
+          "Developed a real-time object detection application using Python and OpenCV for live video stream analysis.",
+          "Implemented deep learning visual inference algorithms to perform high-accuracy bounding-box detection."
+        ],
+        "created_at": "2026-11-11T13:02:58.005Z"
+      },
+      {
+        "id": 3,
+        "title": "Named Entity Recognition (NER) System using NLP",
+        "description": "NLP text analytics pipeline extracting entities (Names, Locations, Dates) from unstructured datasets with high precision.",
+        "tech_stack": [
+          "Python",
+          "NLP",
+          "SpaCy",
+          "Scikit-Learn"
+        ],
+        "github_url": null,
+        "live_url": null,
+        "highlights": [
+          "Engineered an NLP text analytics pipeline to extract critical entities (Names, Locations, Dates) from unstructured text.",
+          "Applied advanced tokenization and sequence tagging algorithms to achieve high-precision entity identification."
+        ],
+        "created_at": "2026-11-11T13:02:58.170Z"
+      }
+    ],
+    "skills": [
+      {
+        "id": 1,
+        "name": "Java",
+        "category": "Programming Languages",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:02:58.377Z"
+      },
+      {
+        "id": 2,
+        "name": "JavaScript",
+        "category": "Programming Languages",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:02:58.561Z"
+      },
+      {
+        "id": 3,
+        "name": "TypeScript",
+        "category": "Programming Languages",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:02:58.865Z"
+      },
+      {
+        "id": 4,
+        "name": "Python",
+        "category": "Programming Languages",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:02:59.198Z"
+      },
+      {
+        "id": 5,
+        "name": "SQL",
+        "category": "Programming Languages",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:02:59.301Z"
+      },
+      {
+        "id": 6,
+        "name": "Next.js",
+        "category": "Web & Backend Frameworks",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:02:59.407Z"
+      },
+      {
+        "id": 7,
+        "name": "React.js",
+        "category": "Web & Backend Frameworks",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:02:59.587Z"
+      },
+      {
+        "id": 8,
+        "name": "Node.js",
+        "category": "Web & Backend Frameworks",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:02:59.764Z"
+      },
+      {
+        "id": 9,
+        "name": "Express.js",
+        "category": "Web & Backend Frameworks",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:02:59.891Z"
+      },
+      {
+        "id": 10,
+        "name": "TailwindCSS",
+        "category": "Web & Backend Frameworks",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:00.052Z"
+      },
+      {
+        "id": 11,
+        "name": "RESTful APIs",
+        "category": "Web & Backend Frameworks",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:00.183Z"
+      },
+      {
+        "id": 12,
+        "name": "Microservices",
+        "category": "Web & Backend Frameworks",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:00.447Z"
+      },
+      {
+        "id": 13,
+        "name": "PyTorch",
+        "category": "AI/ML & Cloud",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:00.618Z"
+      },
+      {
+        "id": 14,
+        "name": "OpenCV",
+        "category": "AI/ML & Cloud",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:00.768Z"
+      },
+      {
+        "id": 15,
+        "name": "Scikit-Learn",
+        "category": "AI/ML & Cloud",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:00.942Z"
+      },
+      {
+        "id": 16,
+        "name": "SpaCy",
+        "category": "AI/ML & Cloud",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:01.049Z"
+      },
+      {
+        "id": 17,
+        "name": "Pandas",
+        "category": "AI/ML & Cloud",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:01.224Z"
+      },
+      {
+        "id": 18,
+        "name": "NumPy",
+        "category": "AI/ML & Cloud",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:01.368Z"
+      },
+      {
+        "id": 19,
+        "name": "AWS Cloud",
+        "category": "AI/ML & Cloud",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:01.447Z"
+      },
+      {
+        "id": 20,
+        "name": "Docker",
+        "category": "AI/ML & Cloud",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:01.617Z"
+      },
+      {
+        "id": 21,
+        "name": "DevOps & CI/CD",
+        "category": "AI/ML & Cloud",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:01.765Z"
+      },
+      {
+        "id": 23,
+        "name": "PostgreSQL",
+        "category": "Databases & Developer Tools",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:01.954Z"
+      },
+      {
+        "id": 24,
+        "name": "Supabase",
+        "category": "Databases & Developer Tools",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:02.068Z"
+      },
+      {
+        "id": 25,
+        "name": "MongoDB",
+        "category": "Databases & Developer Tools",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:02.205Z"
+      },
+      {
+        "id": 26,
+        "name": "Git & GitHub",
+        "category": "Databases & Developer Tools",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:02.287Z"
+      },
+      {
+        "id": 27,
+        "name": "Vercel",
+        "category": "Databases & Developer Tools",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:02.464Z"
+      },
+      {
+        "id": 28,
+        "name": "Data Structures & Algorithms",
+        "category": "Core CS Fundamentals",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:02.561Z"
+      },
+      {
+        "id": 29,
+        "name": "OOP",
+        "category": "Core CS Fundamentals",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:02.724Z"
+      },
+      {
+        "id": 30,
+        "name": "DBMS",
+        "category": "Core CS Fundamentals",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:02.872Z"
+      },
+      {
+        "id": 31,
+        "name": "Operating Systems",
+        "category": "Core CS Fundamentals",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:03.058Z"
+      },
+      {
+        "id": 32,
+        "name": "Computer Networks",
+        "category": "Core CS Fundamentals",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:03.208Z"
+      },
+      {
+        "id": 33,
+        "name": "Software Engineering (SDLC/Agile)",
+        "category": "Core CS Fundamentals",
+        "level": "Proficient",
+        "created_at": "2026-11-11T13:03:03.377Z"
+      }
+    ],
+    "experience": [
+      {
+        "id": 1,
+        "intern_id": "edunet-ibm-aiml-2025",
+        "role": "AI & ML Intern",
+        "company": "Edunet Foundation (in partnership with AICTE & IBM SkillsBuild)",
+        "period": "June 2025 – July 2025",
+        "location": "Remote",
+        "description": [
+          "Engineered machine learning models using Python and Scikit-Learn during an intensive 6-week program via IBM SkillsBuild.",
+          "Architected an end-to-end AIML capstone project, applying supervised learning to analyze datasets and improve prediction accuracy."
+        ],
+        "created_at": "2026-11-11T13:03:03.473Z"
+      },
+      {
+        "id": 2,
+        "intern_id": "codtech-cloud-2025",
+        "role": "Cloud Computing Intern",
+        "company": "CodTech IT Solutions",
+        "period": "May 2025 – June 2025",
+        "location": "Remote",
+        "description": [
+          "Deployed and managed scalable cloud infrastructure utilizing AWS services and Docker containerization.",
+          "Optimized application deployment workflows using cloud-native DevOps principles, enhancing system security and scalability."
+        ],
+        "created_at": "2026-11-11T13:03:03.611Z"
+      }
+    ],
+    "certificates": [
+      {
+        "id": 1,
+        "credential_id": "INFOSYS-JAVA-2025",
+        "title": "Programming using Java",
+        "provider": "Infosys Springboard",
+        "issue_date": "2025",
+        "url": null,
+        "created_at": "2026-11-11T13:03:03.715Z"
+      },
+      {
+        "id": 2,
+        "credential_id": "ORACLE-OCI-DS-2025",
+        "title": "Oracle Cloud Infrastructure Certified Data Science Professional",
+        "provider": "Oracle University",
+        "issue_date": "2025",
+        "url": null,
+        "created_at": "2026-11-11T13:03:03.916Z"
+      },
+      {
+        "id": 3,
+        "credential_id": "IBM-AI-FUND-2025",
+        "title": "Artificial Intelligence Fundamentals",
+        "provider": "IBM SkillsBuild",
+        "issue_date": "2025",
+        "url": null,
+        "created_at": "2026-11-11T13:03:04.015Z"
+      },
+      {
+        "id": 4,
+        "credential_id": "AWS-COURSERA-IT-2025",
+        "title": "Introduction to Information Technology and AWS Cloud",
+        "provider": "Amazon Web Services / Coursera",
+        "issue_date": "2025",
+        "url": null,
+        "created_at": "2026-11-11T13:03:04.170Z"
+      },
+      {
+        "id": 5,
+        "credential_id": "GUVI-PROMPT-ENG-2025",
+        "title": "Prompt Engineering for Beginners",
+        "provider": "GUVI Geek Networks (Google for Education Partner)",
+        "issue_date": "2025",
+        "url": null,
+        "created_at": "2026-11-11T13:03:04.378Z"
+      },
+      {
+        "id": 6,
+        "credential_id": "NASSCOM-DATA-GOLD-2025",
+        "title": "Acquiring Data: IT-ITeS Sector Skills Council NASSCOM – FutureSkills Prime Gold",
+        "provider": "NASSCOM",
+        "issue_date": "2025",
+        "url": null,
+        "created_at": "2026-11-11T13:03:04.664Z"
+      }
+    ],
+    "guestbook_messages": [
+      {
+        "id": 1,
+        "name": "Verification Probe",
+        "email": "tester@neon.tech",
+        "message": "End-to-end verification probe successful on Neon Postgres.",
+        "created_at": "2026-11-11T13:33:24.294Z"
+      }
+    ]
+  }
+}

@@ -136,14 +136,14 @@ export default function ActivityShowcase({
     <div className="space-y-6">
       
       {/* View Switcher */}
-      <div className="flex items-center gap-1.5 p-1 rounded-lg border border-[#20222a] bg-[#111216] w-fit">
+      <div className="flex items-center gap-1.5 p-1 rounded-lg border border-[#1b1f2b] bg-[#0c0e14] w-fit">
         <button
           type="button"
           onClick={() => setActiveTab('all')}
           className={`px-3 py-1.5 rounded-md text-xs font-mono transition-colors cursor-pointer ${
             activeTab === 'all'
-              ? 'bg-zinc-100 text-zinc-900 font-semibold shadow-sm'
-              : 'text-zinc-400 hover:text-zinc-200'
+              ? 'bg-zinc-800 text-zinc-100 font-medium shadow-sm'
+              : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
           }`}
         >
           All Activity
@@ -153,8 +153,8 @@ export default function ActivityShowcase({
           onClick={() => setActiveTab('github')}
           className={`px-3 py-1.5 rounded-md text-xs font-mono transition-colors cursor-pointer ${
             activeTab === 'github'
-              ? 'bg-zinc-100 text-zinc-900 font-semibold shadow-sm'
-              : 'text-zinc-400 hover:text-zinc-200'
+              ? 'bg-zinc-800 text-zinc-100 font-medium shadow-sm'
+              : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
           }`}
         >
           GitHub (@{githubData.username})
@@ -164,8 +164,8 @@ export default function ActivityShowcase({
           onClick={() => setActiveTab('leetcode')}
           className={`px-3 py-1.5 rounded-md text-xs font-mono transition-colors cursor-pointer ${
             activeTab === 'leetcode'
-              ? 'bg-zinc-100 text-zinc-900 font-semibold shadow-sm'
-              : 'text-zinc-400 hover:text-zinc-200'
+              ? 'bg-zinc-800 text-zinc-100 font-medium shadow-sm'
+              : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
           }`}
         >
           LeetCode ({leetcodeData.totalSolved} Solved)
@@ -176,8 +176,8 @@ export default function ActivityShowcase({
         
         {/* GitHub Card */}
         {(activeTab === 'all' || activeTab === 'github') && (
-          <div className="rounded-xl border border-[#20222a] bg-[#111216] p-6 space-y-5">
-            <div className="flex items-center justify-between pb-4 border-b border-[#20222a]">
+          <div className="rounded-xl border border-[#1f2432] bg-[#0f1118] p-6 space-y-5">
+            <div className="flex items-center justify-between pb-4 border-b border-[#1b1f2b]">
               <div className="flex items-center gap-2.5">
                 <GithubIcon className="h-5 w-5 text-zinc-100" />
                 <div>
@@ -208,15 +208,15 @@ export default function ActivityShowcase({
 
             {/* Quick Metrics */}
             <div className="grid grid-cols-3 gap-2.5 text-center">
-              <div className="p-3 rounded-lg border border-[#20222a] bg-[#14151b]">
+              <div className="p-3 rounded-lg border border-[#1b1f2b] bg-[#12151e]">
                 <div className="font-mono text-lg font-bold text-zinc-100">{githubData.totalContributions}</div>
                 <div className="text-[10px] text-zinc-400 mt-0.5">Contributions</div>
               </div>
-              <div className="p-3 rounded-lg border border-[#20222a] bg-[#14151b]">
+              <div className="p-3 rounded-lg border border-[#1b1f2b] bg-[#12151e]">
                 <div className="font-mono text-lg font-bold text-zinc-100">{githubData.publicRepos}</div>
                 <div className="text-[10px] text-zinc-400 mt-0.5">Public Repos</div>
               </div>
-              <div className="p-3 rounded-lg border border-[#20222a] bg-[#14151b]">
+              <div className="p-3 rounded-lg border border-[#1b1f2b] bg-[#12151e]">
                 <div className="font-mono text-lg font-bold text-zinc-100">{githubData.followers}</div>
                 <div className="text-[10px] text-zinc-400 mt-0.5">Followers</div>
               </div>
@@ -310,8 +310,8 @@ export default function ActivityShowcase({
 
         {/* LeetCode Card */}
         {(activeTab === 'all' || activeTab === 'leetcode') && (
-          <div className="rounded-xl border border-[#20222a] bg-[#111216] p-6 space-y-5">
-            <div className="flex items-center justify-between pb-4 border-b border-[#20222a]">
+          <div className="rounded-xl border border-[#1f2432] bg-[#0f1118] p-6 space-y-5">
+            <div className="flex items-center justify-between pb-4 border-b border-[#1b1f2b]">
               <div className="flex items-center gap-2.5">
                 <LeetCodeIcon className="h-5 w-5 text-amber-500" />
                 <div>
@@ -342,15 +342,15 @@ export default function ActivityShowcase({
 
             {/* Solved Counts */}
             <div className="grid grid-cols-3 gap-2.5 text-center">
-              <div className="p-3 rounded-lg border border-[#20222a] bg-[#14151b]">
+              <div className="p-3 rounded-lg border border-[#1b1f2b] bg-[#12151e]">
                 <div className="font-mono text-lg font-bold text-amber-400">{leetcodeData.totalSolved}</div>
                 <div className="text-[10px] text-zinc-400 mt-0.5">Total Solved</div>
               </div>
-              <div className="p-3 rounded-lg border border-[#20222a] bg-[#14151b]">
+              <div className="p-3 rounded-lg border border-[#1b1f2b] bg-[#12151e]">
                 <div className="font-mono text-lg font-bold text-emerald-400">{leetcodeData.easySolved}</div>
                 <div className="text-[10px] text-zinc-400 mt-0.5">Easy Problems</div>
               </div>
-              <div className="p-3 rounded-lg border border-[#20222a] bg-[#14151b]">
+              <div className="p-3 rounded-lg border border-[#1b1f2b] bg-[#12151e]">
                 <div className="font-mono text-lg font-bold text-amber-500">{leetcodeData.mediumSolved}</div>
                 <div className="text-[10px] text-zinc-400 mt-0.5">Medium Problems</div>
               </div>
@@ -385,7 +385,7 @@ export default function ActivityShowcase({
                   {leetcodeData.streak} Days Streak · {leetcodeData.totalActiveDays} Active Days
                 </span>
               </div>
-              <div className="p-3 rounded-lg border border-[#20222a] bg-[#14151b] overflow-hidden">
+              <div className="p-3 rounded-lg border border-[#1b1f2b] bg-[#12151e] overflow-hidden">
                 <div className="overflow-x-auto pb-1 scrollbar-thin">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -395,7 +395,7 @@ export default function ActivityShowcase({
                     loading="eager"
                   />
                 </div>
-                <div className="flex items-center justify-between pt-1.5 text-[10px] font-mono text-zinc-500 border-t border-[#20222a]/50 mt-1">
+                <div className="flex items-center justify-between pt-1.5 text-[10px] font-mono text-zinc-500 border-t border-[#1b1f2b] mt-1">
                   <span>Verified live from LeetCode GraphQL</span>
                   <span className="text-amber-500">u/{leetcodeData.username}</span>
                 </div>
@@ -412,7 +412,7 @@ export default function ActivityShowcase({
                   {leetcodeData.topics.slice(0, 6).map((t: LeetCodeTopicStat) => (
                     <div
                       key={t.title}
-                      className="p-2.5 rounded-lg border border-[#20222a] bg-[#14151b] flex items-center justify-between"
+                      className="p-2.5 rounded-lg border border-[#1b1f2b] bg-[#12151e] flex items-center justify-between"
                     >
                       <span className="text-xs text-zinc-300 font-medium">{t.title}</span>
                       <span className="text-[10px] font-mono text-zinc-500">{t.count}</span>

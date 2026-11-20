@@ -5,7 +5,8 @@ import { skillsService } from '@/services/skills.service';
 import { experienceService } from '@/services/experience.service';
 import { certificatesService } from '@/services/certificates.service';
 
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function GET() {
   try {
@@ -31,7 +32,9 @@ export async function GET() {
       {
         status: 200,
         headers: {
-          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+          Pragma: 'no-cache',
+          Expires: '0',
         },
       }
     );

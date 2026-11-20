@@ -95,7 +95,7 @@ export default function ContactSection({ profile }: ContactSectionProps) {
 
         {/* Contact Details List */}
         <div className="space-y-3 text-xs font-mono">
-          <div className="rounded-xl border border-[#20222a] bg-[#111216] p-4 flex items-center justify-between">
+          <div className="rounded-xl border border-[#1f2432] bg-[#0f1118] p-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Mail className="h-4 w-4 text-emerald-400 shrink-0" />
               <div>
@@ -113,9 +113,9 @@ export default function ContactSection({ profile }: ContactSectionProps) {
             </button>
           </div>
 
-          <div className="rounded-xl border border-[#20222a] bg-[#111216] p-4 flex items-center justify-between">
+          <div className="rounded-xl border border-[#1f2432] bg-[#0f1118] p-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Phone className="h-4 w-4 text-sky-400 shrink-0" />
+              <Phone className="h-4 w-4 text-zinc-400 shrink-0" />
               <div>
                 <div className="text-[10px] text-zinc-500 uppercase">Phone</div>
                 <div className="text-zinc-200 mt-0.5">{profile.phone}</div>
@@ -131,7 +131,7 @@ export default function ContactSection({ profile }: ContactSectionProps) {
             </button>
           </div>
 
-          <div className="rounded-xl border border-[#20222a] bg-[#111216] p-4 flex items-center gap-3">
+          <div className="rounded-xl border border-[#1f2432] bg-[#0f1118] p-4 flex items-center gap-3">
             <MapPin className="h-4 w-4 text-zinc-400 shrink-0" />
             <div>
               <div className="text-[10px] text-zinc-500 uppercase">Location</div>
@@ -146,7 +146,7 @@ export default function ContactSection({ profile }: ContactSectionProps) {
             href={profile.github_url || 'https://github.com/technosaran'}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 p-3 rounded-xl border border-[#20222a] bg-[#111216] hover:border-zinc-700 flex items-center justify-between text-xs text-zinc-300 transition-colors"
+            className="flex-1 p-3 rounded-xl border border-[#1f2432] bg-[#0f1118] hover:border-[#2d3448] flex items-center justify-between text-xs text-zinc-300 transition-colors"
           >
             <span className="flex items-center gap-2">
               <GithubIcon className="h-4 w-4 text-zinc-400" />
@@ -159,10 +159,10 @@ export default function ContactSection({ profile }: ContactSectionProps) {
             href={profile.linkedin_url || 'https://linkedin.com/in/saran-r-b2b1a5275'}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 p-3 rounded-xl border border-[#20222a] bg-[#111216] hover:border-zinc-700 flex items-center justify-between text-xs text-zinc-300 transition-colors"
+            className="flex-1 p-3 rounded-xl border border-[#1f2432] bg-[#0f1118] hover:border-[#2d3448] flex items-center justify-between text-xs text-zinc-300 transition-colors"
           >
             <span className="flex items-center gap-2">
-              <LinkedinIcon className="h-4 w-4 text-sky-400" />
+              <LinkedinIcon className="h-4 w-4 text-zinc-400" />
               <span>LinkedIn</span>
             </span>
             <ArrowUpRight className="h-3 w-3 text-zinc-500" />
@@ -175,7 +175,7 @@ export default function ContactSection({ profile }: ContactSectionProps) {
       <div className="lg:col-span-7">
         <form
           onSubmit={handleSendEmail}
-          className="rounded-xl border border-[#20222a] bg-[#111216] p-6 space-y-4"
+          className="rounded-xl border border-[#1f2432] bg-[#0f1118] p-6 space-y-4"
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
@@ -185,7 +185,7 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                 value={senderName}
                 onChange={(e) => setSenderName(e.target.value)}
                 placeholder="Jane Doe"
-                className="w-full rounded-lg border border-[#20222a] bg-[#14151b] px-3 py-2 text-xs text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500"
+                className="w-full rounded-lg border border-[#1b1f2b] bg-[#12151e] px-3 py-2 text-xs text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500"
               />
             </div>
 
@@ -196,7 +196,7 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                 value={senderEmail}
                 onChange={(e) => setSenderEmail(e.target.value)}
                 placeholder="jane@company.com"
-                className="w-full rounded-lg border border-[#20222a] bg-[#14151b] px-3 py-2 text-xs text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500"
+                className="w-full rounded-lg border border-[#1b1f2b] bg-[#12151e] px-3 py-2 text-xs text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500"
               />
             </div>
           </div>
@@ -206,7 +206,7 @@ export default function ContactSection({ profile }: ContactSectionProps) {
             <select
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
-              className="w-full rounded-lg border border-[#20222a] bg-[#14151b] px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-zinc-500 cursor-pointer"
+              className="w-full rounded-lg border border-[#1b1f2b] bg-[#12151e] px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-zinc-500 cursor-pointer"
             >
               {TOPICS.map((t) => (
                 <option key={t} value={t} className="bg-zinc-900 text-zinc-200">
@@ -223,7 +223,7 @@ export default function ContactSection({ profile }: ContactSectionProps) {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Hi Saran, we're building..."
-              className="w-full rounded-lg border border-[#20222a] bg-[#14151b] px-3 py-2 text-xs text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 resize-none"
+              className="w-full rounded-lg border border-[#1b1f2b] bg-[#12151e] px-3 py-2 text-xs text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 resize-none"
             />
           </div>
 
@@ -239,7 +239,7 @@ export default function ContactSection({ profile }: ContactSectionProps) {
             <button
               type="button"
               onClick={handleCopyMessage}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-lg border border-[#20222a] bg-[#14151b] hover:bg-[#1a1c24] px-4 py-2.5 text-xs font-mono text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-lg border border-[#1b1f2b] bg-[#12151e] hover:bg-[#181c28] px-4 py-2.5 text-xs font-mono text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer"
             >
               <Copy className="h-3.5 w-3.5" />
               <span>Copy Message</span>
