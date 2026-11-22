@@ -22,7 +22,7 @@ export const viewport: Viewport = {
   maximumScale: 5,
   userScalable: true,
   viewportFit: "cover",
-  themeColor: "#050609",
+  themeColor: "#090a0f",
   colorScheme: "dark",
 };
 
@@ -133,7 +133,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://github.com" />
         <link rel="dns-prefetch" href="https://github.com" />
       </head>
-      <body className="min-h-screen bg-[#050609] text-slate-100 font-sans selection:bg-indigo-500/30 selection:text-indigo-200 overflow-x-hidden antialiased">
+      <body className="min-h-screen bg-[#090a0f] text-zinc-100 font-sans selection:bg-emerald-500/20 selection:text-emerald-200 overflow-x-hidden antialiased">
         {children}
       </body>
     </html>
