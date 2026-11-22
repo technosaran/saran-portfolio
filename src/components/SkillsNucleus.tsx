@@ -1,13 +1,9 @@
 'use client';
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { X, Cpu } from 'lucide-react';
+import { X, Cpu, Orbit, LayoutGrid, Search, ArrowUpRight } from 'lucide-react';
 import { Skill } from '@/lib/neon/db';
 import BrandLogo from './BrandLogo';
-
-interface SkillsNucleusProps {
-  skills?: Skill[];
-}
 
 export interface SkillItem {
   id: number | string;
@@ -21,9 +17,27 @@ export interface SkillItem {
   initialAngle: number;
 }
 
+export function groupSkillsByCategory(skills: SkillItem[]): Record<string, SkillItem[]> {
+  const groups: Record<string, SkillItem[]> = {
+    languages: [],
+    frameworks: [],
+    cloud: [],
+    database: [],
+    aiml: [],
+  };
+
+  skills.forEach((skill) => {
+    const cat = skill.category || 'languages';
+    if (!groups[cat]) {
+      groups[cat] = [];
+    }
+    groups[cat].push(skill);
+  });
+
+  return groups;
+}
+
 // Compact Celestial Orbital Mechanics (Scaled for viewport perfection)
-// Outer radius: 275px (diameter 550px). With badges (~140px), stage is ~640px.
-// Uniform prograde revolution with outer orbits moving progressively slower.
 const CELESTIAL_ORBITS = {
   orbit1: { radius: 95, duration: 28, offset: 0, label: 'Languages' },
   orbit2: { radius: 155, duration: 44, offset: 35, label: 'Frameworks' },
@@ -45,7 +59,7 @@ const DEFAULT_SKILLS_CATALOG: Omit<SkillItem, 'initialAngle'>[] = [
   { id: 'nextjs', name: 'Next.js', category: 'frameworks', categoryLabel: 'Frameworks & Web', context: 'Turbopack, Server Components, Server Actions & App Router micro-frontends', projects: ['arthaX Wealth Terminal', 'Developer Portfolio'], orbit: 2, proficiency: 'Expert' },
   { id: 'nodejs', name: 'Node.js', category: 'frameworks', categoryLabel: 'Frameworks & Web', context: 'Asynchronous event runtimes, high-throughput microservices & streaming APIs', projects: ['Full-Stack Microservices'], orbit: 2, proficiency: 'Advanced' },
   { id: 'express', name: 'Express.js', category: 'frameworks', categoryLabel: 'Frameworks & Web', context: 'RESTful API endpoints, secure middleware chains & routing architecture', projects: ['Backend Microservices'], orbit: 2, proficiency: 'Advanced' },
-  { id: 'tailwindcss', name: 'Tailwind CSS', category: 'frameworks', categoryLabel: 'Frameworks & Web', context: 'Tailwind CSS 4, modern utility design, glassmorphism, responsive grids & tokens', projects: ['arthaX Terminal', 'Developer Portfolio'], orbit: 2, proficiency: 'Expert' },
+  { id: 'tailwindcss', name: 'Tailwind CSS', category: 'frameworks', categoryLabel: 'Frameworks & Web', context: 'Tailwind CSS 4, modern utility design, responsive grids & tokens', projects: ['arthaX Terminal', 'Developer Portfolio'], orbit: 2, proficiency: 'Expert' },
 
   // Orbit 3: Cloud, AI & DevOps (Radius: 215px)
   { id: 'vercel', name: 'Vercel', category: 'cloud', categoryLabel: 'Cloud & DevOps', context: 'Zero-config edge deployment, serverless functions, fluid compute & CI/CD', projects: ['Portfolio Live Deployment', 'arthaX Production'], orbit: 3, proficiency: 'Expert' },
@@ -61,7 +75,13 @@ const DEFAULT_SKILLS_CATALOG: Omit<SkillItem, 'initialAngle'>[] = [
   { id: 'neon', name: 'Neon', category: 'database', categoryLabel: 'Databases & Storage', context: 'Serverless Postgres with autoscaling, database branching & instant point-in-time restore', projects: ['Portfolio Live Database', 'arthaX Backend'], orbit: 4, proficiency: 'Advanced' },
 ];
 
+interface SkillsNucleusProps {
+  skills?: Skill[];
+}
+
 export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
+  const [viewMode, setViewMode] = useState<'orbital' | 'matrix'>('orbital');
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedSkill, setSelectedSkill] = useState<SkillItem | null>(null);
   const [hoveredSkill, setHoveredSkill] = useState<SkillItem | null>(null);
   const [zoomScale, setZoomScale] = useState(1);
@@ -81,7 +101,6 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
   useEffect(() => {
     const handleResize = () => {
       const arenaWidth = arenaRef.current ? arenaRef.current.clientWidth : window.innerWidth;
-      // 640px is stage diameter; compute fluid scale with a sensible mobile minimum
       const targetScale = Math.min(1, Math.max(0.48, (arenaWidth - 16) / 640));
       setZoomScale(targetScale);
     };
@@ -95,9 +114,8 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
   const allSkillsList: SkillItem[] = useMemo(() => {
     if (!skills || skills.length === 0) return [];
 
-    const norm = (s: string) => s.toLowerCase().replace(/[\s\.\-_]/g, '');
+    const norm = (s: string) => s.toLowerCase().replace(/[\s.\-_]/g, '');
 
-    // Classify skills into the 4 orbits
     const mapped = skills.map((dbSkill) => {
       const dbNorm = norm(dbSkill.name);
       const catalogMatch = DEFAULT_SKILLS_CATALOG.find((cat) => norm(cat.name) === dbNorm);
@@ -112,7 +130,6 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
         };
       }
 
-      // Dynamic heuristic classification based on skill name & category
       const nameLower = dbSkill.name.toLowerCase();
       const catLower = (dbSkill.category || '').toLowerCase();
 
@@ -174,11 +191,9 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
       };
     });
 
-    // Count skills per orbit
     const counts: { [orbit: number]: number } = { 1: 0, 2: 0, 3: 0, 4: 0 };
     mapped.forEach((s) => { counts[s.orbit] = (counts[s.orbit] || 0) + 1; });
 
-    // Distribute initial angles evenly across 360 degrees for each orbit
     const orbitCurrentIndex: { [orbit: number]: number } = { 1: 0, 2: 0, 3: 0, 4: 0 };
     return mapped.map((skill) => {
       const totalInOrbit = counts[skill.orbit] || 1;
@@ -196,6 +211,31 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
     });
   }, [skills]);
 
+  // Grouped skills for the matrix view
+  const groupedSkills = useMemo(() => {
+    return groupSkillsByCategory(allSkillsList);
+  }, [allSkillsList]);
+
+  // Filtered skills for matrix search
+  const filteredMatrix = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return groupedSkills;
+
+    const filtered: Record<string, SkillItem[]> = {};
+    Object.entries(groupedSkills).forEach(([cat, list]) => {
+      const matched = list.filter(
+        (s) =>
+          s.name.toLowerCase().includes(q) ||
+          s.categoryLabel.toLowerCase().includes(q) ||
+          s.context.toLowerCase().includes(q)
+      );
+      if (matched.length > 0) {
+        filtered[cat] = matched;
+      }
+    });
+    return filtered;
+  }, [groupedSkills, searchQuery]);
+
   // Initialize angles for each skill
   useEffect(() => {
     allSkillsList.forEach((skill) => {
@@ -205,11 +245,9 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
     });
   }, [allSkillsList]);
 
-  // High-performance direct RAF animation loop:
-  // Updates Cartesian (x, y) coordinates with translate3d WITHOUT ANY ROTATION.
-  // Guarantees badges are ALWAYS 100% level, upright, and never tilted or upside down.
+  // High-performance direct RAF animation loop
   useEffect(() => {
-    if (allSkillsList.length === 0) return;
+    if (allSkillsList.length === 0 || viewMode !== 'orbital') return;
 
     const animate = (timestamp: number) => {
       if (lastTimeRef.current === null) {
@@ -218,14 +256,12 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
       const delta = (timestamp - lastTimeRef.current) / 1000;
       lastTimeRef.current = timestamp;
 
-      // Only advance position if not paused and delta is reasonable (prevents big jumps on tab focus)
       if (!isPausedRef.current && delta < 0.2) {
         allSkillsList.forEach((skill) => {
           const orbitKey = `orbit${skill.orbit}` as keyof typeof CELESTIAL_ORBITS;
           const config = CELESTIAL_ORBITS[orbitKey] || CELESTIAL_ORBITS.orbit1;
-          const speed = 360 / config.duration; // degrees per second (counter-clockwise)
+          const speed = 360 / config.duration;
 
-          // Counter-clockwise motion (subtract angle)
           let currentAngle = (anglesRef.current[skill.id] ?? skill.initialAngle) - speed * delta;
           if (currentAngle < 0) currentAngle += 360;
           anglesRef.current[skill.id] = currentAngle;
@@ -251,9 +287,8 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
       }
       lastTimeRef.current = null;
     };
-  }, [allSkillsList]);
+  }, [allSkillsList, viewMode]);
 
-  // Clean empty state if database has no skills
   if (!skills || skills.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-[#262b3a] bg-[#0c0e14]/50 p-8 sm:p-12 text-center space-y-3">
@@ -264,7 +299,7 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
           No skills in database
         </h3>
         <p className="text-xs text-zinc-400 max-w-md mx-auto">
-          Database was cleared. All newly added technical skills from the admin panel or database will orbit here in real time without refreshing.
+          Database was cleared. All newly added technical skills from the admin panel or database will stream here in real time without refreshing.
         </p>
       </div>
     );
@@ -272,7 +307,6 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
 
   const activeInspected = hoveredSkill || selectedSkill;
 
-  // Category visual accent helper
   const getBadgeColors = (orbit: number, isCurrent: boolean) => {
     switch (orbit) {
       case 1:
@@ -311,197 +345,249 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
     }
   };
 
-  return (
-    <div className="relative w-full flex flex-col items-center justify-center select-none py-2">
-      
-      {/* ======================================================== */}
-      {/* COMPACT CELESTIAL STAGE (Scaled proportionally)          */}
-      {/* ======================================================== */}
-      <div 
-        ref={arenaRef}
-        className="relative w-full flex items-center justify-center overflow-visible"
-        style={{
-          height: `${Math.round(590 * zoomScale)}px`,
-          minHeight: '340px'
-        }}
-      >
-        
-        {/* Ambient Radial Glowing Nebulae */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full bg-blue-600/10 blur-[100px] pointer-events-none" />
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[260px] h-[260px] rounded-full bg-cyan-500/15 blur-[70px] pointer-events-none" />
+  const categoryHeadings: Record<string, { title: string; color: string }> = {
+    languages: { title: 'Programming Languages', color: 'text-cyan-400' },
+    frameworks: { title: 'Frameworks & Web Runtimes', color: 'text-blue-400' },
+    cloud: { title: 'Cloud Infrastructure & DevOps', color: 'text-purple-400' },
+    database: { title: 'Databases & Storage', color: 'text-emerald-400' },
+    aiml: { title: 'AI & Machine Learning', color: 'text-amber-400' },
+  };
 
-        {/* Scaled Orbit System (640px coordinate diameter) */}
+  return (
+    <div className="relative w-full flex flex-col items-center justify-center select-none py-2 space-y-4">
+      
+      {/* Top View Switcher Controls */}
+      <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl border border-[#1f2432] bg-[#0c0e14]">
+          <button
+            type="button"
+            onClick={() => setViewMode('orbital')}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer ${
+              viewMode === 'orbital'
+                ? 'bg-zinc-800 text-white font-medium shadow-sm'
+                : 'text-zinc-400 hover:text-zinc-200'
+            }`}
+          >
+            <Orbit className="h-3.5 w-3.5 text-cyan-400" />
+            <span>Orbital Simulation</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode('matrix')}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer ${
+              viewMode === 'matrix'
+                ? 'bg-zinc-800 text-white font-medium shadow-sm'
+                : 'text-zinc-400 hover:text-zinc-200'
+            }`}
+          >
+            <LayoutGrid className="h-3.5 w-3.5 text-emerald-400" />
+            <span>Skills Matrix View</span>
+          </button>
+        </div>
+
+        {viewMode === 'matrix' && (
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search tools & frameworks..."
+              className="w-full pl-9 pr-3 py-1.5 rounded-lg border border-[#202534] bg-[#0f1118] text-xs text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500 transition-colors font-mono"
+            />
+          </div>
+        )}
+      </div>
+
+      {/* MODE 1: CELESTIAL ORBITAL VIEW */}
+      {viewMode === 'orbital' && (
         <div 
-          className="relative shrink-0 flex items-center justify-center origin-center transition-transform duration-200"
+          ref={arenaRef}
+          className="relative w-full flex items-center justify-center overflow-visible"
           style={{
-            width: '640px',
-            height: '640px',
-            transform: `scale(${zoomScale})`
+            height: `${Math.round(590 * zoomScale)}px`,
+            minHeight: '340px'
           }}
         >
+          {/* Ambient Radial Glowing Nebulae */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full bg-blue-600/10 blur-[100px] pointer-events-none" />
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[260px] h-[260px] rounded-full bg-cyan-500/15 blur-[70px] pointer-events-none" />
 
-          {/* SVG Concentric Orbit Track Paths */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none select-none" viewBox="0 0 640 640">
-            {/* Subtle Crosshairs */}
-            <line x1="320" y1="35" x2="320" y2="605" stroke="rgba(255,255,255,0.03)" strokeDasharray="4 8" />
-            <line x1="35" y1="320" x2="605" y2="320" stroke="rgba(255,255,255,0.03)" strokeDasharray="4 8" />
-
-            {/* Orbit Track 1: Languages (r=95px) */}
-            <circle
-              cx="320"
-              cy="320"
-              r={CELESTIAL_ORBITS.orbit1.radius}
-              fill="none"
-              stroke="rgba(56, 189, 248, 0.3)"
-              strokeWidth="1.5"
-              strokeDasharray="4 6"
-            />
-
-            {/* Orbit Track 2: Frameworks & Web (r=155px) */}
-            <circle
-              cx="320"
-              cy="320"
-              r={CELESTIAL_ORBITS.orbit2.radius}
-              fill="none"
-              stroke="rgba(59, 130, 246, 0.3)"
-              strokeWidth="1.5"
-              strokeDasharray="5 7"
-            />
-
-            {/* Orbit Track 3: Cloud & AI (r=215px) */}
-            <circle
-              cx="320"
-              cy="320"
-              r={CELESTIAL_ORBITS.orbit3.radius}
-              fill="none"
-              stroke="rgba(168, 85, 247, 0.3)"
-              strokeWidth="1.5"
-              strokeDasharray="6 8"
-            />
-
-            {/* Orbit Track 4: Databases & Storage (r=275px) */}
-            <circle
-              cx="320"
-              cy="320"
-              r={CELESTIAL_ORBITS.orbit4.radius}
-              fill="none"
-              stroke="rgba(16, 185, 129, 0.3)"
-              strokeWidth="1.5"
-              strokeDasharray="6 10"
-            />
-          </svg>
-
-          {/* =================================================== */}
-          {/* 1. CENTER TECH NUCLEUS (Compact & Refined)          */}
-          {/* =================================================== */}
+          {/* Scaled Orbit System */}
           <div 
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 select-none pointer-events-none"
+            className="relative shrink-0 flex items-center justify-center origin-center transition-transform duration-200"
+            style={{
+              width: '640px',
+              height: '640px',
+              transform: `scale(${zoomScale})`
+            }}
           >
-            {/* Gravitational Wave Ripples */}
-            <div className="absolute inset-0 rounded-full border border-cyan-400/25 animate-spacetime-ripple pointer-events-none" />
-            <div className="absolute inset-0 rounded-full border border-blue-500/20 animate-spacetime-ripple pointer-events-none" style={{ animationDelay: '1.8s' }} />
+            {/* SVG Concentric Orbit Track Paths */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none select-none" viewBox="0 0 640 640">
+              <line x1="320" y1="35" x2="320" y2="605" stroke="rgba(255,255,255,0.03)" strokeDasharray="4 8" />
+              <line x1="35" y1="320" x2="605" y2="320" stroke="rgba(255,255,255,0.03)" strokeDasharray="4 8" />
 
-            {/* Event Horizon Accretion Ring */}
-            <div 
-              className="absolute -inset-3 sm:-inset-4 rounded-full border border-dashed border-cyan-400/35 animate-event-horizon pointer-events-none" 
-            />
+              <circle cx="320" cy="320" r={CELESTIAL_ORBITS.orbit1.radius} fill="none" stroke="rgba(56, 189, 248, 0.3)" strokeWidth="1.5" strokeDasharray="4 6" />
+              <circle cx="320" cy="320" r={CELESTIAL_ORBITS.orbit2.radius} fill="none" stroke="rgba(59, 130, 246, 0.3)" strokeWidth="1.5" strokeDasharray="5 7" />
+              <circle cx="320" cy="320" r={CELESTIAL_ORBITS.orbit3.radius} fill="none" stroke="rgba(168, 85, 247, 0.3)" strokeWidth="1.5" strokeDasharray="6 8" />
+              <circle cx="320" cy="320" r={CELESTIAL_ORBITS.orbit4.radius} fill="none" stroke="rgba(16, 185, 129, 0.3)" strokeWidth="1.5" strokeDasharray="6 10" />
+            </svg>
 
-            {/* Compact Nucleus Body (96px - 108px) */}
-            <div 
-              className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full flex flex-col items-center justify-center p-2 text-center border-2 border-cyan-400/60 bg-gradient-to-b from-[#0b162c] via-[#091024] to-[#04060c] shadow-[0_0_30px_rgba(56,189,248,0.5),0_0_60px_rgba(99,102,241,0.3),inset_0_0_16px_rgba(56,189,248,0.4)] transition-all duration-300 animate-nucleus-pulse"
-            >
-              {activeInspected ? (
-                <>
-                  <div className="text-xs sm:text-sm font-bold text-white tracking-tight line-clamp-1 px-1">
-                    {activeInspected.name}
-                  </div>
-                  <div className="text-[8px] font-mono text-cyan-300 uppercase tracking-wider mt-0.5 line-clamp-1 px-1">
-                    {activeInspected.categoryLabel}
-                  </div>
-                  <div className="mt-1 px-2 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-[7px] font-mono text-cyan-300">
-                    {activeInspected.proficiency || 'Active'}
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="font-mono font-black text-base sm:text-lg tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 via-white to-blue-300 drop-shadow-[0_0_10px_rgba(56,189,248,0.7)] whitespace-nowrap">
-                    E = mc²
-                  </div>
-                  <div className="text-[9px] font-mono font-bold tracking-widest text-cyan-300 uppercase mt-0.5 leading-tight">
-                    Tech Stack
-                  </div>
-                  <div className="text-[7.5px] font-mono text-zinc-400 mt-0.5">
-                    Full-Stack · AI
-                  </div>
-                </>
-              )}
+            {/* Tech Nucleus */}
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 select-none pointer-events-none">
+              <div className="absolute inset-0 rounded-full border border-cyan-400/25 animate-spacetime-ripple pointer-events-none" />
+              <div className="absolute -inset-3 sm:-inset-4 rounded-full border border-dashed border-cyan-400/35 animate-event-horizon pointer-events-none" />
+
+              <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full flex flex-col items-center justify-center p-2 text-center border-2 border-cyan-400/60 bg-gradient-to-b from-[#0b162c] via-[#091024] to-[#04060c] shadow-[0_0_30px_rgba(56,189,248,0.5),0_0_60px_rgba(99,102,241,0.3),inset_0_0_16px_rgba(56,189,248,0.4)] transition-all duration-300 animate-nucleus-pulse">
+                {activeInspected ? (
+                  <>
+                    <div className="text-xs sm:text-sm font-bold text-white tracking-tight line-clamp-1 px-1">
+                      {activeInspected.name}
+                    </div>
+                    <div className="text-[8px] font-mono text-cyan-300 uppercase tracking-wider mt-0.5 line-clamp-1 px-1">
+                      {activeInspected.categoryLabel}
+                    </div>
+                    <div className="mt-1 px-2 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-[7px] font-mono text-cyan-300">
+                      {activeInspected.proficiency || 'Active'}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="font-mono font-black text-base sm:text-lg tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 via-white to-blue-300 drop-shadow-[0_0_10px_rgba(56,189,248,0.7)] whitespace-nowrap">
+                      Tech Stack
+                    </div>
+                    <div className="text-[9px] font-mono font-bold tracking-widest text-cyan-300 uppercase mt-0.5 leading-tight">
+                      Orbits
+                    </div>
+                    <div className="text-[7.5px] font-mono text-zinc-400 mt-0.5">
+                      Hover to pause
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
 
-          {/* =================================================== */}
-          {/* 2. CELESTIAL ORBITING BODIES (Level, Upright & Bold) */}
-          {/* =================================================== */}
-          {allSkillsList.map((skill) => {
-            const isCurrent = activeInspected?.name === skill.name;
-            const colors = getBadgeColors(skill.orbit, isCurrent);
+            {/* Orbiting Badges */}
+            {allSkillsList.map((skill) => {
+              const isCurrent = activeInspected?.name === skill.name;
+              const colors = getBadgeColors(skill.orbit, isCurrent);
 
-            // Compute initial Cartesian position for instant SSR/first paint
-            const orbitKey = `orbit${skill.orbit}` as keyof typeof CELESTIAL_ORBITS;
-            const config = CELESTIAL_ORBITS[orbitKey] || CELESTIAL_ORBITS.orbit1;
-            const initialRad = (skill.initialAngle * Math.PI) / 180;
-            const initialX = Math.round(config.radius * Math.cos(initialRad) * 10) / 10;
-            const initialY = Math.round(config.radius * Math.sin(initialRad) * 10) / 10;
+              const orbitKey = `orbit${skill.orbit}` as keyof typeof CELESTIAL_ORBITS;
+              const config = CELESTIAL_ORBITS[orbitKey] || CELESTIAL_ORBITS.orbit1;
+              const initialRad = (skill.initialAngle * Math.PI) / 180;
+              const initialX = Math.round(config.radius * Math.cos(initialRad) * 10) / 10;
+              const initialY = Math.round(config.radius * Math.sin(initialRad) * 10) / 10;
 
-            return (
-              <div
-                key={skill.id}
-                ref={(el) => {
-                  if (el) badgeRefs.current.set(skill.id, el);
-                  else badgeRefs.current.delete(skill.id);
-                }}
-                className="absolute left-1/2 top-1/2 pointer-events-auto will-change-transform"
-                style={{
-                  transform: `translate3d(calc(-50% + ${initialX}px), calc(-50% + ${initialY}px), 0)`,
-                }}
-              >
+              return (
                 <div
-                  onMouseEnter={() => {
-                    setHoveredSkill(skill);
-                    isPausedRef.current = true;
+                  key={skill.id}
+                  ref={(el) => {
+                    if (el) badgeRefs.current.set(skill.id, el);
+                    else badgeRefs.current.delete(skill.id);
                   }}
-                  onMouseLeave={() => {
-                    setHoveredSkill(null);
-                    isPausedRef.current = selectedSkill !== null;
+                  className="absolute left-1/2 top-1/2 pointer-events-auto will-change-transform"
+                  style={{
+                    transform: `translate3d(calc(-50% + ${initialX}px), calc(-50% + ${initialY}px), 0)`,
                   }}
-                  onClick={() => setSelectedSkill(skill)}
-                  className={`group relative flex items-center gap-2.5 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-full border transition-all duration-200 cursor-pointer shadow-lg hover:scale-105 active:scale-95 ${colors.badge} backdrop-blur-xl shrink-0 whitespace-nowrap`}
                 >
-                  <BrandLogo
-                    name={skill.name}
-                    size={24}
-                    badgeVariant="glass"
-                    showGlow={isCurrent}
-                  />
-                  <span className={`text-xs sm:text-sm font-semibold font-mono tracking-wide text-zinc-100 ${colors.text}`}>
-                    {skill.name}
+                  <div
+                    onMouseEnter={() => {
+                      setHoveredSkill(skill);
+                      isPausedRef.current = true;
+                    }}
+                    onMouseLeave={() => {
+                      setHoveredSkill(null);
+                      isPausedRef.current = selectedSkill !== null;
+                    }}
+                    onClick={() => setSelectedSkill(skill)}
+                    className={`group relative flex items-center gap-2.5 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-full border transition-all duration-200 cursor-pointer shadow-lg hover:scale-105 active:scale-95 ${colors.badge} backdrop-blur-xl shrink-0 whitespace-nowrap`}
+                  >
+                    <BrandLogo
+                      name={skill.name}
+                      size={24}
+                      badgeVariant="glass"
+                      showGlow={isCurrent}
+                    />
+                    <span className={`text-xs sm:text-sm font-semibold font-mono tracking-wide text-zinc-100 ${colors.text}`}>
+                      {skill.name}
+                    </span>
+                    <span className={`h-2 w-2 rounded-full shrink-0 ${colors.dot}`} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* MODE 2: RECRUITER SKILLS MATRIX VIEW */}
+      {viewMode === 'matrix' && (
+        <div className="w-full space-y-6 pt-2">
+          {Object.entries(filteredMatrix).map(([catKey, catSkills]) => {
+            const heading = categoryHeadings[catKey] || { title: catKey, color: 'text-zinc-200' };
+            return (
+              <div key={catKey} className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <span className={`text-xs font-mono font-semibold uppercase tracking-wider ${heading.color}`}>
+                    {heading.title}
                   </span>
-                  <span className={`h-2 w-2 rounded-full shrink-0 ${colors.dot}`} />
+                  <span className="text-[10px] font-mono text-zinc-500">
+                    ({catSkills.length})
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {catSkills.map((skill) => (
+                    <div
+                      key={skill.id}
+                      onClick={() => setSelectedSkill(skill)}
+                      className="group flex flex-col justify-between rounded-xl border border-[#1f2432] bg-[#0f1118] p-4 hover:border-zinc-700 hover:bg-[#121520] transition-all cursor-pointer shadow-sm"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-center gap-2.5">
+                          <BrandLogo name={skill.name} size={24} badgeVariant="glass" />
+                          <div>
+                            <h4 className="text-sm font-bold text-zinc-100 group-hover:text-emerald-400 transition-colors">
+                              {skill.name}
+                            </h4>
+                            <span className="text-[10px] font-mono text-zinc-500 block">
+                              {skill.proficiency || 'Advanced'}
+                            </span>
+                          </div>
+                        </div>
+
+                        <ArrowUpRight className="h-3.5 w-3.5 text-zinc-600 group-hover:text-zinc-300 transition-colors" />
+                      </div>
+
+                      <p className="mt-2 text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                        {skill.context}
+                      </p>
+
+                      {skill.projects && skill.projects.length > 0 && (
+                        <div className="mt-3 pt-2 border-t border-[#1b1f2b] flex items-center gap-1.5 text-[10px] font-mono text-zinc-500">
+                          <span className="text-emerald-400 font-semibold">Applied in:</span>
+                          <span className="truncate">{skill.projects[0]}</span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
             );
           })}
-
         </div>
-      </div>
+      )}
 
-      {/* ======================================================== */}
-      {/* SKILL DETAIL DOSSIER MODAL                               */}
-      {/* ======================================================== */}
+      {/* SKILL DETAIL DOSSIER MODAL */}
       {selectedSkill && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl animate-in fade-in">
-          <div className="relative w-full max-w-md rounded-3xl border border-white/[0.12] bg-[#0c0d16] p-6 sm:p-7 shadow-2xl card-shine">
-            
-            {/* Modal Header */}
+        <div 
+          onClick={() => setSelectedSkill(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl animate-in fade-in"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-md rounded-2xl border border-white/[0.12] bg-[#0c0d16] p-6 shadow-2xl"
+          >
             <div className="flex items-start justify-between border-b border-white/[0.08] pb-4">
               <div className="flex items-center gap-3">
                 <BrandLogo
@@ -529,9 +615,7 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
               </button>
             </div>
 
-            {/* Modal Content */}
             <div className="mt-5 space-y-4 text-xs font-sans text-zinc-300">
-              
               <div>
                 <span className="text-[10px] font-mono uppercase text-zinc-500 block mb-1">
                   Practical Application &amp; Production Architecture
@@ -556,18 +640,16 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
               </div>
 
               <div className="pt-2 flex items-center justify-between text-[11px] font-mono text-zinc-500 border-t border-white/[0.06]">
-                <span>Proficiency Level: <strong className="text-cyan-400">{selectedSkill.proficiency || 'Advanced'}</strong></span>
+                <span>Proficiency: <strong className="text-cyan-400">{selectedSkill.proficiency || 'Advanced'}</strong></span>
                 <button
                   type="button"
                   onClick={() => setSelectedSkill(null)}
                   className="px-4 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-white text-xs font-medium transition-colors cursor-pointer"
                 >
-                  Close Dossier
+                  Close
                 </button>
               </div>
-
             </div>
-
           </div>
         </div>
       )}
