@@ -10,11 +10,7 @@ import {
   Download, 
   Sparkles,
   MapPin,
-  Briefcase,
-  Code2,
-  Terminal,
-  Layers,
-  Database
+  Clock
 } from 'lucide-react';
 import { GithubIcon, LinkedinIcon, LeetCodeIcon } from './SocialIcons';
 import { Profile } from '@/lib/neon/db';
@@ -87,24 +83,34 @@ export default function InteractiveHero({
 
   return (
     <section id="home" className="relative pt-10 pb-16 md:pt-18 md:pb-24 border-b border-[#1b1f2b]">
+      {/* Subtle ambient background glow */}
+      <div 
+        aria-hidden="true" 
+        className="pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 w-full max-w-5xl h-72 bg-gradient-to-b from-emerald-500/[0.04] via-sky-500/[0.02] to-transparent blur-3xl -z-10" 
+      />
+
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
           
           {/* Left Column: Human Story & Identity (7 cols) */}
           <div className="lg:col-span-7 space-y-6">
             
-            {/* Real Status Badge */}
+            {/* Real Status Badge & Timezone */}
             <div className="flex flex-wrap items-center gap-3">
               <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-mono font-medium text-emerald-400">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                 </span>
                 <span>Available for 2026/2027 Roles</span>
               </div>
               <div className="inline-flex items-center gap-1.5 text-xs text-zinc-400 font-mono">
                 <MapPin className="h-3.5 w-3.5 text-zinc-500" />
                 <span>{profile.location || 'Chennai, India'}</span>
+              </div>
+              <div className="hidden sm:inline-flex items-center gap-1.5 text-xs text-zinc-500 font-mono">
+                <Clock className="h-3.5 w-3.5 text-zinc-600" />
+                <span>IST (UTC+5:30)</span>
               </div>
             </div>
 
@@ -135,7 +141,7 @@ export default function InteractiveHero({
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <a
                 href="#projects"
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-zinc-100 text-zinc-900 hover:bg-white px-4.5 py-2.5 text-xs font-semibold transition-all active:scale-[0.98]"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-zinc-100 text-zinc-900 hover:bg-white px-4.5 py-2.5 text-xs font-semibold transition-all active:scale-[0.98] shadow-sm"
               >
                 <span>View Projects</span>
                 <ArrowDown className="h-3.5 w-3.5" />
@@ -170,18 +176,16 @@ export default function InteractiveHero({
                 )}
               </button>
 
-              {onOpenCommandMenu && (
-                <button
-                  type="button"
-                  onClick={handleOpenCommand}
-                  className="hidden sm:inline-flex items-center justify-center gap-1.5 rounded-lg border border-[#1b1f2b] bg-[#0f1118] hover:bg-[#151822] px-3 py-2.5 text-xs font-mono text-zinc-400 hover:text-zinc-200 transition-all cursor-pointer"
-                  title="Search (⌘K)"
-                >
-                  <Sparkles className="h-3.5 w-3.5 text-zinc-400" />
-                  <span>Search</span>
-                  <kbd className="text-[10px] text-zinc-500 bg-zinc-800/80 px-1.5 py-0.5 rounded font-mono">⌘K</kbd>
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={handleOpenCommand}
+                className="hidden sm:inline-flex items-center justify-center gap-1.5 rounded-lg border border-[#262b3a] bg-[#12151e] hover:bg-[#181c28] hover:border-zinc-500 px-3 py-2.5 text-xs font-mono text-zinc-300 hover:text-white transition-all cursor-pointer"
+                title="Search portfolio (⌘K)"
+              >
+                <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+                <span>Search</span>
+                <kbd className="text-[10px] text-zinc-400 bg-zinc-800/90 border border-zinc-700/60 px-1.5 py-0.5 rounded font-mono">⌘K</kbd>
+              </button>
             </div>
 
             {/* Direct Social Links */}
@@ -268,22 +272,26 @@ export default function InteractiveHero({
                   </div>
                 </div>
 
-                {/* Key Numbers */}
+                {/* Key Numbers (Balanced 4-Metric Grid) */}
                 <div className="space-y-1.5">
                   <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
                     At a Glance
                   </div>
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     <div className="rounded-lg border border-[#1b1f2b] bg-[#12151e] p-2.5 text-center">
-                      <div className="font-mono text-lg font-semibold text-zinc-100">90+</div>
-                      <div className="text-[10px] text-zinc-400 mt-0.5">LeetCode Solved</div>
+                      <div className="font-mono text-base sm:text-lg font-semibold text-emerald-400">{projectCount}</div>
+                      <div className="text-[10px] text-zinc-400 mt-0.5">Projects</div>
                     </div>
                     <div className="rounded-lg border border-[#1b1f2b] bg-[#12151e] p-2.5 text-center">
-                      <div className="font-mono text-lg font-semibold text-zinc-100">{internshipCount}</div>
+                      <div className="font-mono text-base sm:text-lg font-semibold text-amber-400">90+</div>
+                      <div className="text-[10px] text-zinc-400 mt-0.5">LeetCode</div>
+                    </div>
+                    <div className="rounded-lg border border-[#1b1f2b] bg-[#12151e] p-2.5 text-center">
+                      <div className="font-mono text-base sm:text-lg font-semibold text-sky-400">{internshipCount}</div>
                       <div className="text-[10px] text-zinc-400 mt-0.5">Internships</div>
                     </div>
                     <div className="rounded-lg border border-[#1b1f2b] bg-[#12151e] p-2.5 text-center">
-                      <div className="font-mono text-lg font-semibold text-zinc-100">{certCount}</div>
+                      <div className="font-mono text-base sm:text-lg font-semibold text-indigo-400">{certCount}</div>
                       <div className="text-[10px] text-zinc-400 mt-0.5">Certificates</div>
                     </div>
                   </div>
