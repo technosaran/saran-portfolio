@@ -6,11 +6,9 @@ import {
   GraduationCap, 
   Calendar, 
   MapPin,
-  CheckCircle2,
   BookOpen
 } from 'lucide-react';
 import { Experience, Profile } from '@/lib/neon/db';
-import BrandLogo from './BrandLogo';
 
 interface ExperienceTimelineProps {
   experience: Experience[];

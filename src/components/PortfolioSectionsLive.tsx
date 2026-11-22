@@ -159,9 +159,6 @@ export default function PortfolioSectionsLive({
 
           <ScrollReveal delay={100}>
             <ActivityShowcase 
-              profile={profile} 
-              projects={projects} 
-              skills={skills} 
               initialGithubData={initialGithubData}
               initialLeetcodeData={initialLeetcodeData}
             />

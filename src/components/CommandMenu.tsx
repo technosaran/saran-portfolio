@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { 
   Search, 
   Terminal, 
@@ -13,7 +14,6 @@ import {
   Download, 
   Copy, 
   X,
-  Sparkles,
   Lock
 } from 'lucide-react';
 import { GithubIcon, LinkedinIcon, LeetCodeIcon } from './SocialIcons';
@@ -44,6 +44,7 @@ export default function CommandMenu({
   phone = '+91 6384957740',
   resumeUrl = '/resume.pdf',
 }: CommandMenuProps) {
+  const router = useRouter();
   const [query, setQuery] = useState('');
   const [rawIndex, setRawIndex] = useState(0);
   const { toast } = useToast();
@@ -203,7 +204,7 @@ export default function CommandMenu({
       icon: Lock,
       action: () => {
         onClose();
-        window.location.href = '/admin';
+        router.push('/admin');
       },
       badge: 'Admin',
     },
@@ -242,7 +243,7 @@ export default function CommandMenu({
         window.open('https://leetcode.com/u/Saran-R/', '_blank', 'noopener,noreferrer');
       },
     },
-  ], [navigateTo, copyText, email, phone, resumeUrl, onClose]);
+  ], [navigateTo, copyText, email, phone, resumeUrl, onClose, router]);
 
   // Filter items based on query
   const filteredItems = useMemo(() => {

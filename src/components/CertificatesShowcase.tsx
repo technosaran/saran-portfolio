@@ -2,13 +2,11 @@
 
 import { useState, useMemo } from 'react';
 import { 
-  Award, 
   Search, 
   Copy, 
   Check, 
   X,
-  ExternalLink,
-  ShieldCheck
+  ExternalLink
 } from 'lucide-react';
 import { Certificate } from '@/lib/neon/db';
 import { useToast } from './Toast';

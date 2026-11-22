@@ -2,11 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-interface ScrollProgressBarProps {
-  onOpenCommandMenu?: () => void;
-}
-
-export default function ScrollProgressBar({ onOpenCommandMenu }: ScrollProgressBarProps = {}) {
+export default function ScrollProgressBar() {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {

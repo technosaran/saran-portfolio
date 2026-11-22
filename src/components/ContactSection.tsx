@@ -8,10 +8,9 @@ import {
   Send, 
   Copy, 
   Check, 
-  Download,
   ArrowUpRight
 } from 'lucide-react';
-import { GithubIcon, LinkedinIcon, LeetCodeIcon } from './SocialIcons';
+import { GithubIcon, LinkedinIcon } from './SocialIcons';
 import { Profile } from '@/lib/neon/db';
 import { useToast } from './Toast';
 

@@ -3,22 +3,14 @@
 import { useState, useEffect } from 'react';
 import { 
   ExternalLink, 
-  Copy, 
-  Check, 
   Flame,
-  Activity,
-  CheckCircle2
+  Activity
 } from 'lucide-react';
 import { GithubIcon, LeetCodeIcon } from './SocialIcons';
-import { Profile, Project, Skill } from '@/lib/neon/db';
-import { useToast } from './Toast';
 import { GitHubActivityData, GitHubRepoItem } from '@/services/github.service';
 import { LeetCodeActivityData, LeetCodeTopicStat } from '@/services/leetcode.service';
 
 interface ActivityShowcaseProps {
-  profile: Profile;
-  projects?: Project[];
-  skills?: Skill[];
   initialGithubData?: GitHubActivityData;
   initialLeetcodeData?: LeetCodeActivityData;
 }
@@ -109,13 +101,9 @@ const DEFAULT_REAL_LEETCODE: LeetCodeActivityData = {
 };
 
 export default function ActivityShowcase({ 
-  profile, 
-  projects,
-  skills,
   initialGithubData,
   initialLeetcodeData
 }: ActivityShowcaseProps) {
-  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<'all' | 'github' | 'leetcode'>('all');
   const [githubData, setGithubData] = useState<GitHubActivityData>(initialGithubData || DEFAULT_REAL_GITHUB);
   const [leetcodeData, setLeetcodeData] = useState<LeetCodeActivityData>(initialLeetcodeData || DEFAULT_REAL_LEETCODE);
