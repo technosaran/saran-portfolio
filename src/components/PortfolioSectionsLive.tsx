@@ -62,9 +62,9 @@ export default function PortfolioSectionsLive({
       {/* Hero Section */}
       <InteractiveHero 
         profile={profile} 
-        projectCount={projects.length} 
-        certCount={certificates.length} 
-        internshipCount={experience.length} 
+        projectCount={projects.length || 3} 
+        certCount={certificates.length || 6} 
+        internshipCount={experience.length || 2} 
       />
 
       {/* Featured Projects Section */}

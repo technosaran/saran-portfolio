@@ -320,36 +320,45 @@ export default function ProjectsShowcase({ projects }: ProjectsShowcaseProps) {
                     </div>
 
                     <div className="flex items-center justify-between text-xs pt-1">
-                      {project.github_url && (
-                        <a
-                          href={project.github_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-zinc-300 hover:text-white font-medium"
-                        >
-                          <span>Inspect Code</span>
-                          <ArrowUpRight className="h-3.5 w-3.5 text-zinc-400" />
-                        </a>
-                      )}
+                      {project.github_url ? (
+                        <>
+                          <a
+                            href={project.github_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-zinc-300 hover:text-white font-medium"
+                          >
+                            <span>Inspect Code</span>
+                            <ArrowUpRight className="h-3.5 w-3.5 text-zinc-400" />
+                          </a>
 
-                      <button
-                        type="button"
-                        onClick={() => copyCloneCommand(project)}
-                        className="inline-flex items-center gap-1.5 text-[11px] font-mono text-zinc-500 hover:text-zinc-300 cursor-pointer"
-                        title="Copy git clone"
-                      >
-                        {copiedId === project.id ? (
-                          <>
-                            <Check className="h-3 w-3 text-emerald-400" />
-                            <span className="text-emerald-400">Copied</span>
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="h-3 w-3" />
-                            <span>clone</span>
-                          </>
-                        )}
-                      </button>
+                          <button
+                            type="button"
+                            onClick={() => copyCloneCommand(project)}
+                            className="inline-flex items-center gap-1.5 text-[11px] font-mono text-zinc-500 hover:text-zinc-300 cursor-pointer"
+                            title="Copy git clone"
+                          >
+                            {copiedId === project.id ? (
+                              <>
+                                <Check className="h-3 w-3 text-emerald-400" />
+                                <span className="text-emerald-400">Copied</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="h-3 w-3" />
+                                <span>clone</span>
+                              </>
+                            )}
+                          </button>
+                        </>
+                      ) : (
+                        <div className="flex items-center justify-between w-full text-[11px] font-mono text-zinc-500">
+                          <span className="inline-flex items-center gap-1 text-zinc-400">
+                            <span>Deep Learning Workload</span>
+                          </span>
+                          <span className="text-zinc-600">Panimalar AI &amp; ML</span>
+                        </div>
+                      )}
                     </div>
                   </div>
 

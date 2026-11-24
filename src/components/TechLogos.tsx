@@ -667,6 +667,90 @@ export function NeonLogo({ className = 'w-6 h-6' }: LogoProps) {
   );
 }
 
+// 38. NASSCOM / FutureSkills Prime
+export function NASSCOMLogo({ className = 'w-6 h-6' }: LogoProps) {
+  return (
+    <svg className={className} viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="128" height="128" rx="20" fill="#0D47A1" />
+      <text
+        x="64"
+        y="76"
+        textAnchor="middle"
+        fontSize="21"
+        fontFamily="sans-serif"
+        fontWeight="800"
+        fill="white"
+        letterSpacing="0.5"
+      >
+        NASSCOM
+      </text>
+    </svg>
+  );
+}
+
+// 39. GUVI Geek Networks
+export function GUVILogo({ className = 'w-6 h-6' }: LogoProps) {
+  return (
+    <svg className={className} viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="128" height="128" rx="20" fill="#00B074" />
+      <text
+        x="64"
+        y="76"
+        textAnchor="middle"
+        fontSize="28"
+        fontFamily="sans-serif"
+        fontWeight="800"
+        fill="white"
+        letterSpacing="-0.5"
+      >
+        GUVI
+      </text>
+    </svg>
+  );
+}
+
+// 40. Edunet Foundation
+export function EdunetLogo({ className = 'w-6 h-6' }: LogoProps) {
+  return (
+    <svg className={className} viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="128" height="128" rx="20" fill="#00838F" />
+      <text
+        x="64"
+        y="75"
+        textAnchor="middle"
+        fontSize="24"
+        fontFamily="sans-serif"
+        fontWeight="800"
+        fill="white"
+        letterSpacing="-0.5"
+      >
+        Edunet
+      </text>
+    </svg>
+  );
+}
+
+// 41. CodTech IT Solutions
+export function CodTechLogo({ className = 'w-6 h-6' }: LogoProps) {
+  return (
+    <svg className={className} viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="128" height="128" rx="20" fill="#2563EB" />
+      <text
+        x="64"
+        y="75"
+        textAnchor="middle"
+        fontSize="21"
+        fontFamily="sans-serif"
+        fontWeight="800"
+        fill="white"
+        letterSpacing="-0.5"
+      >
+        CodTech
+      </text>
+    </svg>
+  );
+}
+
 // 38. Default / Fallback Tech Vector
 export function GenericTechLogo({ name, className = 'w-6 h-6' }: { name: string; className?: string }) {
   const initial = name.slice(0, 2).toUpperCase();
@@ -698,6 +782,7 @@ export function hasCustomLogo(name: string): boolean {
     'docker', 'aws', 'amazon', 'cloud', 'supabase', 'mongo', 'mongodb', 'git',
     'tailwind', 'scikit', 'sklearn', 'pandas', 'numpy', 'vercel', 'neon', 'render',
     'oracle', 'ibm', 'infosys', 'coursera', 'google', 'leetcode', 'spacy',
+    'nasscom', 'futureskills', 'guvi', 'edunet', 'codtech',
     'sql', 'mysql', 'database', 'dbms', 'dsa', 'data structure', 'algorithm',
     'api', 'rest', 'microservice', 'devops', 'ci/cd', 'sdlc', 'software',
     'operating system', 'os', 'linux', 'network', 'oop', 'object-oriented'
@@ -739,6 +824,10 @@ export function getSkillLogo(name: string): React.ComponentType<{ className?: st
   if (n.includes('google')) return GoogleLogo;
   if (n.includes('leetcode')) return LeetCodeLogo;
   if (n.includes('spacy')) return SpaCyLogo;
+  if (n.includes('nasscom') || n.includes('futureskills')) return NASSCOMLogo;
+  if (n.includes('guvi')) return GUVILogo;
+  if (n.includes('edunet')) return EdunetLogo;
+  if (n.includes('codtech')) return CodTechLogo;
   if (n === 'sql' || n.includes('mysql') || n.includes('database') || n === 'dbms') return SQLLogo;
   if (n.includes('data structure') || n.includes('dsa') || n.includes('algorithm')) return DSALogo;
   if (n.includes('api') || n.includes('rest')) return APILogo;

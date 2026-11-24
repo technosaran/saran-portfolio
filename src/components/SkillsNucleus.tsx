@@ -67,6 +67,12 @@ const DEFAULT_SKILLS_CATALOG: Omit<SkillItem, 'initialAngle'>[] = [
   { id: 'aws', name: 'AWS', category: 'cloud', categoryLabel: 'Cloud & DevOps', context: 'EC2 compute, S3 object storage, IAM role policies & secure cloud architecture', projects: ['CodTech Internship', 'Cloud Architecture'], orbit: 3, proficiency: 'Advanced' },
   { id: 'docker', name: 'Docker', category: 'cloud', categoryLabel: 'Cloud & DevOps', context: 'Containerized application packaging, multi-stage Dockerfiles & local dev orchestration', projects: ['Full-Stack Deployment'], orbit: 3, proficiency: 'Advanced' },
   { id: 'pytorch', name: 'PyTorch', category: 'aiml', categoryLabel: 'AI & Machine Learning', context: 'Deep neural network training, tensor math, autograd & computer vision architectures', projects: ['Real-Time Object Detection System'], orbit: 3, proficiency: 'Advanced' },
+  { id: 'opencv', name: 'OpenCV', category: 'aiml', categoryLabel: 'AI & Machine Learning', context: 'Real-time video stream processing, edge detection & visual bounding boxes', projects: ['Real-Time Object Detection System'], orbit: 3, proficiency: 'Advanced' },
+  { id: 'scikitlearn', name: 'Scikit-Learn', category: 'aiml', categoryLabel: 'AI & Machine Learning', context: 'Supervised classifiers, regression algorithms, hyperparameter tuning & evaluation', projects: ['IBM SkillsBuild Capstone', 'NER NLP Pipeline'], orbit: 3, proficiency: 'Advanced' },
+  { id: 'spacy', name: 'SpaCy', category: 'aiml', categoryLabel: 'AI & Machine Learning', context: 'Named entity recognition, tokenization, sequence tagging & NLP pipeline parsing', projects: ['Named Entity Recognition System'], orbit: 3, proficiency: 'Advanced' },
+  { id: 'pandas', name: 'Pandas', category: 'aiml', categoryLabel: 'AI & Machine Learning', context: 'Data cleaning, tabular transformations, dataframe analysis & feature engineering', projects: ['LeetCode 49+ Pandas Solved', 'ML Analytics'], orbit: 3, proficiency: 'Expert' },
+  { id: 'numpy', name: 'NumPy', category: 'aiml', categoryLabel: 'AI & Machine Learning', context: 'High-performance n-dimensional arrays, vector math, linear algebra & matrix operations', projects: ['Scientific Computing & PyTorch'], orbit: 3, proficiency: 'Advanced' },
+  { id: 'git', name: 'Git & GitHub', category: 'cloud', categoryLabel: 'Cloud & DevOps', context: 'Distributed version control, branch protection, CI/CD actions & team PR reviews', projects: ['GitHub @technosaran', 'arthaX'], orbit: 3, proficiency: 'Expert' },
 
   // Orbit 4: Databases & Storage (Radius: 275px)
   { id: 'supabase', name: 'Supabase', category: 'database', categoryLabel: 'Databases & Storage', context: 'Row-Level Security (RLS) policies, PostgreSQL realtime & user authentication', projects: ['arthaX Wealth Terminal'], orbit: 4, proficiency: 'Advanced' },
@@ -140,7 +146,8 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
         nameLower.includes('python') || nameLower.includes('java') || nameLower.includes('type') ||
         nameLower.includes('script') || nameLower.includes('sql') || nameLower.includes('c++') ||
         nameLower.includes('rust') || nameLower.includes('golang') || nameLower.includes('go') ||
-        catLower.includes('lang')
+        nameLower.includes('algorithm') || nameLower.includes('structure') || nameLower.includes('oop') ||
+        catLower.includes('lang') || catLower.includes('fundamental')
       ) {
         orbit = 1;
         category = 'languages';
@@ -148,6 +155,7 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
         nameLower.includes('react') || nameLower.includes('next') || nameLower.includes('vue') ||
         nameLower.includes('angular') || nameLower.includes('express') || nameLower.includes('node') ||
         nameLower.includes('tailwind') || nameLower.includes('html') || nameLower.includes('css') ||
+        nameLower.includes('api') || nameLower.includes('microservice') ||
         catLower.includes('web') || catLower.includes('frontend') || catLower.includes('framework')
       ) {
         orbit = 2;
@@ -161,15 +169,15 @@ export default function SkillsNucleus({ skills = [] }: SkillsNucleusProps) {
         category = 'aiml';
       } else if (
         nameLower.includes('vercel') || nameLower.includes('render') || nameLower.includes('aws') ||
-        nameLower.includes('docker') || nameLower.includes('git') || catLower.includes('cloud') ||
-        catLower.includes('devops')
+        nameLower.includes('docker') || nameLower.includes('git') || nameLower.includes('network') ||
+        nameLower.includes('operating') || catLower.includes('cloud') || catLower.includes('devops')
       ) {
         orbit = 3;
         category = 'cloud';
       } else if (
-        nameLower.includes('base') || nameLower.includes('data') || nameLower.includes('postgre') ||
+        nameLower.includes('dbms') || nameLower.includes('database') || nameLower.includes('postgre') ||
         nameLower.includes('mongo') || nameLower.includes('neon') || nameLower.includes('redis') ||
-        catLower.includes('database') || catLower.includes('storage')
+        nameLower.includes('storage') || catLower.includes('database') || catLower.includes('storage')
       ) {
         orbit = 4;
         category = 'database';

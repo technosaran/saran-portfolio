@@ -160,7 +160,15 @@ export default function CertificatesShowcase({ certificates }: CertificatesShowc
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredCertificates.map((cert) => {
-          const competencies = cert.credential_id ? CERT_COMPETENCIES[cert.credential_id] : undefined;
+          const getCompetencies = (credId: string | null) => {
+            if (!credId) return undefined;
+            if (CERT_COMPETENCIES[credId]) return CERT_COMPETENCIES[credId];
+            const match = Object.entries(CERT_COMPETENCIES).find(([k]) =>
+              credId.toUpperCase().includes(k.toUpperCase())
+            );
+            return match ? match[1] : undefined;
+          };
+          const competencies = getCompetencies(cert.credential_id);
 
           return (
             <div
