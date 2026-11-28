@@ -1,11 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  ExternalLink, 
-  Flame,
-  Activity
-} from 'lucide-react';
+import { ExternalLink, Flame, Activity } from 'lucide-react';
 import { GithubIcon, LeetCodeIcon } from './SocialIcons';
 import { GitHubActivityData, GitHubRepoItem } from '@/services/github.service';
 import { LeetCodeActivityData, LeetCodeTopicStat } from '@/services/leetcode.service';
@@ -24,10 +20,38 @@ const DEFAULT_REAL_GITHUB: GitHubActivityData = {
   following: 5,
   totalContributions: 67,
   languages: [
-    { name: 'TypeScript', share: 86, bytes: 2954244, color: 'bg-blue-500', textColor: 'text-blue-400', usage: 'Next.js 16 App Router, arthaX Wealth Terminal, Modern UI components' },
-    { name: 'SQL & PLpgSQL', share: 6, bytes: 209420, color: 'bg-indigo-500', textColor: 'text-indigo-400', usage: 'PostgreSQL schemas, Supabase Row-Level Security, Database functions' },
-    { name: 'Python', share: 5, bytes: 170146, color: 'bg-emerald-500', textColor: 'text-emerald-400', usage: 'PyTorch deep learning, OpenCV computer vision, SpaCy NLP pipelines' },
-    { name: 'JavaScript', share: 1, bytes: 23299, color: 'bg-amber-500', textColor: 'text-amber-400', usage: 'Interactive DOM interactions, Tailwind styling, automation tooling' }
+    {
+      name: 'TypeScript',
+      share: 86,
+      bytes: 2954244,
+      color: 'bg-blue-500',
+      textColor: 'text-blue-400',
+      usage: 'Next.js 16 App Router, arthaX Wealth Terminal, Modern UI components',
+    },
+    {
+      name: 'SQL & PLpgSQL',
+      share: 6,
+      bytes: 209420,
+      color: 'bg-indigo-500',
+      textColor: 'text-indigo-400',
+      usage: 'PostgreSQL schemas, Supabase Row-Level Security, Database functions',
+    },
+    {
+      name: 'Python',
+      share: 5,
+      bytes: 170146,
+      color: 'bg-emerald-500',
+      textColor: 'text-emerald-400',
+      usage: 'PyTorch deep learning, OpenCV computer vision, SpaCy NLP pipelines',
+    },
+    {
+      name: 'JavaScript',
+      share: 1,
+      bytes: 23299,
+      color: 'bg-amber-500',
+      textColor: 'text-amber-400',
+      usage: 'Interactive DOM interactions, Tailwind styling, automation tooling',
+    },
   ],
   commits: [],
   repos: [
@@ -39,7 +63,7 @@ const DEFAULT_REAL_GITHUB: GitHubActivityData = {
       lang: 'TypeScript',
       tags: ['Next.js 16', 'PostgreSQL', 'Supabase', 'Tailwind CSS'],
       url: 'https://github.com/technosaran/arthaX',
-      pushedAt: '2026-11-18'
+      pushedAt: '2026-11-18',
     },
     {
       name: 'saran-portfolio',
@@ -49,7 +73,7 @@ const DEFAULT_REAL_GITHUB: GitHubActivityData = {
       lang: 'TypeScript',
       tags: ['Next.js 16', 'Neon Postgres', 'Drizzle ORM', 'Tailwind 4'],
       url: 'https://github.com/technosaran/saran-portfolio',
-      pushedAt: '2026-11-18'
+      pushedAt: '2026-11-18',
     },
     {
       name: 'orion-algo',
@@ -59,9 +83,9 @@ const DEFAULT_REAL_GITHUB: GitHubActivityData = {
       lang: 'TypeScript',
       tags: ['TypeScript', 'DSA', 'Algorithms'],
       url: 'https://github.com/technosaran/orion-algo',
-      pushedAt: '2026-11-16'
-    }
-  ]
+      pushedAt: '2026-11-16',
+    },
+  ],
 };
 
 const DEFAULT_REAL_LEETCODE: LeetCodeActivityData = {
@@ -86,23 +110,65 @@ const DEFAULT_REAL_LEETCODE: LeetCodeActivityData = {
     { languageName: 'PostgreSQL', problemsSolved: 19, share: 16 },
     { languageName: 'MySQL', problemsSolved: 15, share: 13 },
     { languageName: 'Python', problemsSolved: 3, share: 3 },
-    { languageName: 'C', problemsSolved: 2, share: 2 }
+    { languageName: 'C', problemsSolved: 2, share: 2 },
   ],
   topics: [
-    { title: 'Database & SQL Engineering', tagSlug: 'database', count: 43, complexity: 'O(N) Scan · Index Scans', desc: 'Inner/Left Joins, window functions, conditional aggregations, grouping', tag: 'Database' },
-    { title: 'Arrays & Slicing', tagSlug: 'array', count: 15, complexity: 'O(N) Time · O(1) Space', desc: 'In-place transformations, element frequency tracking, prefix sums', tag: 'Arrays' },
-    { title: 'Strings & Parsing', tagSlug: 'string', count: 14, complexity: 'O(N) Time · O(1) Space', desc: 'Sub-string matching, pattern evaluation, character frequencies', tag: 'Strings' },
-    { title: 'Two Pointers & Intervals', tagSlug: 'two-pointers', count: 11, complexity: 'O(N) Time · O(1) Space', desc: 'Fast and slow pointer cycles, converging boundary searches', tag: 'Pointers' },
-    { title: 'Hash Tables & Sets', tagSlug: 'hash-table', count: 10, complexity: 'O(1) Average Lookup', desc: 'Constant-time complement lookups, frequency counting, duplicate detection', tag: 'Hash Table' },
-    { title: 'Sorting & Ranking', tagSlug: 'sorting', count: 4, complexity: 'O(N log N) Time', desc: 'Custom multi-key sorting, stable rank ordering', tag: 'Sorting' }
+    {
+      title: 'Database & SQL Engineering',
+      tagSlug: 'database',
+      count: 43,
+      complexity: 'O(N) Scan · Index Scans',
+      desc: 'Inner/Left Joins, window functions, conditional aggregations, grouping',
+      tag: 'Database',
+    },
+    {
+      title: 'Arrays & Slicing',
+      tagSlug: 'array',
+      count: 15,
+      complexity: 'O(N) Time · O(1) Space',
+      desc: 'In-place transformations, element frequency tracking, prefix sums',
+      tag: 'Arrays',
+    },
+    {
+      title: 'Strings & Parsing',
+      tagSlug: 'string',
+      count: 14,
+      complexity: 'O(N) Time · O(1) Space',
+      desc: 'Sub-string matching, pattern evaluation, character frequencies',
+      tag: 'Strings',
+    },
+    {
+      title: 'Two Pointers & Intervals',
+      tagSlug: 'two-pointers',
+      count: 11,
+      complexity: 'O(N) Time · O(1) Space',
+      desc: 'Fast and slow pointer cycles, converging boundary searches',
+      tag: 'Pointers',
+    },
+    {
+      title: 'Hash Tables & Sets',
+      tagSlug: 'hash-table',
+      count: 10,
+      complexity: 'O(1) Average Lookup',
+      desc: 'Constant-time complement lookups, frequency counting, duplicate detection',
+      tag: 'Hash Table',
+    },
+    {
+      title: 'Sorting & Ranking',
+      tagSlug: 'sorting',
+      count: 4,
+      complexity: 'O(N log N) Time',
+      desc: 'Custom multi-key sorting, stable rank ordering',
+      tag: 'Sorting',
+    },
   ],
   recentSubmissions: [],
-  solutions: []
+  solutions: [],
 };
 
-export default function ActivityShowcase({ 
+export default function ActivityShowcase({
   initialGithubData,
-  initialLeetcodeData
+  initialLeetcodeData,
 }: ActivityShowcaseProps) {
   const [activeTab, setActiveTab] = useState<'all' | 'github' | 'leetcode'>('all');
   const [githubData, setGithubData] = useState<GitHubActivityData>(initialGithubData || DEFAULT_REAL_GITHUB);
@@ -110,25 +176,33 @@ export default function ActivityShowcase({
 
   useEffect(() => {
     fetch('/api/activity/github')
-      .then(r => (r.ok ? r.json() : null))
-      .then(d => { if (d) setGithubData(d); })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d) setGithubData(d);
+      })
       .catch(() => {});
 
     fetch('/api/activity/leetcode')
-      .then(r => (r.ok ? r.json() : null))
-      .then(d => { if (d) setLeetcodeData(d); })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d) setLeetcodeData(d);
+      })
       .catch(() => {});
   }, []);
 
+  const totalSolvedSafe = Math.max(1, leetcodeData.totalSolved);
+  const easyPct = (leetcodeData.easySolved / totalSolvedSafe) * 100;
+  const mediumPct = (leetcodeData.mediumSolved / totalSolvedSafe) * 100;
+  const hardPct = (leetcodeData.hardSolved / totalSolvedSafe) * 100;
+
   return (
     <div className="space-y-6">
-      
       {/* View Switcher */}
-      <div className="flex items-center gap-1.5 p-1 rounded-lg border border-[#1b1f2b] bg-[#0c0e14] w-fit">
+      <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-xl border border-[#1b1f2b] bg-[#0c0e14] w-full sm:w-fit">
         <button
           type="button"
           onClick={() => setActiveTab('all')}
-          className={`px-3 py-1.5 rounded-md text-xs font-mono transition-colors cursor-pointer ${
+          className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer whitespace-nowrap ${
             activeTab === 'all'
               ? 'bg-zinc-800 text-zinc-100 font-medium shadow-sm'
               : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
@@ -139,7 +213,7 @@ export default function ActivityShowcase({
         <button
           type="button"
           onClick={() => setActiveTab('github')}
-          className={`px-3 py-1.5 rounded-md text-xs font-mono transition-colors cursor-pointer ${
+          className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer whitespace-nowrap ${
             activeTab === 'github'
               ? 'bg-zinc-800 text-zinc-100 font-medium shadow-sm'
               : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
@@ -150,7 +224,7 @@ export default function ActivityShowcase({
         <button
           type="button"
           onClick={() => setActiveTab('leetcode')}
-          className={`px-3 py-1.5 rounded-md text-xs font-mono transition-colors cursor-pointer ${
+          className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer whitespace-nowrap ${
             activeTab === 'leetcode'
               ? 'bg-zinc-800 text-zinc-100 font-medium shadow-sm'
               : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
@@ -160,18 +234,15 @@ export default function ActivityShowcase({
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        
+      <div className={`grid gap-6 ${activeTab === 'all' ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'}`}>
         {/* GitHub Card */}
         {(activeTab === 'all' || activeTab === 'github') && (
-          <div className="rounded-xl border border-[#1f2432] bg-[#0f1118] p-6 space-y-5">
-            <div className="flex items-center justify-between pb-4 border-b border-[#1b1f2b]">
+          <div className="rounded-xl border border-[#1f2432] bg-[#0f1118] card-bevel p-5 sm:p-6 space-y-5">
+            <div className="flex items-center justify-between gap-3 pb-4 border-b border-[#1b1f2b]">
               <div className="flex items-center gap-2.5">
-                <GithubIcon className="h-5 w-5 text-zinc-100" />
+                <GithubIcon className="h-5 w-5 text-zinc-100 shrink-0" />
                 <div>
-                  <h3 className="text-sm font-bold text-zinc-100">
-                    GitHub Profile
-                  </h3>
+                  <h3 className="text-sm font-bold text-zinc-100">GitHub Profile</h3>
                   <a
                     href={`https://github.com/${githubData.username}`}
                     target="_blank"
@@ -187,7 +258,7 @@ export default function ActivityShowcase({
                 href={`https://github.com/${githubData.username}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-xs font-mono text-zinc-400 hover:text-white"
+                className="inline-flex items-center gap-1 text-xs font-mono text-zinc-400 hover:text-white whitespace-nowrap shrink-0"
               >
                 <span>View Profile</span>
                 <ExternalLink className="h-3 w-3" />
@@ -197,41 +268,47 @@ export default function ActivityShowcase({
             {/* Quick Metrics */}
             <div className="grid grid-cols-3 gap-2.5 text-center">
               <div className="p-3 rounded-lg border border-[#1b1f2b] bg-[#12151e]">
-                <div className="font-mono text-lg font-bold text-zinc-100">{githubData.totalContributions}</div>
+                <div className="font-mono tabular-nums text-lg font-bold text-zinc-100">
+                  {githubData.totalContributions}
+                </div>
                 <div className="text-[10px] text-zinc-400 mt-0.5">Contributions</div>
               </div>
               <div className="p-3 rounded-lg border border-[#1b1f2b] bg-[#12151e]">
-                <div className="font-mono text-lg font-bold text-zinc-100">{githubData.publicRepos}</div>
+                <div className="font-mono tabular-nums text-lg font-bold text-zinc-100">
+                  {githubData.publicRepos}
+                </div>
                 <div className="text-[10px] text-zinc-400 mt-0.5">Public Repos</div>
               </div>
               <div className="p-3 rounded-lg border border-[#1b1f2b] bg-[#12151e]">
-                <div className="font-mono text-lg font-bold text-zinc-100">{githubData.followers}</div>
+                <div className="font-mono tabular-nums text-lg font-bold text-zinc-100">
+                  {githubData.followers}
+                </div>
                 <div className="text-[10px] text-zinc-400 mt-0.5">Followers</div>
               </div>
             </div>
 
             {/* GitHub Contribution Heatmap */}
             <div className="space-y-2 pt-1">
-              <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-zinc-500">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] font-mono uppercase tracking-wider text-zinc-500">
                 <span className="flex items-center gap-1.5 text-zinc-300">
-                  <Activity className="h-3.5 w-3.5 text-sky-400" />
+                  <Activity className="h-3.5 w-3.5 text-sky-400 shrink-0" />
                   <span>Contribution Activity</span>
                 </span>
                 <span className="text-zinc-400 text-[10px] font-mono">
                   {githubData.totalContributions} contributions in the last year
                 </span>
               </div>
-              <div className="p-3 rounded-lg border border-[#20222a] bg-[#14151b] overflow-hidden">
-                <div className="overflow-x-auto pb-1 scrollbar-thin">
+              <div className="p-3 rounded-lg border border-[#1b1f2b] bg-[#12151e] overflow-hidden">
+                <div className="overflow-x-auto pb-1">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/api/github-chart"
                     alt={`Contribution Heatmap for ${githubData.username}`}
-                    className="w-full min-w-[540px] h-auto rounded select-none"
+                    className="w-full min-w-[460px] sm:min-w-0 h-auto rounded select-none"
                     loading="eager"
                   />
                 </div>
-                <div className="flex items-center justify-between pt-1.5 text-[10px] font-mono text-zinc-500 border-t border-[#20222a]/50 mt-1">
+                <div className="flex items-center justify-between pt-2 text-[10px] font-mono text-zinc-500 border-t border-[#1b1f2b] mt-1.5">
                   <span>Verified live from GitHub</span>
                   <span className="text-sky-400">@{githubData.username}</span>
                 </div>
@@ -253,11 +330,13 @@ export default function ActivityShowcase({
                   />
                 ))}
               </div>
-              <div className="flex flex-wrap gap-x-4 gap-y-1 pt-1 text-xs font-mono text-zinc-400">
+              <div className="flex flex-wrap gap-x-4 gap-y-1.5 pt-1 text-xs font-mono text-zinc-400">
                 {githubData.languages.map((l) => (
                   <span key={l.name} className="flex items-center gap-1.5">
                     <span className={`h-2 w-2 rounded-full ${l.color}`} />
-                    <span>{l.name} ({l.share}%)</span>
+                    <span>
+                      {l.name} ({l.share}%)
+                    </span>
                   </span>
                 ))}
               </div>
@@ -268,44 +347,49 @@ export default function ActivityShowcase({
               <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-500">
                 Pinned Engineering Repositories
               </div>
-              <div className="space-y-2">
+              <div
+                className={`grid gap-2 ${
+                  activeTab === 'github' ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1'
+                }`}
+              >
                 {githubData.repos.map((repo: GitHubRepoItem) => (
                   <a
                     key={repo.name}
                     href={repo.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block p-3 rounded-lg border border-[#20222a] bg-[#14151b] hover:border-zinc-700 transition-colors"
+                    className="block p-3.5 rounded-lg border border-[#1b1f2b] bg-[#12151e] hover:border-[#2e364d] transition-colors"
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-xs font-bold text-zinc-200">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-mono text-xs font-bold text-zinc-200 truncate">
                         {repo.name}
                       </span>
-                      <span className="text-[10px] font-mono text-zinc-500">
+                      <span className="text-[10px] font-mono text-sky-400/90 shrink-0">
                         {repo.lang}
                       </span>
                     </div>
-                    <p className="text-[11px] text-zinc-400 mt-1 line-clamp-1">
+                    <p
+                      className={`text-[11px] text-zinc-400 mt-1 ${
+                        activeTab === 'github' ? 'line-clamp-2' : 'line-clamp-1'
+                      }`}
+                    >
                       {repo.desc}
                     </p>
                   </a>
                 ))}
               </div>
             </div>
-
           </div>
         )}
 
         {/* LeetCode Card */}
         {(activeTab === 'all' || activeTab === 'leetcode') && (
-          <div className="rounded-xl border border-[#1f2432] bg-[#0f1118] p-6 space-y-5">
-            <div className="flex items-center justify-between pb-4 border-b border-[#1b1f2b]">
+          <div className="rounded-xl border border-[#1f2432] bg-[#0f1118] card-bevel p-5 sm:p-6 space-y-5">
+            <div className="flex items-center justify-between gap-3 pb-4 border-b border-[#1b1f2b]">
               <div className="flex items-center gap-2.5">
-                <LeetCodeIcon className="h-5 w-5 text-amber-500" />
+                <LeetCodeIcon className="h-5 w-5 text-amber-500 shrink-0" />
                 <div>
-                  <h3 className="text-sm font-bold text-zinc-100">
-                    LeetCode Algorithmic Practice
-                  </h3>
+                  <h3 className="text-sm font-bold text-zinc-100">LeetCode Algorithmic Practice</h3>
                   <a
                     href={`https://leetcode.com/u/${leetcodeData.username}/`}
                     target="_blank"
@@ -321,7 +405,7 @@ export default function ActivityShowcase({
                 href={`https://leetcode.com/u/${leetcodeData.username}/`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-xs font-mono text-zinc-400 hover:text-white"
+                className="inline-flex items-center gap-1 text-xs font-mono text-zinc-400 hover:text-white whitespace-nowrap shrink-0"
               >
                 <span>View Profile</span>
                 <ExternalLink className="h-3 w-3" />
@@ -331,42 +415,46 @@ export default function ActivityShowcase({
             {/* Solved Counts */}
             <div className="grid grid-cols-3 gap-2.5 text-center">
               <div className="p-3 rounded-lg border border-[#1b1f2b] bg-[#12151e]">
-                <div className="font-mono text-lg font-bold text-amber-400">{leetcodeData.totalSolved}</div>
+                <div className="font-mono tabular-nums text-lg font-bold text-amber-400">
+                  {leetcodeData.totalSolved}
+                </div>
                 <div className="text-[10px] text-zinc-400 mt-0.5">Total Solved</div>
               </div>
               <div className="p-3 rounded-lg border border-[#1b1f2b] bg-[#12151e]">
-                <div className="font-mono text-lg font-bold text-emerald-400">{leetcodeData.easySolved}</div>
+                <div className="font-mono tabular-nums text-lg font-bold text-emerald-400">
+                  {leetcodeData.easySolved}
+                </div>
                 <div className="text-[10px] text-zinc-400 mt-0.5">Easy Problems</div>
               </div>
               <div className="p-3 rounded-lg border border-[#1b1f2b] bg-[#12151e]">
-                <div className="font-mono text-lg font-bold text-amber-500">{leetcodeData.mediumSolved}</div>
+                <div className="font-mono tabular-nums text-lg font-bold text-amber-500">
+                  {leetcodeData.mediumSolved}
+                </div>
                 <div className="text-[10px] text-zinc-400 mt-0.5">Medium Problems</div>
               </div>
             </div>
 
             {/* Solved Progress Bar */}
             <div className="space-y-1.5">
-              <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-zinc-400">
                 <span>Problem Difficulty Ratio</span>
-                <span className="text-zinc-500">{leetcodeData.easySolved} Easy · {leetcodeData.mediumSolved} Medium</span>
+                <span className="text-zinc-400">
+                  {leetcodeData.easySolved} Easy · {leetcodeData.mediumSolved} Medium
+                  {leetcodeData.hardSolved > 0 ? ` · ${leetcodeData.hardSolved} Hard` : ''}
+                </span>
               </div>
               <div className="h-2 w-full rounded-full bg-zinc-800 flex overflow-hidden">
-                <div 
-                  className="bg-emerald-500 h-full" 
-                  style={{ width: `${(leetcodeData.easySolved / leetcodeData.totalSolved) * 100}%` }} 
-                />
-                <div 
-                  className="bg-amber-500 h-full" 
-                  style={{ width: `${(leetcodeData.mediumSolved / leetcodeData.totalSolved) * 100}%` }} 
-                />
+                <div className="bg-emerald-500 h-full" style={{ width: `${easyPct}%` }} />
+                <div className="bg-amber-500 h-full" style={{ width: `${mediumPct}%` }} />
+                {hardPct > 0 && <div className="bg-rose-500 h-full" style={{ width: `${hardPct}%` }} />}
               </div>
             </div>
 
             {/* LeetCode Submission Heatmap */}
             <div className="space-y-2 pt-1">
-              <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-zinc-500">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] font-mono uppercase tracking-wider text-zinc-500">
                 <span className="flex items-center gap-1.5 text-zinc-300">
-                  <Flame className="h-3.5 w-3.5 text-amber-500" />
+                  <Flame className="h-3.5 w-3.5 text-amber-500 shrink-0" />
                   <span>Submission Activity Calendar</span>
                 </span>
                 <span className="text-amber-400/90 font-mono text-[10px]">
@@ -374,16 +462,16 @@ export default function ActivityShowcase({
                 </span>
               </div>
               <div className="p-3 rounded-lg border border-[#1b1f2b] bg-[#12151e] overflow-hidden">
-                <div className="overflow-x-auto pb-1 scrollbar-thin">
+                <div className="overflow-x-auto pb-1">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/api/leetcode-chart"
                     alt={`LeetCode Submission Heatmap for ${leetcodeData.username}`}
-                    className="w-full min-w-[540px] h-auto rounded select-none"
+                    className="w-full min-w-[460px] sm:min-w-0 h-auto rounded select-none"
                     loading="eager"
                   />
                 </div>
-                <div className="flex items-center justify-between pt-1.5 text-[10px] font-mono text-zinc-500 border-t border-[#1b1f2b] mt-1">
+                <div className="flex items-center justify-between pt-2 text-[10px] font-mono text-zinc-500 border-t border-[#1b1f2b] mt-1.5">
                   <span>Verified live from LeetCode GraphQL</span>
                   <span className="text-amber-500">u/{leetcodeData.username}</span>
                 </div>
@@ -400,26 +488,31 @@ export default function ActivityShowcase({
                   {leetcodeData.topics.slice(0, 6).map((t: LeetCodeTopicStat) => (
                     <div
                       key={t.title}
-                      className="p-2.5 rounded-lg border border-[#1b1f2b] bg-[#12151e] flex items-center justify-between"
+                      className="p-2.5 rounded-lg border border-[#1b1f2b] bg-[#12151e] flex items-center justify-between gap-2"
                     >
-                      <span className="text-xs text-zinc-300 font-medium">{t.title}</span>
-                      <span className="text-[10px] font-mono text-zinc-500">{t.count}</span>
+                      <span className="text-xs text-zinc-300 font-medium leading-snug">{t.title}</span>
+                      <span className="text-[10px] font-mono tabular-nums text-zinc-400 shrink-0">
+                        {t.count}
+                      </span>
                     </div>
                   ))}
                 </div>
               </div>
             )}
 
-            <div className="pt-2 text-[11px] text-zinc-500 font-mono flex items-center justify-between">
-              <span>Primary Practice: {leetcodeData.languages?.slice(0, 2).map((l) => l.languageName).join(' & ') || 'Pandas & Python3'}</span>
-              <span className="text-zinc-400">Continuous Problem Solving</span>
+            <div className="pt-2 text-[11px] text-zinc-400 font-mono flex flex-wrap items-center justify-between gap-2">
+              <span>
+                Primary Practice:{' '}
+                {leetcodeData.languages
+                  ?.slice(0, 2)
+                  .map((l) => l.languageName)
+                  .join(' & ') || 'Pandas & Python3'}
+              </span>
+              <span className="text-zinc-500">Continuous Problem Solving</span>
             </div>
-
           </div>
         )}
-
       </div>
-
     </div>
   );
 }

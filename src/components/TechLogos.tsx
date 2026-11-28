@@ -297,7 +297,7 @@ export function GitLogo({ className = 'w-6 h-6' }: LogoProps) {
 // 16. TailwindCSS
 export function TailwindLogo({ className = 'w-6 h-6' }: LogoProps) {
   return (
-    <svg className={className} viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg className={className} viewBox="-28 -18 184 184" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M64 36c-18.7 0-28 9.3-28 28 4.7-9.3 11.7-14 21-14 10.5 0 16.3 7 24.5 15.2C89.5 73.4 99.8 84 120 84c18.7 0 28-9.3 28-28-4.7 9.3-11.7 14-21 14-10.5 0-16.3-7-24.5-15.2C94.5 46.6 84.2 36 64 36zM8 64c-18.7 0-28 9.3-28 28 4.7-9.3 11.7-14 21-14 10.5 0 16.3 7 24.5 15.2C33.5 101.4 43.8 112 64 112c18.7 0 28-9.3 28-28-4.7 9.3-11.7 14-21 14-10.5 0-16.3-7-24.5-15.2C38.5 74.6 28.2 64 8 64z"
         fill="#38BDF8"
@@ -496,7 +496,7 @@ export function OSLogo({ className = 'w-6 h-6' }: LogoProps) {
   return (
     <svg className={className} viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect width="128" height="128" rx="20" fill="#0f172a" />
-      <path d="M24 38h80v60H24z" rx="6" stroke="#38bdf8" strokeWidth="6" fill="#1e293b" />
+      <rect x="24" y="38" width="80" height="60" rx="6" stroke="#38bdf8" strokeWidth="6" fill="#1e293b" />
       <path d="M40 56l14 12-14 12M62 80h24" stroke="#38bdf8" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );

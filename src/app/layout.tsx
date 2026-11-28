@@ -114,9 +114,12 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
-    apple: "/favicon.svg",
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/favicon.svg',
   },
 };
 
@@ -133,7 +136,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://github.com" />
         <link rel="dns-prefetch" href="https://github.com" />
       </head>
-      <body className="min-h-screen bg-[#090a0f] text-zinc-100 font-sans selection:bg-emerald-500/20 selection:text-emerald-200 overflow-x-hidden antialiased">
+      <body className="min-h-screen bg-[#090a0f] text-zinc-100 font-sans selection:bg-emerald-500/20 selection:text-emerald-200 overflow-x-hidden antialiased max-w-[100vw]">
         {children}
       </body>
     </html>

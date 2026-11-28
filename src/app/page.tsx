@@ -18,24 +18,13 @@ import {
 } from '@/lib/neon/db';
 import { fetchGitHubData, GitHubActivityData } from '@/services/github.service';
 import { fetchLeetCodeData, LeetCodeActivityData } from '@/services/leetcode.service';
-
-const FALLBACK_PROFILE: Profile = {
-  id: 1,
-  full_name: 'SARAN R',
-  title: 'Artificial Intelligence & Machine Learning Engineer',
-  headline: 'AI/ML Engineering Student | Cloud Infrastructure & Full-Stack Developer',
-  bio: 'Artificial Intelligence and Machine Learning engineering student with hands-on experience in cloud infrastructure (AWS) and full-stack development. Proven ability to architect scalable web applications, implement machine learning models, and solve algorithmic challenges. Passionate about modern software engineering practices, robust database architecture, and building production-grade systems.',
-  email: 'iamsaran.ai@gmail.com',
-  phone: '+91 6384957740',
-  location: 'Chennai, Tamil Nadu',
-  college: 'Panimalar Engineering College',
-  degree: 'Bachelor of Technology in Artificial Intelligence and Machine Learning',
-  graduation_year: '2023 – 2027',
-  github_url: 'https://github.com/technosaran',
-  linkedin_url: 'https://linkedin.com/in/saran-r-b2b1a5275',
-  website_url: 'https://technosaran.vercel.app',
-  leetcode_url: 'https://leetcode.com/u/Saran-R/',
-};
+import {
+  FALLBACK_PROFILE,
+  FALLBACK_PROJECTS,
+  FALLBACK_SKILLS,
+  FALLBACK_EXPERIENCE,
+  FALLBACK_CERTIFICATES,
+} from '@/lib/fallback-data';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://technosaran.vercel.app';
 
@@ -81,38 +70,49 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   let profile: Profile = FALLBACK_PROFILE;
-  let projects: Project[] = [];
-  let experience: Experience[] = [];
-  let certificates: Certificate[] = [];
-  let skills: Skill[] = [];
+  let projects: Project[] = FALLBACK_PROJECTS;
+  let experience: Experience[] = FALLBACK_EXPERIENCE;
+  let certificates: Certificate[] = FALLBACK_CERTIFICATES;
+  let skills: Skill[] = FALLBACK_SKILLS;
   let githubData: GitHubActivityData | undefined;
   let leetcodeData: LeetCodeActivityData | undefined;
+  let dataSource: 'database' | 'fallback' = 'fallback';
 
   try {
+    const hasDb = Boolean(process.env.DATABASE_URL);
     const results = await Promise.allSettled([
-      fetchProfile(),
-      fetchProjects(),
-      fetchSkills(),
-      fetchExperience(),
-      fetchCertificates(),
+      hasDb ? fetchProfile() : Promise.reject(new Error('No DATABASE_URL')),
+      hasDb ? fetchProjects() : Promise.reject(new Error('No DATABASE_URL')),
+      hasDb ? fetchSkills() : Promise.reject(new Error('No DATABASE_URL')),
+      hasDb ? fetchExperience() : Promise.reject(new Error('No DATABASE_URL')),
+      hasDb ? fetchCertificates() : Promise.reject(new Error('No DATABASE_URL')),
       fetchGitHubData('technosaran'),
       fetchLeetCodeData('Saran-R'),
     ]);
 
+    let dbFulfilled = false;
     if (results[0].status === 'fulfilled' && results[0].value) {
       profile = results[0].value;
+      dbFulfilled = true;
     }
-    if (results[1].status === 'fulfilled' && results[1].value) {
+    if (results[1].status === 'fulfilled') {
       projects = results[1].value;
+      dbFulfilled = true;
     }
-    if (results[2].status === 'fulfilled' && results[2].value) {
+    if (results[2].status === 'fulfilled') {
       skills = results[2].value;
+      dbFulfilled = true;
     }
-    if (results[3].status === 'fulfilled' && results[3].value) {
+    if (results[3].status === 'fulfilled') {
       experience = results[3].value;
+      dbFulfilled = true;
     }
-    if (results[4].status === 'fulfilled' && results[4].value) {
+    if (results[4].status === 'fulfilled') {
       certificates = results[4].value;
+      dbFulfilled = true;
+    }
+    if (dbFulfilled) {
+      dataSource = 'database';
     }
     if (results[5].status === 'fulfilled' && results[5].value) {
       githubData = results[5].value;
@@ -256,6 +256,7 @@ export default async function Home() {
     skills,
     experience,
     certificates,
+    dataSource,
   };
 
   return (

@@ -512,8 +512,8 @@ export default function AdminDashboardPage() {
   // Change Password
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (newPassword.length < 6) {
-      notify('error', 'Password must be at least 6 characters');
+    if (newPassword.length < 8) {
+      notify('error', 'Password must be at least 8 characters');
       return;
     }
     try {
@@ -1313,6 +1313,19 @@ export default function AdminDashboardPage() {
                 </select>
               </div>
 
+              <div className="min-w-[160px]">
+                <label className="block text-xs font-semibold text-neutral-300 mb-1">Proficiency</label>
+                <select
+                  value={newSkill.level}
+                  onChange={(e) => setNewSkill({ ...newSkill, level: e.target.value })}
+                  className="w-full rounded-xl bg-neutral-950 border border-neutral-800 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                >
+                  <option value="Expert">Expert</option>
+                  <option value="Advanced">Advanced</option>
+                  <option value="Proficient">Proficient</option>
+                </select>
+              </div>
+
               <button
                 type="submit"
                 disabled={!newSkill.name.trim()}
@@ -1567,15 +1580,16 @@ export default function AdminDashboardPage() {
               Update Admin Password
             </h3>
             <p className="text-xs text-neutral-400">
-              Change the password required to access this admin panel. Stored with SHA-256 in Neon Postgres.
+              Change the password required to access this admin panel. Stored securely using salted Scrypt in Neon Postgres.
             </p>
 
             <form onSubmit={handleChangePassword} className="space-y-4 pt-2">
               <div>
-                <label className="block text-xs font-semibold text-neutral-300">New Password (min 6 chars)</label>
+                <label className="block text-xs font-semibold text-neutral-300">New Password (min 8 chars)</label>
                 <input
                   type="password"
                   required
+                  minLength={8}
                   placeholder="Enter new secure password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
@@ -1585,7 +1599,7 @@ export default function AdminDashboardPage() {
 
               <button
                 type="submit"
-                disabled={newPassword.length < 6}
+                disabled={newPassword.length < 8}
                 className="flex items-center gap-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-4 py-2.5 text-xs transition-colors cursor-pointer disabled:opacity-50"
               >
                 <Save className="h-3.5 w-3.5" />

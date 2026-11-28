@@ -66,7 +66,7 @@ function generateCalendarSvg(submissionMap: Record<string, number>): string {
       const count = dateSubmissions.get(dateStr) || 0;
 
       const m = current.getMonth();
-      if (m !== lastMonth && w - lastLabelWeek >= 3 && w < 51) {
+      if (m !== lastMonth && w - lastLabelWeek >= 3 && w < 50) {
         monthLabels.push(
           `<text style="fill:#71717a;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;font-size:10px;" x="${x}" y="10">${months[m]}</text>`
         );
@@ -90,9 +90,9 @@ function generateCalendarSvg(submissionMap: Record<string, number>): string {
     }
   }
 
-  const svgWidth = 663;
+  const svgWidth = 678;
   const svgHeight = 126;
-  const legendX = svgWidth - 110;
+  const legendX = svgWidth - 116;
   const legendY = svgHeight - 12;
   const leetColors = ['#161b22', '#78350f', '#b45309', '#d97706', '#f59e0b'];
 

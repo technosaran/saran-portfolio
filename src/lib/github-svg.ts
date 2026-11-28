@@ -54,7 +54,7 @@ export function generateContributionSvg(
     dayList = dayList.slice(dayList.length - totalDays);
   }
 
-  const svgWidth = leftPadding + numWeeks * (cellSize + cellGap) + 16;
+  const svgWidth = leftPadding + numWeeks * (cellSize + cellGap) + 28;
   const svgHeight = topPadding + 7 * (cellSize + cellGap) + bottomPadding;
 
   // Month labels: dynamically placed at the start of each month
@@ -69,7 +69,7 @@ export function generateContributionSvg(
       const d = new Date(firstDayOfWeek.date);
       if (!isNaN(d.getTime())) {
         const m = d.getUTCMonth();
-        if (m !== lastMonth && week - lastLabelWeek >= 3 && week < numWeeks - 1) {
+        if (m !== lastMonth && week - lastLabelWeek >= 3 && week < numWeeks - 2) {
           const x = leftPadding + week * (cellSize + cellGap);
           monthLabelsList.push({ text: monthNames[m], x });
           lastMonth = m;

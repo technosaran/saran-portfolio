@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Shield, Lock, Mail, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 
 export default function AdminLoginPage() {
-  const [email, setEmail] = useState('iamsaran.ai@gmail.com');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -39,23 +39,23 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 text-neutral-100 selection:bg-emerald-500 selection:text-black">
+    <div className="min-h-screen bg-[#090a0f] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 text-zinc-100 selection:bg-emerald-500/20 selection:text-emerald-200">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shadow-lg shadow-emerald-500/10">
             <Shield className="h-7 w-7" />
           </div>
         </div>
-        <h2 className="mt-6 text-center text-3xl font-extrabold tracking-tight text-white">
+        <h1 className="mt-6 text-center text-3xl font-extrabold tracking-tight text-white">
           Saran R · Admin Portal
-        </h2>
-        <p className="mt-2 text-center text-xs text-neutral-400">
-          Only authorized administrator (<span className="text-emerald-400 font-mono">iamsaran.ai@gmail.com</span>) has rights to modify portfolio data.
+        </h1>
+        <p className="mt-2 text-center text-xs text-zinc-400">
+          Authorized administrator access for managing portfolio content.
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-neutral-900/60 py-8 px-6 shadow-2xl border border-neutral-800 rounded-3xl sm:px-10 backdrop-blur-xl">
+        <div className="bg-[#0f1118] py-8 px-6 shadow-2xl border border-[#1f2432] card-bevel rounded-3xl sm:px-10 backdrop-blur-xl">
           <form className="space-y-5" onSubmit={handleLogin}>
             {error && (
               <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-300 flex items-center gap-2">
@@ -65,38 +65,42 @@ export default function AdminLoginPage() {
             )}
 
             <div>
-              <label className="block text-xs font-semibold text-neutral-300 uppercase tracking-wider">
+              <label htmlFor="admin-email" className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider">
                 Admin Email
               </label>
               <div className="mt-2 relative rounded-xl shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-500">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
                   <Mail className="h-4 w-4" />
                 </div>
                 <input
+                  id="admin-email"
                   type="email"
                   required
+                  autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full pl-10 pr-3.5 py-2.5 bg-neutral-950 border border-neutral-800 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-500 transition-colors"
-                  placeholder="iamsaran.ai@gmail.com"
+                  className="block w-full pl-10 pr-3.5 py-2.5 bg-[#090a0f] border border-[#222838] rounded-xl text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 transition-colors"
+                  placeholder="Enter administrator email"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-neutral-300 uppercase tracking-wider">
+              <label htmlFor="admin-password" className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider">
                 Password
               </label>
               <div className="mt-2 relative rounded-xl shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-500">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
                   <Lock className="h-4 w-4" />
                 </div>
                 <input
+                  id="admin-password"
                   type="password"
                   required
+                  autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-10 pr-3.5 py-2.5 bg-neutral-950 border border-neutral-800 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="block w-full pl-10 pr-3.5 py-2.5 bg-[#090a0f] border border-[#222838] rounded-xl text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 transition-colors"
                   placeholder="Enter administrator password"
                 />
               </div>
@@ -114,17 +118,17 @@ export default function AdminLoginPage() {
                 </>
               ) : (
                 <>
-                  Authenticate & Enter
+                  Authenticate &amp; Enter
                   <ArrowRight className="h-4 w-4" />
                 </>
               )}
             </button>
           </form>
 
-          <div className="mt-6 border-t border-neutral-800 pt-4 text-center">
+          <div className="mt-6 border-t border-[#1b1f2b] pt-4 text-center">
             <Link
               href="/"
-              className="text-xs text-neutral-400 hover:text-emerald-400 transition-colors"
+              className="text-xs text-zinc-400 hover:text-emerald-400 transition-colors"
             >
               ← Back to Portfolio
             </Link>

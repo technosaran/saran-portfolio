@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import InteractiveHero from '@/components/InteractiveHero';
 import ProjectsShowcase from '@/components/ProjectsShowcase';
 import ExperienceTimeline from '@/components/ExperienceTimeline';
@@ -13,7 +13,7 @@ import { GithubIcon, LinkedinIcon, LeetCodeIcon } from '@/components/SocialIcons
 import { useRealtimeData } from '@/components/RealtimePortfolioProvider';
 import { GitHubActivityData } from '@/services/github.service';
 import { LeetCodeActivityData } from '@/services/leetcode.service';
-import { ArrowUp, Mail, Lock } from 'lucide-react';
+import { ArrowUp, Mail, Lock, Phone } from 'lucide-react';
 import Link from 'next/link';
 
 interface PortfolioSectionsLiveProps {
@@ -25,46 +25,39 @@ export default function PortfolioSectionsLive({
   initialGithubData,
   initialLeetcodeData,
 }: PortfolioSectionsLiveProps) {
-  const { profile, projects, skills, experience, certificates, isRealtimeConnected } = useRealtimeData();
+  const { profile, projects, skills, experience, certificates, isRealtimeConnected, dataSource } =
+    useRealtimeData();
+
+  const flagshipProject = useMemo(
+    () => projects.find((p) => p.title.toLowerCase().includes('arthax')) || projects[0],
+    [projects]
+  );
 
   // Extract core coursework dynamically from real-time database skills
   const coreCoursework = skills
     .filter((s) => s.category === 'Core CS Fundamentals')
     .map((s) => s.name);
-  const displayedCoursework = coreCoursework.length > 0 ? coreCoursework : [
-    'Data Structures & Algorithms',
-    'Object-Oriented Programming (Java)',
-    'Database Management Systems (DBMS)',
-    'Operating Systems',
-    'Computer Networks & Protocols',
-    'Software Engineering (SDLC)'
-  ];
+  const displayedCoursework =
+    coreCoursework.length > 0
+      ? coreCoursework
+      : [
+          'Data Structures & Algorithms',
+          'Object-Oriented Programming (Java)',
+          'Database Management Systems (DBMS)',
+          'Operating Systems',
+          'Computer Networks & Protocols',
+          'Software Engineering (SDLC)',
+        ];
 
   return (
     <>
-      {/* Realtime Status Live Indicator Badge */}
-      <div className="fixed bottom-4 right-4 z-40 hidden sm:flex items-center gap-2 rounded-full border border-[#23293a] bg-[#0c0e15]/90 px-3 py-1.5 shadow-2xl backdrop-blur-md text-[11px] font-mono select-none">
-        <span className="relative flex h-2 w-2">
-          {isRealtimeConnected ? (
-            <>
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-            </>
-          ) : (
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500" />
-          )}
-        </span>
-        <span className="text-zinc-300">
-          {isRealtimeConnected ? 'Live Real-Time Sync' : 'Reconnecting Sync...'}
-        </span>
-      </div>
-
       {/* Hero Section */}
-      <InteractiveHero 
-        profile={profile} 
-        projectCount={projects.length || 3} 
-        certCount={certificates.length || 6} 
-        internshipCount={experience.length || 2} 
+      <InteractiveHero
+        profile={profile}
+        flagshipProject={flagshipProject}
+        projectCount={projects.length}
+        certCount={certificates.length}
+        internshipCount={experience.length}
       />
 
       {/* Featured Projects Section */}
@@ -72,7 +65,7 @@ export default function PortfolioSectionsLive({
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <ScrollReveal>
             <div className="mb-8 space-y-1">
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2.5">
                 <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-100">
                   Featured Projects
                 </h2>
@@ -86,7 +79,7 @@ export default function PortfolioSectionsLive({
             </div>
           </ScrollReveal>
 
-          <ScrollReveal delay={100}>
+          <ScrollReveal delay={60}>
             <ProjectsShowcase projects={projects} />
           </ScrollReveal>
         </div>
@@ -97,7 +90,7 @@ export default function PortfolioSectionsLive({
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <ScrollReveal>
             <div className="mb-8 space-y-1">
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2.5">
                 <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-100">
                   Experience &amp; Education
                 </h2>
@@ -109,10 +102,10 @@ export default function PortfolioSectionsLive({
                 Hands-on engineering internships, cloud infrastructure deployments, and core academic foundations.
               </p>
             </div>
-            <ExperienceTimeline 
-              experience={experience} 
-              profile={profile} 
-              displayedCoursework={displayedCoursework} 
+            <ExperienceTimeline
+              experience={experience}
+              profile={profile}
+              displayedCoursework={displayedCoursework}
             />
           </ScrollReveal>
         </div>
@@ -123,7 +116,7 @@ export default function PortfolioSectionsLive({
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <ScrollReveal>
             <div className="mb-8 space-y-1">
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2.5">
                 <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-100">
                   Technical Tooling
                 </h2>
@@ -137,7 +130,7 @@ export default function PortfolioSectionsLive({
             </div>
           </ScrollReveal>
 
-          <ScrollReveal delay={100}>
+          <ScrollReveal delay={60}>
             <SkillsNucleus skills={skills} />
           </ScrollReveal>
         </div>
@@ -157,8 +150,8 @@ export default function PortfolioSectionsLive({
             </div>
           </ScrollReveal>
 
-          <ScrollReveal delay={100}>
-            <ActivityShowcase 
+          <ScrollReveal delay={60}>
+            <ActivityShowcase
               initialGithubData={initialGithubData}
               initialLeetcodeData={initialLeetcodeData}
             />
@@ -171,7 +164,7 @@ export default function PortfolioSectionsLive({
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <ScrollReveal>
             <div className="mb-8 space-y-1">
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2.5">
                 <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-100">
                   Certifications
                 </h2>
@@ -185,14 +178,14 @@ export default function PortfolioSectionsLive({
             </div>
           </ScrollReveal>
 
-          <ScrollReveal delay={100}>
+          <ScrollReveal delay={60}>
             <CertificatesShowcase certificates={certificates} />
           </ScrollReveal>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-14 md:py-20 border-b border-[#1b1f2b]">
+      <section id="contact" className="py-14 md:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <ScrollReveal>
             <div className="mb-8 space-y-1">
@@ -209,20 +202,45 @@ export default function PortfolioSectionsLive({
       </section>
 
       {/* Compact Minimal Footer */}
-      <footer className="border-t border-[#1b1f2b] bg-[#090a0f] py-6 text-xs text-zinc-400">
+      <footer className="border-t border-[#1b1f2b] bg-[#090a0f] py-7 text-xs text-zinc-400">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-zinc-400 text-xs">
-            <span className="font-semibold text-zinc-200 tracking-tight">
-              {profile.full_name || 'SARAN R'}
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-zinc-400 text-xs">
+            <span className="text-zinc-500">
+              © {new Date().getFullYear()}
             </span>
-            <span className="text-zinc-600">·</span>
-            <span className="text-[11px] font-mono text-zinc-500">
-              Next.js 16 &amp; Neon Live Sync
+            <Link
+              href="/"
+              className="font-semibold text-zinc-200 tracking-tight hover:text-emerald-400 transition-colors"
+            >
+              {profile.full_name === 'SARAN R' ? 'Saran R' : profile.full_name || 'Saran R'}
+            </Link>
+            <span className="text-zinc-600" aria-hidden="true">
+              ·
             </span>
-            <span className="text-zinc-600">·</span>
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-mono text-zinc-400">
+              <span
+                className={`h-1.5 w-1.5 rounded-full ${
+                  isRealtimeConnected
+                    ? 'bg-emerald-400'
+                    : dataSource === 'database'
+                    ? 'bg-amber-400'
+                    : 'bg-sky-400'
+                }`}
+              />
+              <span>
+                {isRealtimeConnected
+                  ? 'Neon Live Sync'
+                  : dataSource === 'database'
+                  ? 'Reconnecting Sync'
+                  : 'Next.js 16'}
+              </span>
+            </span>
+            <span className="text-zinc-600" aria-hidden="true">
+              ·
+            </span>
             <Link
               href="/admin"
-              className="text-zinc-600 hover:text-emerald-400 transition-colors inline-flex items-center gap-1 text-[11px] font-mono"
+              className="text-zinc-400 hover:text-emerald-400 transition-colors inline-flex items-center gap-1 text-[11px] font-mono"
               title="Admin Portal"
             >
               <Lock className="h-2.5 w-2.5" />
@@ -237,7 +255,7 @@ export default function PortfolioSectionsLive({
               rel="noopener noreferrer"
               className="text-zinc-400 hover:text-white transition-colors"
               title="GitHub"
-              aria-label="GitHub"
+              aria-label="GitHub profile"
             >
               <GithubIcon className="h-4 w-4" />
             </a>
@@ -247,7 +265,7 @@ export default function PortfolioSectionsLive({
               rel="noopener noreferrer"
               className="text-zinc-400 hover:text-sky-400 transition-colors"
               title="LinkedIn"
-              aria-label="LinkedIn"
+              aria-label="LinkedIn profile"
             >
               <LinkedinIcon className="h-4 w-4" />
             </a>
@@ -257,23 +275,31 @@ export default function PortfolioSectionsLive({
               rel="noopener noreferrer"
               className="text-zinc-400 hover:text-amber-400 transition-colors"
               title="LeetCode"
-              aria-label="LeetCode"
+              aria-label="LeetCode profile"
             >
               <LeetCodeIcon className="h-4 w-4" />
             </a>
             <a
               href={`mailto:${profile.email}`}
               className="text-zinc-400 hover:text-emerald-400 transition-colors"
-              title="Email"
-              aria-label="Email"
+              title={`Email ${profile.email}`}
+              aria-label="Send email"
             >
               <Mail className="h-4 w-4" />
+            </a>
+            <a
+              href={`tel:${profile.phone.replace(/\s+/g, '')}`}
+              className="text-zinc-400 hover:text-sky-300 transition-colors sm:hidden"
+              title={`Call ${profile.phone}`}
+              aria-label="Call phone number"
+            >
+              <Phone className="h-4 w-4" />
             </a>
           </div>
 
           <a
             href="#home"
-            className="inline-flex items-center gap-1.5 text-[11px] font-mono text-zinc-500 hover:text-zinc-200 transition-colors"
+            className="inline-flex items-center gap-1.5 text-[11px] font-mono text-zinc-400 hover:text-zinc-100 transition-colors whitespace-nowrap"
           >
             <span>Back to top</span>
             <ArrowUp className="h-3 w-3" />
